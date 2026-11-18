@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0066b3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Navette-Pro — Groupe Scolaire L'Ange Bleu | Système OB</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    
+    <style>
+        :root { --p: #0f172a; --blue-ab: #0066b3; --yellow-ab: #ffed00; --s: #10b981; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; padding: 0; height: 100dvh; display: flex; flex-direction: column; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f1f5f9; color: #0f172a; overflow: hidden; }
+
+        #auth-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0066b3 100%);
+            display: flex; align-items: center; justify-content: center; padding: 14px; overflow-y: auto;
+        }
+        .auth-card {
+            background: #ffffff; border-radius: 22px; width: 100%; max-width: 470px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.48); overflow: hidden;
+            animation: slideUp 0.35s ease-out; margin: auto;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+        .role-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: #f1f5f9; padding: 5px; border-radius: 12px; margin-bottom: 14px; }
+        .role-tab-btn {
+            border: none; background: transparent; padding: 9px 6px; border-radius: 9px;
+            font-size: 11px; font-weight: 800; color: #475569; cursor: pointer; transition: 0.15s;
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
+        }
+        .role-tab-btn.active { background: #ffffff; color: #0066b3; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+        #demo-watermark {
+            position: fixed; inset: 0; pointer-events: none; z-index: 4000;
+            display: none; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .watermark-text {
+            font-size: clamp(18px, 3.5vw, 38px); font-weight: 900; letter-spacing: 0.14em;
+            color: rgba(15, 23, 42, 0.065); transform: rotate(-24deg); white-space: nowrap;
+            user-select: none; text-transform: uppercase;
+        }
+
+        .app-header {
+            background: #ffffff; border-bottom: 1px solid #e2e8f0;
+            padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;
+            gap: 8px; z-index: 40; flex-shrink: 0;
+        }
+        .brand-group { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1; }
+        .brand-titles { min-width: 0; flex: 1; }
+        .brand-titles h1 { margin: 0; font-size: 15px; font-weight: 900; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.15; }
+
+        .header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .timer-pill {
+            background: #fefce8; border: 1px solid #fde047; color: #854d0e;
+            font-size: 11px; font-weight: 800; padding: 5px 8px; border-radius: 999px;
+            display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+        }
+        .action-btn {
+            border: none; border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 700;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: 0.15s;
+            white-space: nowrap;
+        }
+        .action-btn:active { transform: scale(0.96); }
+
+        .desktop-nav { display: flex; background: #f1f5f9; padding: 4px; border-radius: 10px; gap: 4px; }
+        .nav-tab {
+            border: none; background: transparent; padding: 7px 11px; border-radius: 7px;
+            font-size: 12px; font-weight: 700; color: #475569; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+        }
+        .nav-tab.active { background: #ffffff; color: #0066b3; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+        .mobile-nav {
+            display: none; background: #ffffff; border-top: 1px solid #e2e8f0;
+            padding: 6px 4px; justify-content: space-around; align-items: center; z-index: 45; flex-shrink: 0;
+        }
+        .mob-tab {
+            flex: 1; border: none; background: transparent; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 2px; padding: 4px 2px;
+            font-size: 10px; font-weight: 700; color: #64748b; cursor: pointer; position: relative;
+        }
+        .mob-tab.active { color: #0066b3; }
+        .mob-tab.active .mob-icon-wrap { background: #eff6ff; color: #0066b3; }
+        .mob-icon-wrap { padding: 4px 10px; border-radius: 999px; font-size: 15px; line-height: 1; }
+
+        @media (max-width: 1024px) {
+            .desktop-nav { display: none !important; }
+            .mobile-nav.dir-only { display: flex !important; }
+            .btn-label-hide { display: none; }
+            .app-header { flex-wrap: wrap; padding: 6px 10px; gap: 6px; }
+            .brand-group { flex: 1 1 100%; justify-content: space-between; }
+            .header-actions { width: 100%; justify-content: space-between; border-top: 1px solid #f1f5f9; padding-top: 5px; overflow-x: auto; }
+        }
+
+        .page-view { display: none; flex: 1; overflow: hidden; flex-direction: column; min-height: 0; }
+        .page-view.active { display: flex; }
+
+        .split-layout { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+        .map-pane { flex: 1.35; position: relative; background: #e2e8f0; min-height: 220px; }
+        .list-pane { flex: 1; max-width: 540px; background: #f8fafc; border-left: 1px solid #e2e8f0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px; }
+
+        @media (max-width: 1024px) {
+            .split-layout { flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+            .map-pane { flex: none; height: 34vh; min-height: 195px; width: 100%; }
+            .list-pane { flex: none; max-width: 100%; border-left: none; border-top: 1px solid #e2e8f0; padding: 12px 12px 72px 12px; overflow-y: visible; }
+        }
+
+        .driver-strip {
+            display: flex; gap: 6px; overflow-x: auto; padding: 8px 12px; background: #ffffff;
+            border-bottom: 1px solid #e2e8f0; flex-shrink: 0; scrollbar-width: none;
+        }
+        .driver-strip::-webkit-scrollbar { display: none; }
+        .driver-pill {
+            border: 1.5px solid #e2e8f0; background: #f8fafc; color: #334155;
+            padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+            white-space: nowrap; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+        }
+        .driver-pill.active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
+
+        .map-overlay-bar {
+            position: absolute; top: 10px; left: 48px; right: 10px; z-index: 500;
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px;
+            pointer-events: none;
+        }
+        .map-chip {
+            pointer-events: auto; background: rgba(15, 23, 42, 0.92); color: #ffffff;
+            padding: 6px 12px; border-radius: 10px; font-size: 11px; font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); max-width: 100%;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .map-btn-center {
+            pointer-events: auto; background: #ffffff; color: #0f172a; border: 1px solid #cbd5e1;
+            padding: 6px 10px; border-radius: 10px; font-size: 11px; font-weight: 800;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; white-space: nowrap;
+        }
+
+        .voyage-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px;
+            margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .voyage-header {
+            background: #f8fafc; padding: 10px 14px; border-bottom: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;
+        }
+        .student-row {
+            padding: 12px 14px; border-bottom: 1px solid #f1f5f9;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .student-row:last-child { border-bottom: none; }
+
+        .sa-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 16px; }
+        .sa-kpi-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+        .sa-table-wrap { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow-x: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        .sa-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; min-width: 820px; }
+        .sa-table th { background: #f8fafc; color: #475569; font-weight: 800; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; padding: 12px 14px; border-bottom: 1px solid #e2e8f0; }
+        .sa-table td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .sa-table tr:last-child td { border-bottom: none; }
+        .sa-table tr:hover td { background: #f8fafc; }
+
+        .modal-backdrop {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.72); z-index: 8000;
+            display: none; align-items: center; justify-content: center; padding: 16px;
+        }
+        .modal-backdrop.open { display: flex; }
+        .modal-box {
+            background: #ffffff; border-radius: 18px; width: 100%; max-width: 500px;
+            padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative;
+            max-height: 92dvh; overflow-y: auto;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div id="demo-watermark">
+        <div class="watermark-text">DÉMO PROPRIÉTÉ OB • GROUPE SCOLAIRE L'ANGE BLEU</div>
+    </div>
+
+    <!-- PORTAIL DE CONNEXION -->
+    <div id="auth-overlay">
+        <div class="auth-card">
+            <div style="background: linear-gradient(135deg, #0066b3 0%, #0f172a 100%); padding: 20px; text-align: center; color: #ffffff; position: relative;">
+                <span style="position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.16); padding: 3px 10px; border-radius: 999px; font-size: 10px; font-weight: 800; letter-spacing: 0.08em;">SYSTÈME OB</span>
+                <div style="width: 90px; height: 90px; margin: 0 auto 10px; border-radius: 24px; box-shadow: 0 14px 30px rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; background: #0f172a; padding: 6px;">
+                    <svg viewBox="0 0 240 240" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="npGradBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0f172a"/>
+                                <stop offset="55%" stop-color="#0284c7"/>
+                                <stop offset="100%" stop-color="#10b981"/>
+                            </linearGradient>
+                            <linearGradient id="npGradAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#facc15"/>
+                                <stop offset="100%" stop-color="#fb923c"/>
+                            </linearGradient>
+                        </defs>
+                        <rect x="12" y="12" width="216" height="216" rx="54" fill="url(#npGradBg)"/>
+                        <rect x="20" y="20" width="200" height="200" rx="46" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="3"/>
+                        <path d="M46,158 C78,125 110,165 142,126 C162,102 182,88 196,82" fill="none" stroke="url(#npGradAccent)" stroke-width="10" stroke-linecap="round"/>
+                        <circle cx="46" cy="158" r="9" fill="#ffffff"/>
+                        <circle cx="196" cy="82" r="11" fill="#facc15"/>
+                        <circle cx="196" cy="82" r="5" fill="#0f172a"/>
+                        <path d="M120,44 C92,44 70,66 70,94 C70,126 120,164 120,164 C120,164 170,126 170,94 C170,66 148,44 120,44 Z" fill="#ffffff"/>
+                        <rect x="92" y="68" width="56" height="28" rx="9" fill="#0f172a"/>
+                        <path d="M98,74 L142,74 L138,88 L102,88 Z" fill="#38bdf8"/>
+                        <circle cx="101" cy="106" r="5.5" fill="#facc15"/>
+                        <circle cx="139" cy="106" r="5.5" fill="#facc15"/>
+                        <rect x="111" y="103" width="18" height="6" rx="3" fill="#0f172a"/>
+                        <text x="120" y="196" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="900" font-size="25" fill="#ffffff">NAVETTE<tspan fill="#facc15">PRO</tspan></text>
+                        <text x="120" y="213" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="800" font-size="10" letter-spacing="3" fill="#bae6fd">SYSTÈME OB</text>
+                    </svg>
+                </div>
+
+                <h1 style="margin: 0; font-size: 20px; font-weight: 900;">Navette-Pro</h1>
+                <p id="auth-school-subtitle" style="margin: 3px 0 0; font-size: 13px; color: #bae6fd; font-weight: 700;">Groupe Scolaire L'Ange Bleu (El Jadida)</p>
+            </div>
+
+            <div style="padding: 18px 20px;">
+                <div class="role-tabs">
+                    <button type="button" class="role-tab-btn active" id="rtab-manager" onclick="selectLoginPortal('manager')">
+                        <span style="font-size: 16px;">🏫</span>
+                        <span>Direction</span>
+                    </button>
+                    <button type="button" class="role-tab-btn" id="rtab-chauffeur" onclick="selectLoginPortal('chauffeur')">
+                        <span style="font-size: 16px;">🚌</span>
+                        <span>Chauffeur</span>
+                    </button>
+                    <button type="button" class="role-tab-btn" id="rtab-parent" onclick="selectLoginPortal('parent')">
+                        <span style="font-size: 16px;">👨‍👩‍👧</span>
+                        <span>Parents</span>
+                    </button>
+                </div>
+
+                <div id="auth-error" style="display: none; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: 700; margin-bottom: 12px; text-align: center;">
+                    ❌ Identifiant ou clé d'accès invalide.
+                </div>
+
+                <div id="auth-expired" style="display: none; background: #fffbeb; border: 1px solid #fde68a; color: #92400e; padding: 10px 12px; border-radius: 10px; font-size: 12px; margin-bottom: 12px; text-align: center;">
+                    ⏳ Licence expirée ou suspendue. Contactez <strong>OB</strong> pour renouveler.
+                </div>
+
+                <div id="login-panel-manager">
+                    <div id="mgr-step-key">
+                        <label style="display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px; text-align: center;">
+                            Clé Licence 24 chiffres (365j) ou E-mail Admin
+                        </label>
+                        <input type="text" id="access-code-input" value="" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XXXX" autocomplete="off"
+                            oninput="formatLicenseInput(this)" onkeydown="if(event.key==='Enter') verifyManagerLogin()"
+                            style="width: 100%; padding: 12px 10px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 14px; font-weight: 900; text-align: center; letter-spacing: 0.06em; color: #0f172a; outline: none; margin-bottom: 12px; font-family: monospace;">
+                        <button type="button" id="btn-mgr-submit" onclick="verifyManagerLogin()" style="width: 100%; background: #0066b3; color: #ffffff; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer;">
+                            🔓 Déverrouiller l'Espace
+                        </button>
+                    </div>
+
+                    <div id="mgr-step-otp" style="display: none;">
+                        <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 10px 12px; border-radius: 10px; font-size: 12px; margin-bottom: 10px; text-align: center;">
+                            📧 Code de vérification à 6 chiffres envoyé à :<br><strong>omarbenhayoun21@gmail.com</strong>
+                            <div id="emergency-otp-badge" style="margin-top: 6px; font-size: 11px; font-weight: 900; color: #7c3aed;"></div>
+                        </div>
+                        <input type="text" id="admin-otp-input" maxlength="6" placeholder="000000" onkeydown="if(event.key==='Enter') confirmAdminOtp()"
+                            style="width: 100%; padding: 12px; border: 2px solid #7c3aed; border-radius: 12px; font-size: 20px; font-weight: 900; text-align: center; letter-spacing: 0.35em; color: #0f172a; margin-bottom: 10px; font-family: monospace;">
+                        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px;">
+                            <button type="button" onclick="cancelAdminOtp()" style="background: #f1f5f9; color: #475569; border: none; padding: 12px; border-radius: 12px; font-size: 12px; font-weight: 800; cursor: pointer;">← Retour</button>
+                            <button type="button" onclick="confirmAdminOtp()" style="background: #7c3aed; color: #ffffff; border: none; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 800; cursor: pointer;">👑 Valider le code OTP</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="login-panel-chauffeur" style="display: none;">
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px; text-align: center;">
+                        Sélectionnez votre véhicule ou saisissez votre code Bus
+                    </label>
+                    <select id="driver-login-select" style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 14px; font-weight: 800; color: #0f172a; background: #fff; margin-bottom: 10px;"></select>
+                    <input type="text" id="driver-pin-input" placeholder="Code accès Bus (ex: BUS1 ou 1234)" onkeydown="if(event.key==='Enter') verifyDriverLogin()"
+                        style="width: 100%; padding: 11px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 14px; font-weight: 800; text-align: center; text-transform: uppercase; margin-bottom: 12px;">
+                    <button type="button" onclick="verifyDriverLogin()" style="width: 100%; background: #0f172a; color: #facc15; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer;">
+                        🚌 Accéder à ma tournée
+                    </button>
+                </div>
+
+                <div id="login-panel-parent" style="display: none;">
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px; text-align: center;">
+                        Numéro de téléphone parent ou Matricule élève
+                    </label>
+                    <input type="text" id="parent-login-input" placeholder="Ex: 0661458912 ou EL-101" onkeydown="if(event.key==='Enter') verifyParentLogin()"
+                        style="width: 100%; padding: 13px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 15px; font-weight: 900; text-align: center; color: #0f172a; margin-bottom: 12px;">
+                    <button type="button" onclick="verifyParentLogin()" style="width: 100%; background: #10b981; color: #ffffff; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer;">
+                        👨‍👩‍👧 Suivre la navette
+                    </button>
+                </div>
+
+                <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8;">
+                    <span>🟢 Architecture SaaS Cloud</span>
+                    <span>Conception : <strong style="color: #475569;">OB</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPLICATION PRINCIPALE -->
+    <div id="app-shell" style="display: flex; flex-direction: column; height: 100dvh; overflow: hidden;">
+        
+        <header class="app-header">
+            <div class="brand-group">
+                <div style="width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background:#0f172a; padding:4px;">
+                    <svg viewBox="0 0 240 240" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="12" y="12" width="216" height="216" rx="54" fill="url(#npGradBg)"/>
+                        <path d="M46,158 C78,125 110,165 142,126 C162,102 182,88 196,82" fill="none" stroke="url(#npGradAccent)" stroke-width="10" stroke-linecap="round"/>
+                        <path d="M120,44 C92,44 70,66 70,94 C70,126 120,164 120,164 C120,164 170,126 170,94 C170,66 148,44 120,44 Z" fill="#ffffff"/>
+                        <rect x="92" y="68" width="56" height="28" rx="9" fill="#0f172a"/>
+                        <text x="120" y="196" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="900" font-size="25" fill="#ffffff">NAVETTE</text>
+                    </svg>
+                </div>
+
+                <div class="brand-titles">
+                    <div id="header-school-name" style="font-size: 11px; font-weight: 900; color: #0066b3; text-transform: uppercase;">
+                        Groupe Scolaire L'Ange Bleu
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px; margin-top: 1px;">
+                        <h1>Navette-Pro</h1>
+                        <span id="version-tier-pill" style="background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 999px;">El Jadida</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="desktop-nav" id="manager-desktop-nav">
+                <button type="button" class="nav-tab" id="d-tab-global" onclick="switchPage('global')">🗺️ 1. Globale</button>
+                <button type="button" class="nav-tab active" id="d-tab-driver" onclick="switchPage('driver')">👨‍✈️ 2. Par Chauffeur</button>
+                <button type="button" class="nav-tab" id="d-tab-fleet" onclick="switchPage('fleet')">🚌 3. Flotte</button>
+                <button type="button" class="nav-tab" id="d-tab-students" onclick="switchPage('students')">
+                    🏫 4. Élèves &amp; WA <span id="badge-d-wa" style="background: #10b981; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 999px;">1</span>
+                </button>
+                <button type="button" class="nav-tab" id="d-tab-attendance" onclick="switchPage('attendance')" style="background: #eff6ff; color: #0066b3; border: 1px solid #bfdbfe;">
+                    📸 5. Pointage Terrain
+                </button>
+            </nav>
+
+            <div class="header-actions">
+                <span id="demo-timer-badge" class="timer-pill">⏳ Actif</span>
+                <button type="button" id="btn-ob-superadmin" onclick="switchPage('superadmin')" class="action-btn" style="display: none; background: #7c3aed; color: #ffffff; box-shadow: 0 2px 8px rgba(124,58,237,0.35);">
+                    👑 Cockpit SuperAdmin OB
+                </button>
+                <button type="button" id="btn-save-mgr" onclick="saveAllManual()" class="action-btn" style="background: #2563eb; color: #ffffff;">💾 <span class="btn-label-hide">Sauver</span></button>
+                <button type="button" id="btn-export-excel" onclick="handleExcelAction()" class="action-btn" style="background: #10b981; color: #ffffff;">📊 Excel</button>
+                <button type="button" onclick="logoutSession()" class="action-btn" style="background: #0f172a; color: #ffffff;" title="Déconnexion">🔒 Quitter</button>
+            </div>
+        </header>
+
+        <!-- ==================== ÉTAPE 1 : COCKPIT SUPERADMIN OB (100 % PRIVÉ) ==================== -->
+        <section id="page-superadmin" class="page-view" style="overflow-y: auto; background: #f1f5f9; padding: 16px;">
+            <div style="max-width: 1180px; margin: 0 auto; width: 100%; padding-bottom: 48px;">
+                
+                <div style="background: linear-gradient(135deg, #0f172a 0%, #312e81 60%, #5b21b6 100%); color: #ffffff; border-radius: 18px; padding: 20px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; box-shadow: 0 10px 25px rgba(15,23,42,0.18);">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <span style="background: #facc15; color: #0f172a; font-size: 10px; font-weight: 900; padding: 3px 9px; border-radius: 999px; text-transform: uppercase;">Espace Privé Fondateur • OTP Gmail Vérifié</span>
+                            <span style="font-size: 11px; color: #c4b5fd;">omarbenhayoun21@gmail.com</span>
+                        </div>
+                        <h2 style="margin: 0; font-size: 21px; font-weight: 900;">👑 Cockpit SuperAdmin OB — Gestion SaaS Navette-Pro</h2>
+                        <p style="margin: 4px 0 0; font-size: 12px; color: #e2e8f0;">Suivi des établissements clients, validité des licences 365j, revenus annuels et génération de clés sécurisées.</p>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" onclick="openAddClientModal()" style="background: #10b981; color: #ffffff; border: none; padding: 11px 16px; border-radius: 12px; font-size: 13px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(16,185,129,0.35);">
+                            + Nouvelle École Cliente &amp; Clé
+                        </button>
+                        <button type="button" onclick="exportClientsSaasExcel()" style="background: rgba(255,255,255,0.14); color: #ffffff; border: 1px solid rgba(255,255,255,0.25); padding: 11px 14px; border-radius: 12px; font-size: 12px; font-weight: 800; cursor: pointer;">
+                            📥 Exporter Registre Clients
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sa-kpi-grid" id="sa-kpi-container"></div>
+
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <input type="text" id="sa-search-input" oninput="renderSuperAdminDashboard()" placeholder="🔍 Rechercher une école, une ville, un directeur ou une clé..." style="flex: 1; min-width: 240px; padding: 9px 12px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none;">
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        <button type="button" class="sa-filter-btn" data-filter="all" onclick="setSaFilter('all')" style="background: #0f172a; color: #fff; border: none; padding: 7px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">Tous</button>
+                        <button type="button" class="sa-filter-btn" data-filter="active" onclick="setSaFilter('active')" style="background: #f1f5f9; color: #334155; border: none; padding: 7px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">🟢 Actifs</button>
+                        <button type="button" class="sa-filter-btn" data-filter="expiring" onclick="setSaFilter('expiring')" style="background: #f1f5f9; color: #334155; border: none; padding: 7px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">🟠 À renouveler (&lt;30j)</button>
+                        <button type="button" class="sa-filter-btn" data-filter="suspended" onclick="setSaFilter('suspended')" style="background: #f1f5f9; color: #334155; border: none; padding: 7px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">⛔ Suspendus / Expirés</button>
+                    </div>
+                </div>
+
+                <div class="sa-table-wrap">
+                    <table class="sa-table">
+                        <thead>
+                            <tr>
+                                <th>École Cliente &amp; Contact</th>
+                                <th>Pack Choisi</th>
+                                <th>Clé Licence 24 Chiffres</th>
+                                <th>Durée de Validité Restante</th>
+                                <th>Tarif Annuel</th>
+                                <th>Statut &amp; Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sa-clients-tbody"></tbody>
+                    </table>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== VUES GESTIONNAIRE DIRECTION ==================== -->
+        <section id="page-global" class="page-view">
+            <div class="split-layout">
+                <div class="map-pane">
+                    <div id="mapGlobal" style="width: 100%; height: 100%;"></div>
+                    <div class="map-overlay-bar">
+                        <div class="map-chip" id="map-school-label-global">🏫 Siège : Groupe Scolaire L'Ange Bleu</div>
+                        <button type="button" class="map-btn-center" onclick="fitGlobalMap()">🎯 Recentrer</button>
+                    </div>
+                </div>
+                <div class="list-pane">
+                    <h3 style="margin: 0 0 10px; font-size: 13px; font-weight: 800;">Secteurs Actifs</h3>
+                    <div id="global-sectors-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-driver" class="page-view active">
+            <div class="driver-strip" id="driver-pills-container"></div>
+            <div style="background: #f8fafc; padding: 8px 12px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <div id="active-crew-banner" style="font-size: 12px; font-weight: 700; color: #1e293b;">👨‍✈️ Abdeladim • Sidi Bouzid</div>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <button type="button" onclick="jumpToAddStudent()" style="background: #0066b3; color: #fff; border: none; padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer;">+ Élève</button>
+                </div>
+            </div>
+            <div class="split-layout">
+                <div class="map-pane">
+                    <div id="mapDriver" style="width: 100%; height: 100%;"></div>
+                    <div class="map-overlay-bar">
+                        <div class="map-chip" id="driver-map-chip">Bus 1 — Sidi Bouzid</div>
+                        <button type="button" class="map-btn-center" onclick="recenterDriverMap()">🎯 Centrer</button>
+                    </div>
+                </div>
+                <div class="list-pane">
+                    <div id="driver-voyages-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-fleet" class="page-view" style="overflow-y: auto; padding: 14px;">
+            <div style="max-width: 900px; margin: 0 auto; width: 100%;">
+                <div id="fleet-cards-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;"></div>
+            </div>
+        </section>
+
+        <section id="page-students" class="page-view" style="overflow-y: auto; padding: 14px;">
+            <div style="max-width: 980px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 16px; padding-bottom: 24px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px;">
+                    <h2 style="margin: 0 0 10px; font-size: 17px; font-weight: 900;">+ Ajouter un Élève</h2>
+                    <input type="text" id="stu-name" placeholder="Nom & Prénom de l'élève *" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; margin-bottom: 8px;">
+                    <input type="text" id="stu-phone" placeholder="Tél. Parent *" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; margin-bottom: 8px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                        <select id="stu-level" onchange="syncVoyageByLevel(this.value)" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #fff;">
+                            <option value="CP">CP (Primaire)</option><option value="2AP">2AP (Primaire)</option><option value="3AP">3AP (Primaire)</option>
+                            <option value="4AP">4AP (Primaire)</option><option value="5AP">5AP (Primaire)</option><option value="6AP">6AP (Primaire)</option>
+                            <option value="1AC">1AC (Collège)</option><option value="2AC">2AC (Collège)</option><option value="3AC">3AC (Collège)</option>
+                            <option value="TC">TC (Lycée)</option><option value="1BAC">1BAC (Lycée)</option><option value="TERM">TERM (Lycée)</option>
+                        </select>
+                        <select id="stu-voyage" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #fff;">
+                            <option value="1">Voyage 1 (07h00 — Primaire)</option><option value="2">Voyage 2 (07h45 — Collège/Lycée)</option>
+                        </select>
+                    </div>
+                    <select id="stu-bus" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #fff; margin-bottom: 8px;"></select>
+                    <input type="text" id="stu-address" placeholder="Adresse / Repère" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; margin-bottom: 8px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                        <input type="number" step="any" id="stu-lat" placeholder="X (Latitude)" style="padding: 8px; border: 1px solid #93c5fd; border-radius: 6px; font-size: 12px;">
+                        <input type="number" step="any" id="stu-lng" placeholder="Y (Longitude)" style="padding: 8px; border: 1px solid #93c5fd; border-radius: 6px; font-size: 12px;">
+                    </div>
+                    <button type="button" onclick="submitNewStudent()" style="width: 100%; background: #10b981; color: #fff; border: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer;">✅ Enregistrer l'élève</button>
+                </div>
+
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <h2 style="margin: 0; font-size: 16px; font-weight: 900;">📱 Positions GPS Parents reçues</h2>
+                        <span id="wa-pending-pill" style="background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px;">0</span>
+                    </div>
+                    <div id="wa-requests-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== VUE TERRAIN CHAUFFEUR ==================== -->
+        <section id="page-attendance" class="page-view" style="overflow-y: auto; background: #f8fafc;">
+            <div class="driver-strip" id="att-driver-pills"></div>
+            <div style="max-width: 880px; margin: 0 auto; width: 100%; padding: 14px 14px 80px 14px;">
+                <div style="background: #0f172a; color: #ffffff; border-radius: 16px; padding: 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <span style="background: #facc15; color: #0f172a; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 999px; text-transform: uppercase;">Feuille de Route Terrain</span>
+                        <h2 style="margin: 6px 0 2px; font-size: 17px; font-weight: 900;" id="att-header-title">Bus 1 — Secteur Sidi Bouzid</h2>
+                        <p style="margin: 0; font-size: 12px; color: #cbd5e1;" id="att-crew-subtitle">Chauffeur : Abdeladim • Accompagnatrice : Fatima Zahra</p>
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                        <button type="button" id="att-v1-btn" onclick="setAttVoyage(1)" style="background: #10b981; color: #fff; border: none; padding: 9px 13px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer;">Voyage 1 (07h00)</button>
+                        <button type="button" id="att-v2-btn" onclick="setAttVoyage(2)" style="background: rgba(255,255,255,0.14); color: #fff; border: none; padding: 9px 13px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer;">Voyage 2 (07h45)</button>
+                    </div>
+                </div>
+                <div id="att-students-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px;"></div>
+            </div>
+        </section>
+
+        <!-- ==================== VUE PARENTS D'ÉLÈVES ==================== -->
+        <section id="page-parent-portal" class="page-view" style="overflow-y: auto; background: #f1f5f9; padding: 14px;">
+            <div style="max-width: 640px; margin: 0 auto; width: 100%; padding-bottom: 40px;">
+                <div style="background: linear-gradient(135deg, #0066b3 0%, #0f172a 100%); color: #ffffff; border-radius: 18px; padding: 18px; margin-bottom: 14px;">
+                    <span style="background: rgba(255,255,255,0.18); font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 999px;">ESPACE FAMILLE EN DIRECT</span>
+                    <h2 style="margin: 8px 0 4px; font-size: 19px; font-weight: 900;">Suivi Transport Scolaire</h2>
+                    <p style="margin: 0; font-size: 12px; color: #bae6fd;">Consultez l'état d'embarquement de votre enfant en temps réel.</p>
+                </div>
+                <div id="parent-children-cards"></div>
+            </div>
+        </section>
+
+        <!-- BARRE MOBILE DIRECTION -->
+        <nav class="mobile-nav dir-only" id="manager-mobile-nav">
+            <button type="button" class="mob-tab" onclick="switchPage('global')"><span class="mob-icon-wrap">🗺️</span><span>Globale</span></button>
+            <button type="button" class="mob-tab active" onclick="switchPage('driver')"><span class="mob-icon-wrap">👨‍✈️</span><span>Chauffeur</span></button>
+            <button type="button" class="mob-tab" onclick="switchPage('fleet')"><span class="mob-icon-wrap">🚌</span><span>Flotte</span></button>
+            <button type="button" class="mob-tab" onclick="switchPage('students')"><span class="mob-icon-wrap">➕</span><span>Élèves</span></button>
+            <button type="button" class="mob-tab" onclick="switchPage('attendance')"><span class="mob-icon-wrap">📸</span><span>Pointage</span></button>
+        </nav>
+    </div>
+
+    <!-- MODALE AJOUT NOUVELLE ÉCOLE CLIENTE + GÉNÉRATION CLÉ 24 CHIFFRES -->
+    <div id="add-client-modal" class="modal-backdrop" onclick="if(event.target===this) this.classList.remove('open')">
+        <div class="modal-box">
+            <button type="button" onclick="document.getElementById('add-client-modal').classList.remove('open')" style="position: absolute; top: 12px; right: 12px; border: none; background: #f1f5f9; width: 30px; height: 30px; border-radius: 50%; font-weight: 900; cursor: pointer;">✕</button>
+            <h3 style="margin: 0 0 12px; font-size: 17px; font-weight: 900;">🏫 Enregistrer une Nouvelle École Cliente</h3>
+            
+            <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Nom de l'établissement *</label>
+            <input type="text" id="new-cli-school" placeholder="Ex: Groupe Scolaire Al Kawtar" style="width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;margin-bottom:8px;">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                <div>
+                    <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Ville *</label>
+                    <input type="text" id="new-cli-city" value="El Jadida" style="width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Nom du Directeur *</label>
+                    <input type="text" id="new-cli-director" placeholder="Ex: M. Bennani" style="width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                <div>
+                    <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Téléphone WhatsApp *</label>
+                    <input type="text" id="new-cli-phone" placeholder="0661000000" style="width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;">
+                </div>
+                <div>
+                    <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Nombre de Bus</label>
+                    <input type="number" id="new-cli-buses" value="4" min="1" style="width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                <div>
+                    <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Pack Choisi *</label>
+                    <select id="new-cli-pack" onchange="autoFillPackPrice(this.value)" style="width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;background:#fff;">
+                        <option value="premium">👑 Premium (365j — OSRM + Photos)</option>
+                        <option value="basic">⚡ Basique (365j — Standard)</option>
+                        <option value="demo">⏳ Démo Essai (48h)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Tarif Facturé (MAD)</label>
+                    <input type="number" id="new-cli-price" value="6000" style="width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;">
+                </div>
+            </div>
+
+            <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Notes internes / Modalités paiement</label>
+            <input type="text" id="new-cli-notes" placeholder="Ex: Règlement par virement, renouvellement sept." style="width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;font-size:12px;margin-bottom:12px;">
+
+            <button type="button" onclick="createSaasClient()" style="width: 100%; background: #7c3aed; color: #ffffff; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 900; cursor: pointer;">
+                🔑 Générer la Clé 24 Chiffres &amp; Activer le Client
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const SUPERADMIN_EMAIL = "omarbenhayoun21@gmail.com";
+        const APPS_SCRIPT_OTP_URL = "https://script.google.com/macros/s/AKfycbw-V0_w-i_a1vmNLHU1Whzt_KH5d0xZFtZABcvjCARodp1JV_DE66dtFUkugIxIOE1H/exec";
+        
+        // URL CORRIGÉE AVEC LA RÉGION EUROPE-WEST1
+        const FIREBASE_DB_URL = "https://navette-pro-ob-default-rtdb.europe-west1.firebasedatabase.app";
+
+        let firebaseDb = null;
+        if (FIREBASE_DB_URL && typeof firebase !== 'undefined') {
+            try { 
+                firebase.initializeApp({ databaseURL: FIREBASE_DB_URL }); 
+                firebaseDb = firebase.database(); 
+            } catch (e) {
+                console.error("Erreur Firebase:", e);
+            }
+        }
+
+        const STORAGE_KEY = 'fkhekho_ange_bleu_ob_v8';
+        const SAAS_CLIENTS_KEY = 'navette_pro_saas_clients_ob_v1';
+        const SESSION_KEY = 'fkhekho_ob_session_v8';
+        const DEMO_START_KEY = 'fkhekho_ob_demo_start_v8';
+        const DEMO_DURATION_MS = 48 * 60 * 60 * 1000;
+        const DAY_MS = 24 * 60 * 60 * 1000;
+
+        const SCHOOL_COORDS = [33.2378, -8.5165];
+        let schoolNameGlobal = "Groupe Scolaire L'Ange Bleu";
+
+        let saasClients = [];
+        let saFilterMode = 'all';
+        let pendingOtpCode = null;
+        let pendingOtpExpiry = 0;
+
+        function computeObSignature(first20Digits) {
+            let h1 = 2026, h2 = 8819;
+            for (let i = 0; i < 20; i++) {
+                const d = parseInt(first20Digits[i], 10);
+                h1 = (h1 * 31 + d * (i + 7) + 13) % 10000;
+                h2 = (h2 * 17 + d * (23 - i) + 29) % 10000;
+            }
+            return String((h1 ^ h2) % 10000).padStart(4, '0');
+        }
+
+        function create24DigitLicense(tier) {
+            const prefix = tier === 'premium' ? '95' : '21';
+            let r18 = '';
+            for (let i = 0; i < 18; i++) r18 += String(Math.floor(Math.random() * 10));
+            const full24 = prefix + r18 + computeObSignature(prefix + r18);
+            return full24.match(/.{1,4}/g).join('-');
+        }
+
+        function validate24DigitLicense(rawInput) {
+            const digits = (rawInput || '').replace(/\D/g, '');
+            if (digits.length !== 24) return null;
+            if (computeObSignature(digits.slice(0, 20)) !== digits.slice(20, 24)) return null;
+            return digits.slice(0, 2) === '95' ? 'premium' : 'basic';
+        }
+
+        function formatLicenseInput(inputEl) {
+            const val = inputEl.value.trim();
+            if (val.includes('@') || /^[A-Za-z]/.test(val)) return;
+            const digits = val.replace(/\D/g, '').slice(0, 24);
+            if (digits.length > 4) inputEl.value = digits.match(/.{1,4}/g).join('-');
+        }
+
+        function loadSaasClients() {
+            try {
+                const raw = localStorage.getItem(SAAS_CLIENTS_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        saasClients = parsed;
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            const now = Date.now();
+            saasClients = [
+                {
+                    id: 'CLI-001',
+                    school: "Groupe Scolaire L'Ange Bleu",
+                    city: 'El Jadida',
+                    director: 'Direction Pédagogique',
+                    phone: '0661000000',
+                    buses: 6,
+                    pack: 'premium',
+                    key24: create24DigitLicense('premium'),
+                    startDate: now - (5 * DAY_MS),
+                    endDate: now + (360 * DAY_MS),
+                    priceMad: 6000,
+                    suspended: false,
+                    notes: 'Établissement pilote El Jadida — Flotte 6 bus'
+                }
+            ];
+            saveSaasClients();
+        }
+
+        function saveSaasClients() {
+            try { localStorage.setItem(SAAS_CLIENTS_KEY, JSON.stringify(saasClients)); } catch (e) {}
+            if (firebaseDb) firebaseDb.ref('navette_pro_saas_clients').set(saasClients);
+        }
+
+        async function verifyManagerLogin() {
+            const rawVal = (document.getElementById('access-code-input').value || '').trim();
+            const errBox = document.getElementById('auth-error');
+            const expBox = document.getElementById('auth-expired');
+            errBox.style.display = 'none';
+            expBox.style.display = 'none';
+
+            if (rawVal.toLowerCase() === SUPERADMIN_EMAIL.toLowerCase()) {
+                const btn = document.getElementById('btn-mgr-submit');
+                btn.disabled = true;
+                btn.textContent = '⏳ Envoi du code OTP sur Gmail...';
+
+                pendingOtpCode = String(Math.floor(100000 + Math.random() * 900000));
+                pendingOtpExpiry = Date.now() + (5 * 60 * 1000);
+                document.getElementById('emergency-otp-badge').textContent = `🔑 Code de secours : ${pendingOtpCode}`;
+
+                try {
+                    const finalUrl = APPS_SCRIPT_OTP_URL + "?email=" + encodeURIComponent(SUPERADMIN_EMAIL) + "&otp=" + encodeURIComponent(pendingOtpCode);
+                    await fetch(finalUrl, { method: 'GET', mode: 'no-cors' });
+                } catch (e) {}
+                
+                document.getElementById('mgr-step-key').style.display = 'none';
+                document.getElementById('mgr-step-otp').style.display = 'block';
+                document.getElementById('admin-otp-input').value = '';
+                document.getElementById('admin-otp-input').focus();
+                
+                btn.disabled = false;
+                btn.textContent = '🔓 Déverrouiller l\'Espace';
+                return;
+            }
+
+            const upperCode = rawVal.toUpperCase();
+            if (upperCode === '4800' || upperCode === 'AB48') {
+                let firstTs = parseInt(localStorage.getItem(DEMO_START_KEY), 10) || Date.now();
+                localStorage.setItem(DEMO_START_KEY, String(firstTs));
+                if ((Date.now() - firstTs) >= DEMO_DURATION_MS) {
+                    expBox.style.display = 'block';
+                    return;
+                }
+                startSession({ role: 'demo' });
+                return;
+            }
+
+            const tier = validate24DigitLicense(rawVal);
+            if (tier) {
+                const cleanDigits = rawVal.replace(/\D/g, '');
+                const matchedClient = saasClients.find(c => c.key24.replace(/\D/g, '') === cleanDigits);
+                if (matchedClient) {
+                    if (matchedClient.suspended || Date.now() > matchedClient.endDate) {
+                        expBox.style.display = 'block';
+                        return;
+                    }
+                    schoolNameGlobal = matchedClient.school;
+                }
+                startSession({ role: tier, clientId: matchedClient ? matchedClient.id : null });
+                return;
+            }
+
+            errBox.textContent = '❌ Clé licence 24 chiffres ou identifiant invalide.';
+            errBox.style.display = 'block';
+        }
+
+        function confirmAdminOtp() {
+            const entered = (document.getElementById('admin-otp-input').value || '').trim();
+            const errBox = document.getElementById('auth-error');
+            errBox.style.display = 'none';
+
+            if (!pendingOtpCode || Date.now() > pendingOtpExpiry) {
+                errBox.textContent = '⏳ Code OTP expiré.';
+                errBox.style.display = 'block';
+                return;
+            }
+            if (entered === pendingOtpCode) {
+                pendingOtpCode = null;
+                document.getElementById('mgr-step-otp').style.display = 'none';
+                document.getElementById('mgr-step-key').style.display = 'block';
+                startSession({ role: 'admin' });
+            } else {
+                errBox.textContent = '❌ Code OTP incorrect.';
+                errBox.style.display = 'block';
+            }
+        }
+
+        function cancelAdminOtp() {
+            pendingOtpCode = null;
+            document.getElementById('mgr-step-otp').style.display = 'none';
+            document.getElementById('mgr-step-key').style.display = 'block';
+        }
+
+        function setSaFilter(mode) {
+            saFilterMode = mode;
+            document.querySelectorAll('.sa-filter-btn').forEach(b => {
+                const active = b.getAttribute('data-filter') === mode;
+                b.style.background = active ? '#0f172a' : '#f1f5f9';
+                b.style.color = active ? '#ffffff' : '#334155';
+            });
+            renderSuperAdminDashboard();
+        }
+
+        function renderSuperAdminDashboard() {
+            const now = Date.now();
+            let activeCount = 0, totalArrMad = 0, expiringSoonCount = 0, demoCount = 0;
+
+            saasClients.forEach(c => {
+                const daysLeft = Math.ceil((c.endDate - now) / DAY_MS);
+                const isValid = !c.suspended && daysLeft > 0;
+                if (c.pack === 'demo') { if (isValid) demoCount++; }
+                else if (isValid) {
+                    activeCount++;
+                    totalArrMad += Number(c.priceMad || 0);
+                    if (daysLeft <= 30) expiringSoonCount++;
+                }
+            });
+
+            document.getElementById('sa-kpi-container').innerHTML = `
+                <div class="sa-kpi-card" style="border-left: 4px solid #10b981;"><div style="font-size:11px;font-weight:800;color:#64748b;">ÉCOLES ACTIVES</div><div style="font-size:24px;font-weight:900;">${activeCount}</div></div>
+                <div class="sa-kpi-card" style="border-left: 4px solid #7c3aed;"><div style="font-size:11px;font-weight:800;color:#64748b;">ARR ANNUEL</div><div style="font-size:24px;font-weight:900;">${totalArrMad.toLocaleString('fr-FR')} MAD</div></div>
+                <div class="sa-kpi-card" style="border-left: 4px solid #f59e0b;"><div style="font-size:11px;font-weight:800;color:#64748b;">ALERTES (&lt;30j)</div><div style="font-size:24px;font-weight:900;">${expiringSoonCount}</div></div>
+                <div class="sa-kpi-card" style="border-left: 4px solid #0284c7;"><div style="font-size:11px;font-weight:800;color:#64748b;">DÉMOS 48H</div><div style="font-size:24px;font-weight:900;">${demoCount}</div></div>
+            `;
+
+            const q = (document.getElementById('sa-search-input').value || '').toLowerCase().trim();
+            const filtered = saasClients.filter(c => {
+                const daysLeft = Math.ceil((c.endDate - now) / DAY_MS);
+                const isExpired = daysLeft <= 0 || c.suspended;
+                if (saFilterMode === 'active' && isExpired) return false;
+                if (saFilterMode === 'expiring' && (isExpired || daysLeft > 30)) return false;
+                if (saFilterMode === 'suspended' && !isExpired) return false;
+                if (q && !`${c.school} ${c.city} ${c.director} ${c.key24}`.toLowerCase().includes(q)) return false;
+                return true;
+            });
+
+            document.getElementById('sa-clients-tbody').innerHTML = filtered.map(c => `
+                <tr>
+                    <td><strong>${c.school}</strong><br><small>${c.city} • ${c.director}</small></td>
+                    <td>${c.pack.toUpperCase()}</td>
+                    <td><code>${c.key24}</code></td>
+                    <td>${Math.max(0, Math.ceil((c.endDate - now) / DAY_MS))}j restants</td>
+                    <td>${c.priceMad} MAD</td>
+                    <td><button type="button" onclick="renewSaasClient('${c.id}')" style="background:#10b981;color:#fff;border:none;padding:5px 9px;border-radius:7px;cursor:pointer;">+365j</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function openAddClientModal() { document.getElementById('add-client-modal').classList.add('open'); }
+        function autoFillPackPrice(pack) { document.getElementById('new-cli-price').value = pack === 'premium' ? 6000 : pack === 'basic' ? 3500 : 0; }
+        
+        function createSaasClient() {
+            const school = (document.getElementById('new-cli-school').value || '').trim();
+            if (!school) return;
+            const now = Date.now(), pack = document.getElementById('new-cli-pack').value;
+            saasClients.unshift({
+                id: 'CLI-' + Math.floor(100 + Math.random() * 900),
+                school, city: document.getElementById('new-cli-city').value,
+                director: document.getElementById('new-cli-director').value,
+                phone: document.getElementById('new-cli-phone').value,
+                buses: parseInt(document.getElementById('new-cli-buses').value, 10) || 1,
+                pack, key24: create24DigitLicense(pack), startDate: now,
+                endDate: now + (pack === 'demo' ? DEMO_DURATION_MS : (365 * DAY_MS)),
+                priceMad: parseFloat(document.getElementById('new-cli-price').value) || 0,
+                suspended: false
+            });
+            saveSaasClients();
+            document.getElementById('add-client-modal').classList.remove('open');
+            renderSuperAdminDashboard();
+        }
+
+        function renewSaasClient(id) {
+            const c = saasClients.find(x => x.id === id);
+            if (c) { c.endDate = Math.max(Date.now(), c.endDate) + (365 * DAY_MS); c.suspended = false; saveSaasClients(); renderSuperAdminDashboard(); }
+        }
+
+        const DEFAULT_FLEET = [
+            {
+                id: 'B1', code: 'BUS1', num: 'Bus 1', driver: 'Abdeladim', acc: 'Fatima Zahra', sector: 'Sidi Bouzid',
+                color: '#1d4ed8', center: [33.2265, -8.5475],
+                students: [
+                    { id: 'EL-101', name: 'Yassine Bennani', level: '4AP', voyage: 1, address: 'Corniche Sidi Bouzid Nord', lat: 33.2285, lng: -8.5490, phone: '0661458912', status: 'pending', statusTime: '' },
+                    { id: 'EL-102', name: 'Lina Chraibi', level: '2AP', voyage: 1, address: 'Résidence Les Vagues', lat: 33.2248, lng: -8.5462, phone: '0662114488', status: 'pending', statusTime: '' },
+                    { id: 'EL-103', name: 'Mehdi El Fassi', level: '1AC', voyage: 2, address: 'Entrée Sidi Bouzid Est', lat: 33.2292, lng: -8.5420, phone: '0663992211', status: 'pending', statusTime: '' }
+                ]
+            },
+            {
+                id: 'B2', code: 'BUS2', num: 'Bus 2', driver: 'Abdessalam', acc: 'Khadija', sector: 'Saada',
+                color: '#dc2626', center: [33.2280, -8.5045],
+                students: [
+                    { id: 'EL-201', name: 'Salma Berrada', level: '5AP', voyage: 1, address: 'Lotissement Saada 1', lat: 33.2295, lng: -8.5030, phone: '0661778899', status: 'pending', statusTime: '' }
+                ]
+            }
+        ];
+
+        let fleetState = [];
+        let waRequests = [];
+        let selectedBusId = 'B1';
+        let activeSession = null;
+        let attVoyageFilter = 1;
+        let mapGlobal = null, mapDriver = null, globalLayer = null, driverLayer = null;
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && Array.isArray(parsed.fleet) && parsed.fleet.length > 0) {
+                        fleetState = parsed.fleet;
+                        waRequests = Array.isArray(parsed.wa) ? parsed.wa : [];
+                        if (parsed.schoolName) schoolNameGlobal = parsed.schoolName;
+                        return;
+                    }
+                }
+            } catch (e) {}
+            fleetState = JSON.parse(JSON.stringify(DEFAULT_FLEET));
+            waRequests = [];
+        }
+
+        /* === SYNCHRONISATION TEMPS RÉEL FIREBASE CLOUD === */
+        function initRealtimeSync() {
+            if (firebaseDb) {
+                firebaseDb.ref('navette_pro_live').on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data && data.fleet) {
+                        fleetState = data.fleet;
+                        if (data.wa) waRequests = data.wa;
+                        if (data.schoolName) schoolNameGlobal = data.schoolName;
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                        refreshCurrentView();
+                    }
+                });
+            }
+        }
+
+        function refreshCurrentView() {
+            if (document.getElementById('page-global').classList.contains('active')) renderGlobalPage();
+            if (document.getElementById('page-driver').classList.contains('active')) renderDriverPage();
+            if (document.getElementById('page-fleet').classList.contains('active')) renderFleetPage();
+            if (document.getElementById('page-students').classList.contains('active')) renderStudentsPage();
+            if (document.getElementById('page-attendance').classList.contains('active')) renderAttendancePage();
+            if (document.getElementById('page-parent-portal').classList.contains('active')) renderParentPortal();
+        }
+
+        function saveState() {
+            const payload = { fleet: fleetState, wa: waRequests, schoolName: schoolNameGlobal, updatedAt: Date.now() };
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch (e) {}
+            if (firebaseDb) {
+                firebaseDb.ref('navette_pro_live').set(payload).catch(err => {
+                    console.error("Erreur d'écriture Firebase:", err);
+                });
+            }
+        }
+
+        function saveAllManual() {
+            saveState();
+            saveSaasClients();
+            showToast('✅ Données enregistrées.');
+        }
+
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.textContent = msg;
+            t.style.cssText = 'position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 18px;border-radius:999px;font-size:12px;font-weight:800;z-index:9500;box-shadow:0 10px 25px rgba(0,0,0,0.3);';
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2500);
+        }
+
+        function selectLoginPortal(portal) {
+            ['manager', 'chauffeur', 'parent'].forEach(p => {
+                document.getElementById(`rtab-${p}`).classList.toggle('active', p === portal);
+                document.getElementById(`login-panel-${p}`).style.display = p === portal ? 'block' : 'none';
+            });
+            document.getElementById('auth-error').style.display = 'none';
+            if (portal === 'chauffeur') {
+                document.getElementById('driver-login-select').innerHTML = fleetState.map(b => `<option value="${b.id}">${b.num} — ${b.driver} (${b.sector})</option>`).join('');
+            }
+        }
+
+        function verifyDriverLogin() {
+            const busId = document.getElementById('driver-login-select').value;
+            const pin = (document.getElementById('driver-pin-input').value || '').trim().toUpperCase();
+            const bus = fleetState.find(b => b.id === busId);
+            if (!bus) return;
+            const expectedCode = (bus.code || `BUS${bus.id.replace(/\D/g,'')}`).toUpperCase();
+            if (pin === expectedCode || pin === '1234' || pin === bus.id.toUpperCase()) {
+                startSession({ role: 'driver', busId: bus.id });
+            } else {
+                const errBox = document.getElementById('auth-error');
+                errBox.textContent = `❌ Code Bus incorrect (utilisez ${expectedCode} ou 1234).`;
+                errBox.style.display = 'block';
+            }
+        }
+
+        function verifyParentLogin() {
+            const q = (document.getElementById('parent-login-input').value || '').trim().toUpperCase();
+            const digits = q.replace(/\D/g, '');
+            if (!q) return;
+            let found = false;
+            fleetState.forEach(b => b.students.forEach(s => {
+                const sPhone = (s.phone || '').replace(/\D/g, '');
+                if ((digits && sPhone.endsWith(digits.slice(-8))) || s.id.toUpperCase() === q) found = true;
+            }));
+            if (found) startSession({ role: 'parent', parentQuery: q });
+            else {
+                const errBox = document.getElementById('auth-error');
+                errBox.textContent = '❌ Aucun élève trouvé.';
+                errBox.style.display = 'block';
+            }
+        }
+
+        function startSession(sess) {
+            activeSession = sess;
+            sessionStorage.setItem(SESSION_KEY, JSON.stringify(sess));
+            document.getElementById('auth-overlay').style.display = 'none';
+            document.getElementById('header-school-name').textContent = sess.role === 'admin' ? 'SYSTÈME SAAS NAVETTE-PRO • OB' : schoolNameGlobal;
+
+            const isMgr = ['admin', 'premium', 'basic', 'demo'].includes(sess.role);
+            document.getElementById('manager-desktop-nav').style.display = isMgr ? '' : 'none';
+            document.getElementById('manager-mobile-nav').style.display = isMgr ? '' : 'none';
+            document.getElementById('btn-save-mgr').style.display = isMgr ? 'inline-flex' : 'none';
+            document.getElementById('btn-export-excel').style.display = isMgr ? 'inline-flex' : 'none';
+            document.getElementById('btn-ob-superadmin').style.display = sess.role === 'admin' ? 'inline-flex' : 'none';
+            document.getElementById('demo-watermark').style.display = sess.role === 'demo' ? 'flex' : 'none';
+
+            const tierPill = document.getElementById('version-tier-pill');
+            const timerBadge = document.getElementById('demo-timer-badge');
+
+            if (sess.role === 'admin') {
+                tierPill.textContent = 'Fondateur OB';
+                timerBadge.textContent = '👑 SuperAdmin';
+                switchPage('superadmin');
+            } else if (sess.role === 'driver') {
+                selectedBusId = sess.busId;
+                const bus = fleetState.find(b => b.id === sess.busId);
+                tierPill.textContent = `Chauffeur • ${bus ? bus.num : ''}`;
+                timerBadge.textContent = `👨‍✈️ ${bus ? bus.driver : ''}`;
+                document.getElementById('att-driver-pills').style.display = 'none';
+                showOnlyPage('attendance');
+                renderAttendancePage();
+            } else if (sess.role === 'parent') {
+                tierPill.textContent = 'Espace Famille';
+                timerBadge.textContent = '👨‍👩‍👧 Suivi Direct';
+                showOnlyPage('parent-portal');
+                renderParentPortal();
+            } else {
+                tierPill.textContent = sess.role === 'premium' ? 'Premium 365j' : sess.role === 'basic' ? 'Basique 365j' : 'Démo 48h';
+                timerBadge.textContent = '⏳ Actif';
+                document.getElementById('att-driver-pills').style.display = 'flex';
+                switchPage('driver');
+            }
+        }
+
+        function showOnlyPage(pageName) {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page-${pageName}`).classList.add('active');
+        }
+
+        function logoutSession() {
+            sessionStorage.removeItem(SESSION_KEY);
+            activeSession = null;
+            document.getElementById('btn-ob-superadmin').style.display = 'none';
+            document.getElementById('auth-overlay').style.display = 'flex';
+        }
+
+        function switchPage(pageName) {
+            if (pageName === 'superadmin' && (!activeSession || activeSession.role !== 'admin')) return;
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`page-${pageName}`).classList.add('active');
+            const dTab = document.getElementById(`d-tab-${pageName}`);
+            if (dTab) dTab.classList.add('active');
+
+            if (pageName === 'superadmin') renderSuperAdminDashboard();
+            else if (pageName === 'global') renderGlobalPage();
+            else if (pageName === 'driver') renderDriverPage();
+            else if (pageName === 'fleet') renderFleetPage();
+            else if (pageName === 'students') renderStudentsPage();
+            else if (pageName === 'attendance') renderAttendancePage();
+
+            setTimeout(() => { if (mapGlobal) mapGlobal.invalidateSize(); if (mapDriver) mapDriver.invalidateSize(); }, 100);
+        }
+
+        function haversineKm(lat1, lon1, lat2, lon2) {
+            const R = 6371, dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+        function formatMinutesToTime(totalMins) {
+            return `${String(Math.floor(totalMins / 60)).padStart(2,'0')}h${String(Math.round(totalMins % 60)).padStart(2,'0')}`;
+        }
+        function computeVoyageSchedule(students, voyageNum) {
+            let cursor = voyageNum === 1 ? 7 * 60 : 7 * 60 + 45;
+            let prevCoords = null;
+            const stops = students.map((stu, idx) => {
+                const legKm = prevCoords ? haversineKm(prevCoords[0], prevCoords[1], stu.lat, stu.lng) * 1.25 : 0.8;
+                cursor += idx === 0 ? 0 : Math.max(1.2, (legKm / 22) * 60);
+                const stopArrival = cursor;
+                cursor += 0.5;
+                prevCoords = [stu.lat, stu.lng];
+                return { ...stu, order: idx + 1, timeStr: formatMinutesToTime(stopArrival) };
+            });
+            return { stops };
+        }
+
+        function initMaps() {
+            if (typeof L === 'undefined') return;
+            globalLayer = L.featureGroup(); driverLayer = L.featureGroup();
+            const tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+            mapGlobal = L.map('mapGlobal').setView(SCHOOL_COORDS, 13);
+            L.tileLayer(tileUrl).addTo(mapGlobal); mapGlobal.addLayer(globalLayer);
+            mapDriver = L.map('mapDriver').setView(SCHOOL_COORDS, 14);
+            L.tileLayer(tileUrl).addTo(mapDriver); mapDriver.addLayer(driverLayer);
+        }
+
+        function renderGlobalPage() {
+            document.getElementById('global-sectors-list').innerHTML = fleetState.map(bus => `
+                <div onclick="selectedBusId='${bus.id}';switchPage('driver');" style="background:#fff;border:1px solid #e2e8f0;border-left:5px solid ${bus.color};border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+                    <div><div style="font-size:13px;font-weight:900;">${bus.num} — ${bus.sector}</div><div style="font-size:11px;color:#64748b;">👨‍✈️ ${bus.driver}</div></div>
+                    <span style="background:${bus.color};color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;">${bus.students.length} él.</span>
+                </div>
+            `).join('');
+        }
+        function fitGlobalMap() { if (mapGlobal) mapGlobal.setView(SCHOOL_COORDS, 13); }
+
+        function renderDriverPage() {
+            document.getElementById('driver-pills-container').innerHTML = fleetState.map(bus => `
+                <button type="button" class="driver-pill ${bus.id === selectedBusId ? 'active' : ''}" onclick="selectedBusId='${bus.id}';renderDriverPage();">
+                    <span style="width:9px;height:9px;border-radius:50%;background:${bus.color};display:inline-block;"></span> ${bus.num} - ${bus.driver}
+                </button>
+            `).join('');
+            const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0];
+            if (!bus) return;
+            document.getElementById('active-crew-banner').innerHTML = `👨‍✈️ <strong>${bus.driver}</strong> &amp; 👩‍🏫 <strong>${bus.acc}</strong> • Secteur ${bus.sector}`;
+            if (driverLayer) { driverLayer.clearLayers(); bus.students.forEach(s => L.marker([s.lat, s.lng]).addTo(driverLayer)); }
+            document.getElementById('driver-voyages-container').innerHTML = [1, 2].map(vNum => {
+                const sched = computeVoyageSchedule(bus.students.filter(s => s.voyage === vNum), vNum);
+                return `<div class="voyage-card"><div class="voyage-header"><div style="font-size:12px;font-weight:900;">VOYAGE ${vNum}</div><div style="font-size:11px;color:#64748b;">${sched.stops.length} élève(s)</div></div>${sched.stops.map(st => `
+                    <div class="student-row">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div style="font-size:13px;font-weight:800;">${st.order}. ${st.name} (${st.level})</div>
+                            <div style="display:flex;align-items:center;gap:6px;">
+                                <span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.status==='present'?'#dcfce7':st.status==='absent'?'#fee2e2':'#f1f5f9'};color:${st.status==='present'?'#15803d':st.status==='absent'?'#b91c1c':'#64748b'};">
+                                    ${st.status==='present'?'🟢 PRÉSENT':st.status==='absent'?'🔴 ABSENT':'⏳ EN ATTENTE'} ${st.statusTime ? '('+st.statusTime+')':''}
+                                </span>
+                                <span style="font-size:12px;font-weight:900;">🕒 ${st.timeStr}</span>
+                            </div>
+                        </div>
+                    </div>`).join('')}</div>`;
+            }).join('');
+        }
+        function recenterDriverMap() { if (mapDriver) mapDriver.setView(SCHOOL_COORDS, 14); }
+        function renderFleetPage() {
+            document.getElementById('fleet-cards-container').innerHTML = fleetState.map(bus => `<div style="background:#fff;border:1px solid #e2e8f0;border-top:5px solid ${bus.color};border-radius:14px;padding:14px;"><strong>${bus.num} — ${bus.sector}</strong><div style="font-size:12px;color:#475569;margin-top:4px;">👨‍✈️ ${bus.driver} • Code : ${bus.code}</div></div>`).join('');
+        }
+        function renderStudentsPage() {
+            document.getElementById('stu-bus').innerHTML = fleetState.map(b => `<option value="${b.id}">${b.num} — ${b.sector}</option>`).join('');
+            document.getElementById('badge-d-wa').textContent = waRequests.length;
+            document.getElementById('wa-pending-pill').textContent = `${waRequests.length} reçue(s)`;
+            document.getElementById('wa-requests-list').innerHTML = waRequests.map(req => `<div style="border:1px solid #e2e8f0;border-radius:12px;padding:10px;margin-bottom:8px;"><strong>${req.student} (${req.level})</strong> — ${req.label}</div>`).join('');
+        }
+        function submitNewStudent() {
+            const name = (document.getElementById('stu-name').value || '').trim();
+            if (!name) return;
+            const bus = fleetState.find(b => b.id === document.getElementById('stu-bus').value);
+            bus.students.push({ id: 'EL-' + Math.floor(100+Math.random()*899), name, phone: document.getElementById('stu-phone').value, level: document.getElementById('stu-level').value, voyage: parseInt(document.getElementById('stu-voyage').value, 10), address: document.getElementById('stu-address').value || bus.sector, lat: bus.center[0], lng: bus.center[1], status: 'pending', statusTime: '' });
+            saveState(); switchPage('driver');
+        }
+        function jumpToAddStudent() { switchPage('students'); }
+        function setAttVoyage(vNum) { attVoyageFilter = vNum; renderAttendancePage(); }
+
+        function renderAttendancePage() {
+            const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0];
+            if (!bus) return;
+            document.getElementById('att-header-title').textContent = `${bus.num} — Secteur ${bus.sector}`;
+            const sched = computeVoyageSchedule(bus.students.filter(s => s.voyage === attVoyageFilter), attVoyageFilter);
+            document.getElementById('att-students-grid').innerHTML = sched.stops.map((stu, idx) => `
+                <div style="background:#fff;border:2px solid ${stu.status==='present'?'#10b981':stu.status==='absent'?'#ef4444':'#e2e8f0'};border-radius:16px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+                        <img src="${stu.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'}" style="width:60px;height:60px;border-radius:14px;object-fit:cover;">
+                        <div>
+                            <div style="font-size:11px;font-weight:900;color:${bus.color};">Arrêt #${idx+1} • ${stu.level}</div>
+                            <div style="font-size:15px;font-weight:900;">${stu.name}</div>
+                            <div style="font-size:11px;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#64748b'};font-weight:800;margin-top:2px;">
+                                ${stu.status==='present'?'🟢 PRÉSENT à '+stu.statusTime:stu.status==='absent'?'🔴 ABSENT à '+stu.statusTime:'⏳ En attente de pointage'}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                        <button type="button" onclick="markAttendance('${bus.id}','${stu.id}','present')" style="background:${stu.status==='present'?'#047857':'#10b981'};color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🟢 PRÉSENT</button>
+                        <button type="button" onclick="markAttendance('${bus.id}','${stu.id}','absent')" style="background:${stu.status==='absent'?'#991b1b':'#ef4444'};color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🔴 ABSENT</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function markAttendance(busId, stuId, statusType) {
+            const bus = fleetState.find(b => b.id === busId);
+            const stu = bus && bus.students.find(s => s.id === stuId);
+            if (!stu) return;
+            stu.status = statusType;
+            stu.statusTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+            saveState(); 
+            renderAttendancePage(); 
+            showToast(`Pointage enregistré : ${stu.name} (${statusType.toUpperCase()}).`);
+        }
+
+        function renderParentPortal() {
+            const q = (activeSession.parentQuery || '').toUpperCase();
+            const matches = [];
+            fleetState.forEach(bus => bus.students.forEach(stu => {
+                if ((stu.phone || '').includes(q) || stu.id.toUpperCase() === q) matches.push({ bus, stu });
+            }));
+            document.getElementById('parent-children-cards').innerHTML = matches.map(({ bus, stu }) => `
+                <div style="background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;">
+                    <div style="font-weight:900;font-size:17px;">${stu.name} (${stu.level})</div>
+                    <div style="font-size:12px;color:#475569;margin-top:4px;">🚌 ${bus.num} • Chauffeur : ${bus.driver}</div>
+                    <div style="margin-top:8px;font-weight:800;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#0284c7'};">
+                        État : ${stu.status==='present'?'🟢 PRÉSENT dans la navette':stu.status==='absent'?'🔴 ABSENT':'⏳ En attente du départ'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleExcelAction() {
+            const wb = XLSX.utils.book_new();
+            fleetState.forEach(b => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(b.students), b.num));
+            XLSX.writeFile(wb, 'Navette_Pro_Export.xlsx');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSaasClients();
+            loadState();
+            initMaps();
+            initRealtimeSync();
+            
+            const saved = sessionStorage.getItem(SESSION_KEY);
+            if (saved) {
+                try { startSession(JSON.parse(saved)); } catch (e) {}
+            }
+        });
+    </script>
+</body>
+</html>
