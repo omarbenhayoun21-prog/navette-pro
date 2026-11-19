@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0066b3">
-    <title>Navette-Pro — Logiciel de Transport Scolaire SaaS</title>
+    <title>Navette Pro — Logiciel de Transport Scolaire SaaS</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -20,17 +20,18 @@
         body { margin: 0; padding: 0; height: 100dvh; display: flex; flex-direction: column; font-family: system-ui, -apple-system, sans-serif; background: #f1f5f9; color: #0f172a; overflow: hidden; }
 
         /* ====== STYLES LANDING PAGE MARKETING ====== */
-        #landing-page { position: fixed; inset: 0; z-index: 10000; background: #f8fafc; overflow-y: auto; display: flex; flex-direction: column; }
-        .lp-header { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 50; }
-        .lp-hero { max-width: 1000px; margin: 40px auto; padding: 0 20px; text-align: center; flex: 1; }
-        .lp-video-container { background: #0f172a; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2); aspect-ratio: 16/9; max-width: 800px; margin: 0 auto 40px; position: relative; border: 4px solid #ffffff; }
-        .lp-pricing-section { background: #0f172a; color: white; padding: 60px 20px; margin-top: 40px; border-top-left-radius: 40px; border-top-right-radius: 40px; }
-        .lp-card-basic { background: #1e293b; border: 1px solid #334155; border-radius: 24px; padding: 32px; text-align: left; }
-        .lp-card-premium { background: linear-gradient(135deg, #312e81 0%, #4c1d95 100%); border: 2px solid #8b5cf6; border-radius: 24px; padding: 32px; text-align: left; position: relative; box-shadow: 0 10px 30px rgba(139,92,246,0.3); transform: scale(1.02); }
+        #landing-page { position: fixed; inset: 0; z-index: 10000; background: #f8fafc; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; }
+        .lp-header { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 50; }
+        .lp-hero { width: 100%; max-width: 1000px; margin: 32px auto; padding: 0 16px; text-align: center; }
+        .lp-video-container { background: #0f172a; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2); aspect-ratio: 16/9; width: 100%; max-width: 800px; margin: 0 auto 36px; position: relative; border: 4px solid #ffffff; }
+        .lp-pricing-section { background: #0f172a; color: white; padding: 56px 16px; margin-top: 32px; border-top-left-radius: 40px; border-top-right-radius: 40px; }
+        .lp-card-basic { background: #1e293b; border: 1px solid #334155; border-radius: 24px; padding: 28px; text-align: left; }
+        .lp-card-premium { background: linear-gradient(135deg, #312e81 0%, #4c1d95 100%); border: 2px solid #8b5cf6; border-radius: 24px; padding: 28px; text-align: left; position: relative; box-shadow: 0 10px 30px rgba(139,92,246,0.3); transform: scale(1.02); }
         
         @media (max-width: 768px) {
-            .lp-card-premium { transform: scale(1); margin-top: 20px; }
-            .lp-hero h2 { font-size: 32px !important; }
+            .lp-card-premium { transform: scale(1); margin-top: 12px; }
+            .lp-hero h2 { font-size: 30px !important; }
+            .lp-hero p { font-size: 15px !important; }
         }
 
         /* ====== STYLES APP & AUTH ====== */
@@ -110,7 +111,7 @@
         .sa-table tr:last-child td { border-bottom: none; }
         .sa-table tr:hover td { background: #f8fafc; }
 
-        .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.72); z-index: 8000; display: none; align-items: center; justify-content: center; padding: 16px; }
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.72); z-index: 11000; display: none; align-items: center; justify-content: center; padding: 16px; }
         .modal-backdrop.open { display: flex; }
         .modal-box { background: #ffffff; border-radius: 18px; width: 100%; max-width: 500px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative; max-height: 92dvh; overflow-y: auto; }
     </style>
@@ -123,9 +124,9 @@
     <div id="landing-page">
         <!-- HEADER MARKETING -->
         <header class="lp-header">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <!-- SVG LOGO NAVETTE-PRO SANS CADRE NOIR -->
-                <svg viewBox="0 0 240 240" width="42" height="42" xmlns="http://www.w3.org/2000/svg">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <!-- SVG LOGO NAVETTE PRO SANS CADRE NOIR -->
+                <svg viewBox="0 0 240 240" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="npGradBgHeaderL" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#0f172a"/><stop offset="55%" stop-color="#0284c7"/><stop offset="100%" stop-color="#10b981"/>
@@ -147,9 +148,9 @@
                     <circle cx="139" cy="106" r="5.5" fill="#facc15"/>
                     <rect x="111" y="103" width="18" height="6" rx="3" fill="#0f172a"/>
                 </svg>
-                <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em;">Navette-Pro</h1>
+                <h1 style="margin: 0; font-size: 18px; font-weight: 900; color: #0f172a; letter-spacing: -0.02em;">Navette Pro</h1>
             </div>
-            <button onclick="showLoginPortal()" style="background: #0f172a; color: white; border: none; padding: 10px 18px; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(15,23,42,0.15); transition: 0.2s;">
+            <button onclick="showLoginPortal()" style="background: #0f172a; color: white; border: none; padding: 9px 14px; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(15,23,42,0.15); transition: 0.2s;">
                 🔒 Se connecter
             </button>
         </header>
@@ -159,28 +160,28 @@
             <span style="background: #dbeafe; color: #1e40af; font-weight: 900; font-size: 12px; padding: 6px 14px; border-radius: 999px; letter-spacing: 0.05em;">ÉDITION 2027 • PAR CAREFLOW STUDIO</span>
             
             <!-- SLOGAN INTÉGRÉ -->
-            <h2 style="font-size: 46px; font-weight: 900; color: #0f172a; margin: 24px 0 16px; line-height: 1.15; letter-spacing: -0.02em;">
+            <h2 style="font-size: 44px; font-weight: 900; color: #0f172a; margin: 22px 0 14px; line-height: 1.15; letter-spacing: -0.02em;">
                 Le trajet de la maison à l'école, <br><span style="color: #0066b3;">connecté en temps réel.</span>
             </h2>
             
-            <p style="font-size: 18px; color: #475569; margin: 0 auto 36px; max-width: 600px; font-weight: 500;">
-                Suivi GPS en direct, pointage instantané des élèves et communication fluide avec les parents. Navette-Pro offre une tranquillité d'esprit totale, de l'arrêt de bus jusqu'à la salle de classe.
+            <p style="font-size: 17px; color: #475569; margin: 0 auto 32px; max-width: 600px; font-weight: 500;">
+                Suivi GPS en direct, pointage instantané des élèves et communication fluide avec les parents. Navette Pro offre une tranquillité d'esprit totale, de l'arrêt de bus jusqu'à la salle de classe.
             </p>
 
-            <!-- CONTENEUR VIDÉO -->
+            <!-- CONTENEUR VIDÉO (Ajoutez votre fichier demo.mp4 sur GitHub au même niveau que index.html) -->
             <div class="lp-video-container">
-                <video id="promo-video" controls poster="https://images.unsplash.com/photo-1550096141-7263640ae4ce?auto=format&fit=crop&w=1000&q=80" style="width: 100%; height: 100%; object-fit: cover;">
-                    <source src="LIEN_DE_VOTRE_VIDEO_ICI.mp4" type="video/mp4">
+                <video id="promo-video" controls playsinline poster="https://images.unsplash.com/photo-1550096141-7263640ae4ce?auto=format&fit=crop&w=1000&q=80" style="width: 100%; height: 100%; object-fit: cover;">
+                    <source src="./demo.mp4" type="video/mp4">
                     Votre navigateur ne supporte pas la vidéo.
                 </video>
             </div>
 
             <!-- BOUTONS D'ACTION (CALL TO ACTION) -->
-            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                <button onclick="document.getElementById('demo-modal').classList.add('open')" style="background: #10b981; color: white; border: none; padding: 16px 32px; border-radius: 14px; font-size: 17px; font-weight: 900; cursor: pointer; box-shadow: 0 12px 24px rgba(16,185,129,0.3); transition: 0.2s;">
+            <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="document.getElementById('demo-modal').classList.add('open')" style="background: #10b981; color: white; border: none; padding: 15px 28px; border-radius: 14px; font-size: 16px; font-weight: 900; cursor: pointer; box-shadow: 0 12px 24px rgba(16,185,129,0.3); transition: 0.2s;">
                     ▶️ J'essaye l'application (Démo 48h)
                 </button>
-                <a href="#tarifs" style="display: inline-block; text-decoration: none; background: white; color: #0f172a; border: 2px solid #cbd5e1; padding: 14px 32px; border-radius: 14px; font-size: 17px; font-weight: 900; cursor: pointer; transition: 0.2s;">
+                <a href="#tarifs" style="display: inline-block; text-decoration: none; background: white; color: #0f172a; border: 2px solid #cbd5e1; padding: 13px 28px; border-radius: 14px; font-size: 16px; font-weight: 900; cursor: pointer; transition: 0.2s;">
                     ⭐ Je m'abonne
                 </a>
             </div>
@@ -189,20 +190,20 @@
         <!-- SECTION PRIX & ABONNEMENT -->
         <section id="tarifs" class="lp-pricing-section">
             <div style="max-width: 900px; margin: 0 auto; text-align: center;">
-                <h3 style="font-size: 34px; font-weight: 900; margin: 0 0 40px; letter-spacing: -0.02em;">Choisissez votre formule</h3>
+                <h3 style="font-size: 32px; font-weight: 900; margin: 0 0 36px; letter-spacing: -0.02em;">Choisissez votre formule</h3>
                 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 24px;">
                     <!-- CARTE BASIQUE -->
                     <div class="lp-card-basic">
-                        <h4 style="font-size: 26px; font-weight: 900; color: #38bdf8; margin: 0 0 8px;">⚡ Pack Basique</h4>
+                        <h4 style="font-size: 24px; font-weight: 900; color: #38bdf8; margin: 0 0 8px;">⚡ Pack Basique</h4>
                         <p style="color: #94a3b8; font-size: 14px; margin: 0 0 24px; font-weight: 700;">Licence Annuelle (365 jours)</p>
-                        <ul style="list-style: none; padding: 0; margin: 0 0 36px; gap: 14px; display: flex; flex-direction: column; font-size: 15px; font-weight: 500;">
+                        <ul style="list-style: none; padding: 0; margin: 0 0 32px; gap: 14px; display: flex; flex-direction: column; font-size: 15px; font-weight: 500;">
                             <li><span style="color:#38bdf8; margin-right:8px;">✔</span> Pointage manuel (Présent/Absent)</li>
                             <li><span style="color:#38bdf8; margin-right:8px;">✔</span> Espace Direction (Tableau de bord)</li>
                             <li><span style="color:#38bdf8; margin-right:8px;">✔</span> Historique des trajets</li>
                             <li><span style="color:#38bdf8; margin-right:8px;">✔</span> Export Excel des données</li>
                         </ul>
-                        <button onclick="openLicenseInput('basic')" style="width: 100%; background: #38bdf8; color: #0f172a; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(56,189,248,0.2);">
+                        <button onclick="openLicenseInput('basic')" style="width: 100%; background: #38bdf8; color: #0f172a; border: none; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(56,189,248,0.2);">
                             Saisir ma clé d'activation
                         </button>
                     </div>
@@ -210,25 +211,25 @@
                     <!-- CARTE PREMIUM -->
                     <div class="lp-card-premium">
                         <span style="position: absolute; top: -14px; right: 24px; background: #facc15; color: #0f172a; font-size: 12px; font-weight: 900; padding: 6px 14px; border-radius: 999px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">LE PLUS POPULAIRE</span>
-                        <h4 style="font-size: 26px; font-weight: 900; color: #facc15; margin: 0 0 8px;">👑 Pack Premium</h4>
+                        <h4 style="font-size: 24px; font-weight: 900; color: #facc15; margin: 0 0 8px;">👑 Pack Premium</h4>
                         <p style="color: #c4b5fd; font-size: 14px; margin: 0 0 24px; font-weight: 700;">Licence Annuelle (365j) + Suivi Complet</p>
-                        <ul style="list-style: none; padding: 0; margin: 0 0 36px; gap: 14px; display: flex; flex-direction: column; font-size: 15px; font-weight: 500;">
+                        <ul style="list-style: none; padding: 0; margin: 0 0 32px; gap: 14px; display: flex; flex-direction: column; font-size: 15px; font-weight: 500;">
                             <li><span style="color:#facc15; margin-right:8px;">✔</span> <strong>Tout le pack Basique</strong></li>
-                            <li><span style="color:#facc15; margin-right:8px;">✔</span> <strong>Suivi GPS & Traçage en temps réel</strong></li>
+                            <li><span style="color:#facc15; margin-right:8px;">✔</span> <strong>Suivi GPS &amp; Traçage en temps réel</strong></li>
                             <li><span style="color:#facc15; margin-right:8px;">✔</span> Pointage rapide par QR Code</li>
                             <li><span style="color:#facc15; margin-right:8px;">✔</span> Portail Famille (Application Parents)</li>
                             <li><span style="color:#facc15; margin-right:8px;">✔</span> Support prioritaire CareFlow Studio</li>
                         </ul>
-                        <button onclick="openLicenseInput('premium')" style="width: 100%; background: #facc15; color: #0f172a; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(250,204,21,0.3);">
+                        <button onclick="openLicenseInput('premium')" style="width: 100%; background: #facc15; color: #0f172a; border: none; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(250,204,21,0.3);">
                             Saisir ma clé d'activation
                         </button>
                     </div>
                 </div>
 
                 <!-- ZONE DE SAISIE DE LA CLÉ -->
-                <div id="license-input-zone" style="display: none; margin-top: 40px; background: #1e293b; padding: 32px; border-radius: 20px; border: 1px solid #334155; animation: slideUp 0.3s ease-out; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+                <div id="license-input-zone" style="display: none; margin-top: 36px; background: #1e293b; padding: 28px; border-radius: 20px; border: 1px solid #334155; animation: slideUp 0.3s ease-out; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
                     <h4 style="font-size: 18px; font-weight: 800; margin: 0 0 16px; color: #f8fafc;">Entrez votre clé de licence à 24 chiffres :</h4>
-                    <input type="text" id="landing-license-input" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XXXX" oninput="formatLicenseInput(this)" style="width: 100%; max-width: 420px; padding: 16px; border-radius: 14px; border: 2px solid #cbd5e1; font-family: monospace; font-size: 18px; font-weight: 900; text-align: center; margin-bottom: 16px; color: #0f172a; background: #f8fafc; outline: none;">
+                    <input type="text" id="landing-license-input" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XXXX" oninput="formatLicenseInput(this)" style="width: 100%; max-width: 420px; padding: 16px; border-radius: 14px; border: 2px solid #cbd5e1; font-family: monospace; font-size: 16px; font-weight: 900; text-align: center; margin-bottom: 16px; color: #0f172a; background: #f8fafc; outline: none;">
                     
                     <div id="landing-license-error" style="color: #fca5a5; font-size: 14px; font-weight: 800; margin-bottom: 16px; display: none;">❌ Clé invalide ou expirée.</div>
                     
@@ -243,8 +244,8 @@
                 </div>
             </div>
             
-            <div style="text-align: center; margin-top: 60px; font-size: 12px; color: #64748b; font-weight: 700;">
-                © 2027 Navette-Pro. Une solution développée par CareFlow Studio (OB).
+            <div style="text-align: center; margin-top: 52px; font-size: 12px; color: #64748b; font-weight: 700;">
+                © 2027 Navette Pro. Une solution développée par CareFlow Studio (OB).
             </div>
         </section>
     </div>
@@ -260,7 +261,7 @@
             </div>
             
             <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:6px;text-transform:uppercase;">Adresse E-mail Google (Gmail) *</label>
-            <input type="email" id="demo-gmail-input" placeholder="exemple@gmail.com" onkeydown="if(event.key==='Enter') submitDemoForm()" style="width:100%;padding:12px;border:2px solid #cbd5e1;border-radius:10px;font-size:14px;margin-bottom:16px;">
+            <input type="email" id="demo-gmail-input" placeholder="exemple@gmail.com" onkeydown="if(event.key==='Enter') submitDemoForm()" style="width:100%;padding:12px;border:2px solid #cbd5e1;border-radius:10px;font-size:16px;margin-bottom:16px;">
             
             <button type="button" onclick="submitDemoForm()" style="width: 100%; background: #10b981; color: #ffffff; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 900; cursor: pointer;">
                 🚀 Accéder à la Démo
@@ -302,7 +303,7 @@
                     </svg>
                 </div>
 
-                <h1 style="margin: 0; font-size: 20px; font-weight: 900;">Navette-Pro</h1>
+                <h1 style="margin: 0; font-size: 20px; font-weight: 900;">Navette Pro</h1>
                 <p id="auth-school-subtitle" style="margin: 3px 0 0; font-size: 13px; color: #bae6fd; font-weight: 700;">Connexion Sécurisée</p>
             </div>
 
@@ -337,7 +338,7 @@
                         </label>
                         <input type="text" id="access-code-input" value="" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XXXX" autocomplete="off"
                             oninput="formatLicenseInput(this)" onkeydown="if(event.key==='Enter') verifyManagerLogin()"
-                            style="width: 100%; padding: 12px 10px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 14px; font-weight: 900; text-align: center; letter-spacing: 0.06em; color: #0f172a; outline: none; margin-bottom: 12px; font-family: monospace;">
+                            style="width: 100%; padding: 12px 10px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 16px; font-weight: 900; text-align: center; letter-spacing: 0.06em; color: #0f172a; outline: none; margin-bottom: 12px; font-family: monospace;">
                         <button type="button" id="btn-mgr-submit" onclick="verifyManagerLogin()" style="width: 100%; background: #0066b3; color: #ffffff; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer;">
                             🔓 Déverrouiller l'Espace
                         </button>
@@ -348,7 +349,7 @@
                             📧 Code de vérification à 6 chiffres envoyé à :<br><strong>omarbenhayoun21@gmail.com</strong>
                             <div id="emergency-otp-badge" style="margin-top: 6px; font-size: 11px; font-weight: 900; color: #7c3aed;"></div>
                         </div>
-                        <input type="text" id="admin-otp-input" maxlength="6" placeholder="000000" onkeydown="if(event.key==='Enter') confirmAdminOtp()"
+                        <input type="text" id="admin-otp-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" onkeydown="if(event.key==='Enter') confirmAdminOtp()"
                             style="width: 100%; padding: 12px; border: 2px solid #7c3aed; border-radius: 12px; font-size: 20px; font-weight: 900; text-align: center; letter-spacing: 0.35em; color: #0f172a; margin-bottom: 10px; font-family: monospace;">
                         <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px;">
                             <button type="button" onclick="cancelAdminOtp()" style="background: #f1f5f9; color: #475569; border: none; padding: 12px; border-radius: 12px; font-size: 12px; font-weight: 800; cursor: pointer;">← Retour</button>
@@ -362,9 +363,9 @@
                     <label style="display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px; text-align: center;">
                         Sélectionnez votre véhicule ou saisissez votre code Bus
                     </label>
-                    <select id="driver-login-select" style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 14px; font-weight: 800; color: #0f172a; background: #fff; margin-bottom: 10px;"></select>
+                    <select id="driver-login-select" style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 16px; font-weight: 800; color: #0f172a; background: #fff; margin-bottom: 10px;"></select>
                     <input type="text" id="driver-pin-input" placeholder="Code accès Bus (ex: BUS1 ou 1234)" onkeydown="if(event.key==='Enter') verifyDriverLogin()"
-                        style="width: 100%; padding: 11px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 14px; font-weight: 800; text-align: center; text-transform: uppercase; margin-bottom: 12px;">
+                        style="width: 100%; padding: 11px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 16px; font-weight: 800; text-align: center; text-transform: uppercase; margin-bottom: 12px;">
                     <button type="button" onclick="verifyDriverLogin()" style="width: 100%; background: #0f172a; color: #facc15; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer;">
                         🚌 Accéder à ma tournée
                     </button>
@@ -376,7 +377,7 @@
                         Numéro de téléphone parent ou Matricule élève
                     </label>
                     <input type="text" id="parent-login-input" placeholder="Ex: 0661458912 ou EL-101" onkeydown="if(event.key==='Enter') verifyParentLogin()"
-                        style="width: 100%; padding: 13px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 15px; font-weight: 900; text-align: center; color: #0f172a; margin-bottom: 12px;">
+                        style="width: 100%; padding: 13px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 16px; font-weight: 900; text-align: center; color: #0f172a; margin-bottom: 12px;">
                     <button type="button" onclick="verifyParentLogin()" style="width: 100%; background: #10b981; color: #ffffff; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer;">
                         👨‍👩‍👧 Suivre la navette
                     </button>
@@ -428,7 +429,7 @@
                         Groupe Scolaire L'Ange Bleu
                     </div>
                     <div style="display: flex; align-items: center; gap: 6px; margin-top: 1px;">
-                        <h1>Navette-Pro</h1>
+                        <h1>Navette Pro</h1>
                         <span id="version-tier-pill" style="background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 999px;">El Jadida</span>
                     </div>
                 </div>
@@ -464,7 +465,7 @@
                             <span style="background: #facc15; color: #0f172a; font-size: 10px; font-weight: 900; padding: 3px 9px; border-radius: 999px; text-transform: uppercase;">Espace Privé Fondateur • OTP Gmail Vérifié</span>
                             <span style="font-size: 11px; color: #c4b5fd;">omarbenhayoun21@gmail.com</span>
                         </div>
-                        <h2 style="margin: 0; font-size: 21px; font-weight: 900;">👑 Cockpit SuperAdmin OB — Gestion SaaS Navette-Pro</h2>
+                        <h2 style="margin: 0; font-size: 21px; font-weight: 900;">👑 Cockpit SuperAdmin OB — Gestion SaaS Navette Pro</h2>
                         <p style="margin: 4px 0 0; font-size: 12px; color: #e2e8f0;">Suivi des établissements clients, validité des licences 365j, revenus annuels et génération de clés sécurisées.</p>
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -554,7 +555,7 @@
         </section>
 
         <section id="page-students" class="page-view" style="overflow-y: auto; padding: 14px;">
-            <div style="max-width: 980px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 16px; padding-bottom: 24px;">
+            <div style="max-width: 980px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; padding-bottom: 24px;">
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px;">
                     <h2 style="margin: 0 0 10px; font-size: 17px; font-weight: 900;">+ Ajouter un Élève</h2>
                     <input type="text" id="stu-name" placeholder="Nom & Prénom de l'élève *" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; margin-bottom: 8px;">
@@ -1018,7 +1019,7 @@
             activeSession = sess; sessionStorage.setItem(SESSION_KEY, JSON.stringify(sess));
             document.getElementById('landing-page').style.display = 'none';
             document.getElementById('auth-overlay').style.display = 'none';
-            document.getElementById('header-school-name').textContent = sess.role === 'admin' ? 'SYSTÈME SAAS NAVETTE-PRO • OB' : schoolNameGlobal;
+            document.getElementById('header-school-name').textContent = sess.role === 'admin' ? 'SYSTÈME SAAS NAVETTE PRO • OB' : schoolNameGlobal;
 
             const isMgr = ['admin', 'premium', 'basic', 'demo'].includes(sess.role);
             document.getElementById('manager-desktop-nav').style.display = isMgr ? '' : 'none';
