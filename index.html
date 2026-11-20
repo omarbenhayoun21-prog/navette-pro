@@ -178,12 +178,12 @@
 
             <!-- BOUTONS D'ACTION (CALL TO ACTION) -->
             <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-                <button onclick="document.getElementById('demo-modal').classList.add('open')" style="background: #10b981; color: white; border: none; padding: 15px 28px; border-radius: 14px; font-size: 16px; font-weight: 900; cursor: pointer; box-shadow: 0 12px 24px rgba(16,185,129,0.3); transition: 0.2s;">
+                <button type="button" onclick="document.getElementById('demo-modal').classList.add('open')" style="background: #10b981; color: white; border: none; padding: 15px 28px; border-radius: 14px; font-size: 16px; font-weight: 900; cursor: pointer; box-shadow: 0 12px 24px rgba(16,185,129,0.3); transition: 0.2s;">
                     ▶️ J'essaye l'application (Démo 48h)
                 </button>
-                <a href="#tarifs" style="display: inline-block; text-decoration: none; background: white; color: #0f172a; border: 2px solid #cbd5e1; padding: 13px 28px; border-radius: 14px; font-size: 16px; font-weight: 900; cursor: pointer; transition: 0.2s;">
+                <button type="button" onclick="document.getElementById('tarifs').scrollIntoView({ behavior: 'smooth', block: 'start' })" style="background: white; color: #0f172a; border: 2px solid #cbd5e1; padding: 13px 28px; border-radius: 14px; font-size: 16px; font-weight: 900; cursor: pointer; transition: 0.2s;">
                     ⭐ Je m'abonne
-                </a>
+                </button>
             </div>
         </section>
 
