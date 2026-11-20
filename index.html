@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
     
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
@@ -113,20 +114,18 @@
 
         .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.72); z-index: 11000; display: none; align-items: center; justify-content: center; padding: 16px; }
         .modal-backdrop.open { display: flex; }
-        .modal-box { background: #ffffff; border-radius: 18px; width: 100%; max-width: 500px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative; max-height: 92dvh; overflow-y: auto; }
+        .modal-box { background: #ffffff; border-radius: 18px; width: 100%; max-width: 520px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative; max-height: 92dvh; overflow-y: auto; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <!-- ============================================================== -->
-    <!-- NOUVELLE PAGE VITRINE MARKETING (LANDING PAGE)                 -->
+    <!-- PAGE VITRINE MARKETING (LANDING PAGE)                          -->
     <!-- ============================================================== -->
     <div id="landing-page">
-        <!-- HEADER MARKETING -->
         <header class="lp-header">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <!-- SVG LOGO NAVETTE PRO SANS CADRE NOIR -->
-                <svg viewBox="0 0 240 240" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+                <svg id="navette-pro-svg-logo" viewBox="0 0 240 240" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="npGradBgHeaderL" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#0f172a"/><stop offset="55%" stop-color="#0284c7"/><stop offset="100%" stop-color="#10b981"/>
@@ -155,11 +154,9 @@
             </button>
         </header>
 
-        <!-- HERO SECTION (PRÉSENTATION & VIDÉO) -->
         <section class="lp-hero">
             <span style="background: #dbeafe; color: #1e40af; font-weight: 900; font-size: 12px; padding: 6px 14px; border-radius: 999px; letter-spacing: 0.05em;">ÉDITION 2027 • PAR CAREFLOW STUDIO</span>
             
-            <!-- SLOGAN INTÉGRÉ -->
             <h2 style="font-size: 44px; font-weight: 900; color: #0f172a; margin: 22px 0 14px; line-height: 1.15; letter-spacing: -0.02em;">
                 Le trajet de la maison à l'école, <br><span style="color: #0066b3;">connecté en temps réel.</span>
             </h2>
@@ -168,7 +165,6 @@
                 Suivi GPS en direct, pointage instantané des élèves et communication fluide avec les parents. Navette Pro offre une tranquillité d'esprit totale, de l'arrêt de bus jusqu'à la salle de classe.
             </p>
 
-            <!-- CONTENEUR VIDÉO (Ajoutez votre fichier demo.mp4 sur GitHub au même niveau que index.html) -->
             <div class="lp-video-container">
                 <video id="promo-video" controls playsinline poster="https://images.unsplash.com/photo-1550096141-7263640ae4ce?auto=format&fit=crop&w=1000&q=80" style="width: 100%; height: 100%; object-fit: cover;">
                     <source src="./demo.mp4" type="video/mp4">
@@ -176,7 +172,6 @@
                 </video>
             </div>
 
-            <!-- BOUTONS D'ACTION (CALL TO ACTION) -->
             <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
                 <button type="button" onclick="document.getElementById('demo-modal').classList.add('open')" style="background: #10b981; color: white; border: none; padding: 15px 28px; border-radius: 14px; font-size: 16px; font-weight: 900; cursor: pointer; box-shadow: 0 12px 24px rgba(16,185,129,0.3); transition: 0.2s;">
                     ▶️ J'essaye l'application (Démo 48h)
@@ -187,34 +182,31 @@
             </div>
         </section>
 
-        <!-- SECTION PRIX & ABONNEMENT -->
         <section id="tarifs" class="lp-pricing-section">
             <div style="max-width: 900px; margin: 0 auto; text-align: center;">
                 <h3 style="font-size: 32px; font-weight: 900; margin: 0 0 36px; letter-spacing: -0.02em;">Choisissez votre formule</h3>
                 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 24px;">
-                    <!-- CARTE BASIQUE -->
                     <div class="lp-card-basic">
                         <h4 style="font-size: 24px; font-weight: 900; color: #38bdf8; margin: 0 0 8px;">⚡ Pack Basique</h4>
-                        <p style="color: #94a3b8; font-size: 14px; margin: 0 0 24px; font-weight: 700;">Licence Annuelle (365 jours)</p>
+                        <p style="color: #94a3b8; font-size: 14px; margin: 0 0 24px; font-weight: 700;">Licence Annuelle (365 jours) • Jusqu'à 6 Bus</p>
                         <ul style="list-style: none; padding: 0; margin: 0 0 32px; gap: 14px; display: flex; flex-direction: column; font-size: 15px; font-weight: 500;">
+                            <li><span style="color:#38bdf8; margin-right:8px;">✔</span> 2 comptes Direction (PDG + Gestionnaire)</li>
+                            <li><span style="color:#38bdf8; margin-right:8px;">✔</span> Jusqu'à 6 espaces transport (élèves illimités)</li>
                             <li><span style="color:#38bdf8; margin-right:8px;">✔</span> Pointage manuel (Présent/Absent)</li>
-                            <li><span style="color:#38bdf8; margin-right:8px;">✔</span> Espace Direction (Tableau de bord)</li>
-                            <li><span style="color:#38bdf8; margin-right:8px;">✔</span> Historique des trajets</li>
-                            <li><span style="color:#38bdf8; margin-right:8px;">✔</span> Export Excel des données</li>
+                            <li><span style="color:#38bdf8; margin-right:8px;">✔</span> Import / Export Excel Navette Pro</li>
                         </ul>
                         <button onclick="openLicenseInput('basic')" style="width: 100%; background: #38bdf8; color: #0f172a; border: none; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(56,189,248,0.2);">
                             Saisir ma clé d'activation
                         </button>
                     </div>
 
-                    <!-- CARTE PREMIUM -->
                     <div class="lp-card-premium">
                         <span style="position: absolute; top: -14px; right: 24px; background: #facc15; color: #0f172a; font-size: 12px; font-weight: 900; padding: 6px 14px; border-radius: 999px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">LE PLUS POPULAIRE</span>
                         <h4 style="font-size: 24px; font-weight: 900; color: #facc15; margin: 0 0 8px;">👑 Pack Premium</h4>
-                        <p style="color: #c4b5fd; font-size: 14px; margin: 0 0 24px; font-weight: 700;">Licence Annuelle (365j) + Suivi Complet</p>
+                        <p style="color: #c4b5fd; font-size: 14px; margin: 0 0 24px; font-weight: 700;">Licence Annuelle (365j) • Jusqu'à 12 Bus</p>
                         <ul style="list-style: none; padding: 0; margin: 0 0 32px; gap: 14px; display: flex; flex-direction: column; font-size: 15px; font-weight: 500;">
-                            <li><span style="color:#facc15; margin-right:8px;">✔</span> <strong>Tout le pack Basique</strong></li>
+                            <li><span style="color:#facc15; margin-right:8px;">✔</span> <strong>Tout le pack Basique + jusqu'à 12 Bus</strong></li>
                             <li><span style="color:#facc15; margin-right:8px;">✔</span> <strong>Suivi GPS &amp; Traçage en temps réel</strong></li>
                             <li><span style="color:#facc15; margin-right:8px;">✔</span> Pointage rapide par QR Code</li>
                             <li><span style="color:#facc15; margin-right:8px;">✔</span> Portail Famille (Application Parents)</li>
@@ -235,7 +227,7 @@
                     
                     <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                         <button onclick="validateLandingLicense()" style="background: #10b981; color: white; border: none; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(16,185,129,0.3);">
-                            ✅ Activer l'école
+                            ✅ Valider la clé et s'inscrire
                         </button>
                         <button onclick="document.getElementById('license-input-zone').style.display='none'" style="background: transparent; color: #94a3b8; border: 2px solid #475569; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer;">
                             Annuler
@@ -269,8 +261,81 @@
         </div>
     </div>
 
+    <!-- MODALE 1 : INSCRIPTION PDG (APRÈS VALIDATION CLÉ LICENCE) -->
+    <div id="pdg-register-modal" class="modal-backdrop">
+        <div class="modal-box" style="max-width: 540px;">
+            <div style="text-align: center; margin-bottom: 14px;">
+                <span style="background: #dbeafe; color: #1e40af; font-size: 11px; font-weight: 900; padding: 4px 12px; border-radius: 999px;">ÉTAPE 1 / 2 • COMPTE DIRECTION (PDG)</span>
+                <h3 style="margin: 8px 0 4px; font-size: 19px; font-weight: 900;">Finalisez l'inscription de votre école</h3>
+                <p style="margin: 0; font-size: 12px; color: #64748b;">Clé validée (<strong id="pdg-pack-label">Pack</strong>). Créez votre accès PDG.</p>
+            </div>
+
+            <div style="display: grid; gap: 10px;">
+                <input type="text" id="pdg-school-name" placeholder="Nom de l'école *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                <input type="text" id="pdg-school-address" placeholder="Adresse complète de l'école *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="text" id="pdg-lastname" placeholder="Nom *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                    <input type="text" id="pdg-firstname" placeholder="Prénom *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                </div>
+                
+                <input type="text" id="pdg-role" placeholder="Poste occupé (ex: PDG, Directeur Général) *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="email" id="pdg-email" placeholder="Adresse e-mail *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                    <input type="email" id="pdg-email-confirm" placeholder="Confirmer l'e-mail *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="password" id="pdg-pass" placeholder="Mot de passe *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                    <input type="password" id="pdg-pass-confirm" placeholder="Confirmer mot de passe *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                </div>
+            </div>
+
+            <div id="pdg-reg-error" style="display:none;color:#b91c1c;background:#fef2f2;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-top:10px;text-align:center;"></div>
+
+            <button type="button" onclick="submitPdgRegistration()" style="width:100%;margin-top:14px;background:#0066b3;color:#fff;border:none;padding:13px;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;">
+                ✅ Valider le compte PDG et continuer
+            </button>
+        </div>
+    </div>
+
+    <!-- MODALE 2 : CRÉATION COMPTE GESTIONNAIRE DES TRANSPORTS -->
+    <div id="manager-register-modal" class="modal-backdrop">
+        <div class="modal-box" style="max-width: 520px;">
+            <button type="button" onclick="skipManagerCreation()" style="position:absolute;top:12px;right:12px;border:none;background:#f1f5f9;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;color:#475569;cursor:pointer;">Plus tard ✕</button>
+            <div style="text-align: center; margin-bottom: 14px;">
+                <span style="background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 900; padding: 4px 12px; border-radius: 999px;">ÉTAPE 2 / 2 • ESPACE GESTIONNAIRE</span>
+                <h3 style="margin: 8px 0 4px; font-size: 19px; font-weight: 900;">Créer le compte Gestionnaire Transport</h3>
+                <p style="margin: 0; font-size: 12px; color: #64748b;">Rattaché automatiquement à : <strong id="mgr-school-inherit"></strong></p>
+            </div>
+
+            <div style="display: grid; gap: 10px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="text" id="mgr-lastname" placeholder="Nom *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                    <input type="text" id="mgr-firstname" placeholder="Prénom *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                </div>
+                <input type="text" id="mgr-role" placeholder="Poste occupé (ex: Responsable Transport) *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="email" id="mgr-email" placeholder="Adresse e-mail *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                    <input type="email" id="mgr-email-confirm" placeholder="Confirmer l'e-mail *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="password" id="mgr-pass" placeholder="Mot de passe *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                    <input type="password" id="mgr-pass-confirm" placeholder="Confirmer mot de passe *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                </div>
+            </div>
+
+            <div id="mgr-reg-error" style="display:none;color:#b91c1c;background:#fef2f2;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-top:10px;text-align:center;"></div>
+
+            <button type="button" onclick="submitManagerRegistration()" style="width:100%;margin-top:14px;background:#10b981;color:#fff;border:none;padding:13px;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;">
+                🚌 Créer l'Espace Gestionnaire &amp; Accéder
+            </button>
+        </div>
+    </div>
+
     <!-- ============================================================== -->
-    <!-- PORTAIL DE CONNEXION CLASSIQUE (CACHÉ SOUS LA LANDING PAGE)    -->
+    <!-- PORTAIL DE CONNEXION CLASSIQUE                                 -->
     <!-- ============================================================== -->
     <div id="auth-overlay">
         <div class="auth-card">
@@ -330,15 +395,18 @@
                     ⏳ Licence expirée ou suspendue. Contactez <strong>OB</strong> pour renouveler.
                 </div>
 
-                <!-- CONNEXION DIRECTION -->
+                <!-- CONNEXION DIRECTION (PDG / GESTIONNAIRE / CLÉ / SUPERADMIN) -->
                 <div id="login-panel-manager">
                     <div id="mgr-step-key">
                         <label style="display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px; text-align: center;">
-                            Clé Licence 24 chiffres (365j) ou E-mail Admin
+                            E-mail (PDG / Gestionnaire / Admin) ou Clé Licence
                         </label>
-                        <input type="text" id="access-code-input" value="" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XXXX" autocomplete="off"
+                        <input type="text" id="access-code-input" value="" placeholder="email@ecole.ma ou XXXX-XXXX-..." autocomplete="off"
                             oninput="formatLicenseInput(this)" onkeydown="if(event.key==='Enter') verifyManagerLogin()"
-                            style="width: 100%; padding: 12px 10px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 16px; font-weight: 900; text-align: center; letter-spacing: 0.06em; color: #0f172a; outline: none; margin-bottom: 12px; font-family: monospace;">
+                            style="width: 100%; padding: 12px 10px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 16px; font-weight: 800; text-align: center; color: #0f172a; outline: none; margin-bottom: 8px;">
+                        <input type="password" id="access-pass-input" value="" placeholder="Mot de passe (pour compte PDG / Gestionnaire)"
+                            onkeydown="if(event.key==='Enter') verifyManagerLogin()"
+                            style="width: 100%; padding: 11px 10px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 15px; text-align: center; color: #0f172a; outline: none; margin-bottom: 12px;">
                         <button type="button" id="btn-mgr-submit" onclick="verifyManagerLogin()" style="width: 100%; background: #0066b3; color: #ffffff; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer;">
                             🔓 Déverrouiller l'Espace
                         </button>
@@ -386,9 +454,8 @@
         </div>
     </div>
 
-
     <!-- ============================================================== -->
-    <!-- APPLICATION PRINCIPALE (TABLEAU DE BORD, CHAUFFEUR, PARENT)    -->
+    <!-- APPLICATION PRINCIPALE                                         -->
     <!-- ============================================================== -->
     <div id="demo-watermark">
         <div class="watermark-text">DÉMO PROPRIÉTÉ OB • GROUPE SCOLAIRE L'ANGE BLEU</div>
@@ -399,7 +466,6 @@
         <header class="app-header">
             <div class="brand-group">
                 <div style="width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background:#0f172a; padding:4px;">
-                    <!-- SVG LOGO SANS CADRE NOIR -->
                     <svg viewBox="0 0 240 240" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="npGradBgHeader" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -449,6 +515,7 @@
 
             <div class="header-actions">
                 <span id="demo-timer-badge" class="timer-pill">⏳ Actif</span>
+                <button type="button" id="btn-create-mgr-header" onclick="openManagerModalFromApp()" class="action-btn" style="display: none; background: #0ea5e9; color: #ffffff;">👤 + Gestionnaire</button>
                 <button type="button" id="btn-ob-superadmin" onclick="switchPage('superadmin')" class="action-btn" style="display: none; background: #7c3aed; color: #ffffff; box-shadow: 0 2px 8px rgba(124,58,237,0.35);">👑 SuperAdmin OB</button>
                 <button type="button" id="btn-save-mgr" onclick="saveAllManual()" class="action-btn" style="background: #2563eb; color: #ffffff;">💾 <span class="btn-label-hide">Sauver</span></button>
                 <button type="button" id="btn-export-excel" onclick="handleExcelAction()" class="action-btn" style="background: #10b981; color: #ffffff;">📊 Excel</button>
@@ -456,7 +523,7 @@
             </div>
         </header>
 
-        <!-- ==================== ÉTAPE 1 : COCKPIT SUPERADMIN OB (100 % PRIVÉ) ==================== -->
+        <!-- ==================== COCKPIT SUPERADMIN OB ==================== -->
         <section id="page-superadmin" class="page-view" style="overflow-y: auto; background: #f1f5f9; padding: 16px;">
             <div style="max-width: 1180px; margin: 0 auto; width: 100%; padding-bottom: 48px;">
                 <div style="background: linear-gradient(135deg, #0f172a 0%, #312e81 60%, #5b21b6 100%); color: #ffffff; border-radius: 18px; padding: 20px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; box-shadow: 0 10px 25px rgba(15,23,42,0.18);">
@@ -471,9 +538,6 @@
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                         <button type="button" onclick="openAddClientModal()" style="background: #10b981; color: #ffffff; border: none; padding: 11px 16px; border-radius: 12px; font-size: 13px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(16,185,129,0.35);">
                             + Nouvelle École Cliente &amp; Clé
-                        </button>
-                        <button type="button" onclick="exportClientsSaasExcel()" style="background: rgba(255,255,255,0.14); color: #ffffff; border: 1px solid rgba(255,255,255,0.25); padding: 11px 14px; border-radius: 12px; font-size: 12px; font-weight: 800; cursor: pointer;">
-                            📥 Exporter Registre Clients
                         </button>
                     </div>
                 </div>
@@ -505,7 +569,6 @@
                         <tbody id="sa-clients-tbody"></tbody>
                     </table>
                 </div>
-
             </div>
         </section>
 
@@ -548,8 +611,46 @@
             </div>
         </section>
 
+        <!-- ==================== VUE 3. FLOTTE (6/12 BUS + EXCEL LOGO) ==================== -->
         <section id="page-fleet" class="page-view" style="overflow-y: auto; padding: 14px;">
-            <div style="max-width: 900px; margin: 0 auto; width: 100%;">
+            <div style="max-width: 980px; margin: 0 auto; width: 100%; padding-bottom: 60px;">
+                
+                <!-- BARRE EXCEL OFFICIEL NAVETTE PRO -->
+                <div style="background: linear-gradient(135deg, #0f172a 0%, #0066b3 100%); color: #fff; border-radius: 16px; padding: 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <div style="font-size: 11px; font-weight: 900; color: #facc15; text-transform: uppercase;">Importation Rapide • Charte Navette Pro</div>
+                        <h3 style="margin: 4px 0 2px; font-size: 16px; font-weight: 900;">Modèle Excel Officiel avec Logo</h3>
+                        <p style="margin: 0; font-size: 12px; color: #bae6fd;">Téléchargez le modèle, remplissez vos bus et élèves (illimités), puis importez-le en un clic.</p>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" onclick="downloadNavetteProExcelTemplate()" style="background: #facc15; color: #0f172a; border: none; padding: 10px 14px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer;">
+                            📥 Télécharger Modèle Excel
+                        </button>
+                        <label style="background: #10b981; color: #ffffff; padding: 10px 14px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                            📤 Importer Excel Rempli
+                            <input type="file" accept=".xlsx,.xls" onchange="importNavetteProExcel(event)" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- FORMULAIRE CRÉATION ESPACE TRANSPORT (6 BASIC / 12 PREMIUM) -->
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                        <h3 style="margin: 0; font-size: 15px; font-weight: 900;">🚌 Créer un nouvel espace transport</h3>
+                        <span id="fleet-quota-badge" style="background: #eff6ff; color: #0066b3; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 999px;">0 / 6 Bus utilisés</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+                        <input type="text" id="new-bus-num" placeholder="Numéro du Bus (ex: Bus 3) *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
+                        <input type="text" id="new-bus-driver" placeholder="Nom du Chauffeur *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
+                        <input type="text" id="new-bus-acc" placeholder="Nom de l'Accompagnatrice *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
+                        <input type="number" id="new-bus-cap" placeholder="Élèves autorisés (indicatif)" min="1" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
+                    </div>
+                    <button type="button" onclick="handleAddBusForm()" style="margin-top: 12px; width: 100%; background: #0f172a; color: #ffffff; border: none; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 900; cursor: pointer;">
+                        ➕ Ajouter l'espace transport
+                    </button>
+                </div>
+
+                <!-- LISTE DES BUS -->
                 <div id="fleet-cards-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;"></div>
             </div>
         </section>
@@ -561,7 +662,7 @@
                     <input type="text" id="stu-name" placeholder="Nom & Prénom de l'élève *" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; margin-bottom: 8px;">
                     <input type="text" id="stu-phone" placeholder="Tél. Parent *" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; margin-bottom: 8px;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-                        <select id="stu-level" onchange="syncVoyageByLevel(this.value)" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #fff;">
+                        <select id="stu-level" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #fff;">
                             <option value="CP">CP (Primaire)</option><option value="2AP">2AP (Primaire)</option><option value="3AP">3AP (Primaire)</option>
                             <option value="4AP">4AP (Primaire)</option><option value="5AP">5AP (Primaire)</option><option value="6AP">6AP (Primaire)</option>
                             <option value="1AC">1AC (Collège)</option><option value="2AC">2AC (Collège)</option><option value="3AC">3AC (Collège)</option>
@@ -621,7 +722,6 @@
             </div>
         </section>
 
-        <!-- BARRE MOBILE DIRECTION -->
         <nav class="mobile-nav dir-only" id="manager-mobile-nav">
             <button type="button" class="mob-tab" onclick="switchPage('global')"><span class="mob-icon-wrap">🗺️</span><span>Globale</span></button>
             <button type="button" class="mob-tab active" onclick="switchPage('driver')"><span class="mob-icon-wrap">👨‍✈️</span><span>Chauffeur</span></button>
@@ -631,7 +731,7 @@
         </nav>
     </div>
 
-    <!-- MODALE AJOUT NOUVELLE ÉCOLE CLIENTE + GÉNÉRATION CLÉ 24 CHIFFRES -->
+    <!-- MODALE AJOUT NOUVELLE ÉCOLE CLIENTE -->
     <div id="add-client-modal" class="modal-backdrop" onclick="if(event.target===this) this.classList.remove('open')">
         <div class="modal-box">
             <button type="button" onclick="document.getElementById('add-client-modal').classList.remove('open')" style="position: absolute; top: 12px; right: 12px; border: none; background: #f1f5f9; width: 30px; height: 30px; border-radius: 50%; font-weight: 900; cursor: pointer;">✕</button>
@@ -666,8 +766,8 @@
                 <div>
                     <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Pack Choisi *</label>
                     <select id="new-cli-pack" onchange="autoFillPackPrice(this.value)" style="width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;background:#fff;">
-                        <option value="premium">👑 Premium (365j — OSRM + Photos)</option>
-                        <option value="basic">⚡ Basique (365j — Standard)</option>
+                        <option value="premium">👑 Premium (365j — 12 bus max)</option>
+                        <option value="basic">⚡ Basique (365j — 6 bus max)</option>
                         <option value="demo">⏳ Démo Essai (48h)</option>
                     </select>
                 </div>
@@ -677,9 +777,6 @@
                 </div>
             </div>
 
-            <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Notes internes / Modalités paiement</label>
-            <input type="text" id="new-cli-notes" placeholder="Ex: Règlement par virement, renouvellement sept." style="width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;font-size:12px;margin-bottom:12px;">
-
             <button type="button" onclick="createSaasClient()" style="width: 100%; background: #7c3aed; color: #ffffff; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 900; cursor: pointer;">
                 🔑 Générer la Clé 24 Chiffres &amp; Activer le Client
             </button>
@@ -688,7 +785,33 @@
 
     <!-- SCRIPTS GLOBAUX -->
     <script>
-        // ==================== LOGIQUE DE LA LANDING PAGE ====================
+        const SUPERADMIN_EMAIL = "omarbenhayoun21@gmail.com";
+        const APPS_SCRIPT_OTP_URL = "https://script.google.com/macros/s/AKfycbw-V0_w-i_a1vmNLHU1Whzt_KH5d0xZFtZABcvjCARodp1JV_DE66dtFUkugIxIOE1H/exec";
+        const FIREBASE_DB_URL = "https://navette-pro-ob-default-rtdb.europe-west1.firebasedatabase.app";
+
+        let firebaseDb = null;
+        if (FIREBASE_DB_URL && typeof firebase !== 'undefined') {
+            try { firebase.initializeApp({ databaseURL: FIREBASE_DB_URL }); firebaseDb = firebase.database(); } catch (e) {}
+        }
+
+        const STORAGE_KEY = 'fkhekho_ange_bleu_ob_v8';
+        const SAAS_CLIENTS_KEY = 'navette_pro_saas_clients_ob_v1';
+        const ACCOUNTS_KEY = 'navette_pro_accounts_v1';
+        const SESSION_KEY = 'fkhekho_ob_session_v8';
+        const DEMO_START_KEY = 'fkhekho_ob_demo_start_v8';
+        const DEMO_DURATION_MS = 48 * 60 * 60 * 1000;
+        const DAY_MS = 24 * 60 * 60 * 1000;
+        const SCHOOL_COORDS = [33.2378, -8.5165];
+
+        let schoolNameGlobal = "Groupe Scolaire L'Ange Bleu";
+        let schoolAccounts = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '{}');
+        let pendingLicenseContext = null;
+        let saasClients = [];
+        let saFilterMode = 'all';
+        let pendingOtpCode = null;
+        let pendingOtpExpiry = 0;
+
+        // ==================== LANDING PAGE & ONBOARDING PDG / GESTIONNAIRE ====================
         function showLoginPortal() {
             document.getElementById('landing-page').style.display = 'none';
             document.getElementById('auth-overlay').style.display = 'flex';
@@ -699,14 +822,9 @@
             document.getElementById('landing-page').style.display = 'flex';
         }
 
-        // Action sur la modale de démo (Gmail)
         function submitDemoForm() {
             const email = document.getElementById('demo-gmail-input').value.trim();
-            if (!email || !email.includes('@')) {
-                alert("Veuillez renseigner une adresse e-mail valide.");
-                return;
-            }
-            
+            if (!email || !email.includes('@')) { alert("Veuillez renseigner une adresse e-mail valide."); return; }
             let firstTs = parseInt(localStorage.getItem(DEMO_START_KEY), 10) || Date.now();
             localStorage.setItem(DEMO_START_KEY, String(firstTs));
             if ((Date.now() - firstTs) >= DEMO_DURATION_MS) {
@@ -715,7 +833,6 @@
                 document.getElementById('tarifs').scrollIntoView({behavior: 'smooth'});
                 return;
             }
-            
             document.getElementById('demo-modal').classList.remove('open');
             document.getElementById('landing-page').style.display = 'none';
             startSession({ role: 'demo', email: email });
@@ -735,46 +852,237 @@
             if (tier) {
                 const cleanDigits = rawVal.replace(/\D/g, '');
                 const matchedClient = saasClients.find(c => c.key24.replace(/\D/g, '') === cleanDigits);
-                if (matchedClient) {
-                    if (matchedClient.suspended || Date.now() > matchedClient.endDate) {
-                        errBox.textContent = "❌ Licence expirée ou suspendue.";
-                        errBox.style.display = "block";
-                        return;
-                    }
-                    schoolNameGlobal = matchedClient.school;
+                if (matchedClient && (matchedClient.suspended || Date.now() > matchedClient.endDate)) {
+                    errBox.textContent = "❌ Licence expirée ou suspendue.";
+                    errBox.style.display = "block";
+                    return;
                 }
-                document.getElementById('landing-page').style.display = 'none';
-                startSession({ role: tier, clientId: matchedClient ? matchedClient.id : null });
+                errBox.style.display = 'none';
+                openPdgOnboarding(tier, rawVal, matchedClient ? matchedClient.id : null);
             } else {
                 errBox.textContent = "❌ Clé licence 24 chiffres invalide.";
                 errBox.style.display = 'block';
             }
         }
 
-        // ==================== LOGIQUE DE L'APPLICATION ====================
-        const SUPERADMIN_EMAIL = "omarbenhayoun21@gmail.com";
-        const APPS_SCRIPT_OTP_URL = "https://script.google.com/macros/s/AKfycbw-V0_w-i_a1vmNLHU1Whzt_KH5d0xZFtZABcvjCARodp1JV_DE66dtFUkugIxIOE1H/exec";
-        const FIREBASE_DB_URL = "https://navette-pro-ob-default-rtdb.europe-west1.firebasedatabase.app";
-
-        let firebaseDb = null;
-        if (FIREBASE_DB_URL && typeof firebase !== 'undefined') {
-            try { firebase.initializeApp({ databaseURL: FIREBASE_DB_URL }); firebaseDb = firebase.database(); } catch (e) {}
+        function openPdgOnboarding(tier, licenseKey, clientId) {
+            pendingLicenseContext = { tier, licenseKey, clientId };
+            document.getElementById('pdg-pack-label').textContent = tier === 'premium' ? 'Pack Premium (12 bus max)' : 'Pack Basique (6 bus max)';
+            document.getElementById('pdg-register-modal').classList.add('open');
         }
 
-        const STORAGE_KEY = 'fkhekho_ange_bleu_ob_v8';
-        const SAAS_CLIENTS_KEY = 'navette_pro_saas_clients_ob_v1';
-        const SESSION_KEY = 'fkhekho_ob_session_v8';
-        const DEMO_START_KEY = 'fkhekho_ob_demo_start_v8';
-        const DEMO_DURATION_MS = 48 * 60 * 60 * 1000;
-        const DAY_MS = 24 * 60 * 60 * 1000;
-        const SCHOOL_COORDS = [33.2378, -8.5165];
-        let schoolNameGlobal = "Groupe Scolaire L'Ange Bleu";
+        function submitPdgRegistration() {
+            const school = document.getElementById('pdg-school-name').value.trim();
+            const address = document.getElementById('pdg-school-address').value.trim();
+            const lastname = document.getElementById('pdg-lastname').value.trim();
+            const firstname = document.getElementById('pdg-firstname').value.trim();
+            const role = document.getElementById('pdg-role').value.trim();
+            const email = document.getElementById('pdg-email').value.trim().toLowerCase();
+            const email2 = document.getElementById('pdg-email-confirm').value.trim().toLowerCase();
+            const pass = document.getElementById('pdg-pass').value;
+            const pass2 = document.getElementById('pdg-pass-confirm').value;
+            const err = document.getElementById('pdg-reg-error');
 
-        let saasClients = [];
-        let saFilterMode = 'all';
-        let pendingOtpCode = null;
-        let pendingOtpExpiry = 0;
+            if (!school || !address || !lastname || !firstname || !role || !email || !pass) {
+                err.textContent = "❌ Veuillez remplir tous les champs obligatoires."; err.style.display = 'block'; return;
+            }
+            if (email !== email2) { err.textContent = "❌ Les adresses e-mail ne correspondent pas."; err.style.display = 'block'; return; }
+            if (pass.length < 6 || pass !== pass2) { err.textContent = "❌ Mots de passe différents ou trop courts (6 caractères min)."; err.style.display = 'block'; return; }
 
+            err.style.display = 'none';
+            schoolNameGlobal = school;
+            schoolAccounts.pdg = { school, address, lastname, firstname, role, email, pass, tier: pendingLicenseContext.tier };
+            localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(schoolAccounts));
+            if (firebaseDb) firebaseDb.ref('navette_pro_accounts').set(schoolAccounts);
+            saveState();
+
+            document.getElementById('pdg-register-modal').classList.remove('open');
+            document.getElementById('mgr-school-inherit').textContent = `${school} — ${address}`;
+            document.getElementById('manager-register-modal').classList.add('open');
+        }
+
+        function skipManagerCreation() {
+            document.getElementById('manager-register-modal').classList.remove('open');
+            if (pendingLicenseContext && schoolAccounts.pdg) {
+                startSession({ role: pendingLicenseContext.tier, subRole: 'pdg', email: schoolAccounts.pdg.email });
+                showToast("✅ Compte PDG créé ! Vous pourrez ajouter le Gestionnaire plus tard.");
+            }
+        }
+
+        function openManagerModalFromApp() {
+            if (!schoolAccounts.pdg) { showToast("ℹ️ Créez d'abord un compte PDG via une clé licence."); return; }
+            document.getElementById('mgr-school-inherit').textContent = `${schoolAccounts.pdg.school} — ${schoolAccounts.pdg.address}`;
+            document.getElementById('manager-register-modal').classList.add('open');
+        }
+
+        function submitManagerRegistration() {
+            const lastname = document.getElementById('mgr-lastname').value.trim();
+            const firstname = document.getElementById('mgr-firstname').value.trim();
+            const role = document.getElementById('mgr-role').value.trim();
+            const email = document.getElementById('mgr-email').value.trim().toLowerCase();
+            const email2 = document.getElementById('mgr-email-confirm').value.trim().toLowerCase();
+            const pass = document.getElementById('mgr-pass').value;
+            const pass2 = document.getElementById('mgr-pass-confirm').value;
+            const err = document.getElementById('mgr-reg-error');
+
+            if (!lastname || !firstname || !role || !email || !pass) {
+                err.textContent = "❌ Veuillez remplir tous les champs obligatoires."; err.style.display = 'block'; return;
+            }
+            if (email !== email2) { err.textContent = "❌ Les adresses e-mail ne correspondent pas."; err.style.display = 'block'; return; }
+            if (pass.length < 6 || pass !== pass2) { err.textContent = "❌ Mots de passe différents ou trop courts (6 caractères min)."; err.style.display = 'block'; return; }
+
+            err.style.display = 'none';
+            schoolAccounts.manager = { lastname, firstname, role, email, pass };
+            localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(schoolAccounts));
+            if (firebaseDb) firebaseDb.ref('navette_pro_accounts').set(schoolAccounts);
+
+            document.getElementById('manager-register-modal').classList.remove('open');
+            if (pendingLicenseContext) {
+                startSession({ role: pendingLicenseContext.tier, subRole: 'pdg', email: schoolAccounts.pdg.email });
+                pendingLicenseContext = null;
+            }
+            showToast("✅ Compte Gestionnaire créé avec succès !");
+        }
+
+        // ==================== GESTION DES BUS (6 BASIC / 12 PREMIUM) & EXCEL LOGO ====================
+        function getMaxBusLimit() {
+            if (!activeSession) return 6;
+            return (activeSession.role === 'premium' || activeSession.role === 'admin') ? 12 : 6;
+        }
+
+        function handleAddBusForm() {
+            const num = document.getElementById('new-bus-num').value.trim();
+            const driver = document.getElementById('new-bus-driver').value.trim();
+            const acc = document.getElementById('new-bus-acc').value.trim();
+            const cap = document.getElementById('new-bus-cap').value.trim();
+            if (!num || !driver) { alert("Veuillez saisir au moins le numéro du bus et le nom du chauffeur."); return; }
+            if (createTransportBus(num, driver, acc || 'Non définie', cap)) {
+                document.getElementById('new-bus-num').value = '';
+                document.getElementById('new-bus-driver').value = '';
+                document.getElementById('new-bus-acc').value = '';
+                document.getElementById('new-bus-cap').value = '';
+            }
+        }
+
+        function createTransportBus(busNum, driverName, accName, maxAuthorizedStudents) {
+            const maxBuses = getMaxBusLimit();
+            if (fleetState.length >= maxBuses) {
+                alert(`Limite atteinte : votre pack autorise jusqu'à ${maxBuses} espaces transport.`);
+                return false;
+            }
+            const nextIdx = fleetState.length + 1;
+            const palette = ['#1d4ed8', '#dc2626', '#059669', '#d97706', '#7c3aed', '#0891b2'];
+            fleetState.push({
+                id: 'B' + Date.now() + nextIdx,
+                code: 'BUS' + nextIdx,
+                num: busNum || `Bus ${nextIdx}`,
+                driver: driverName,
+                acc: accName,
+                authorizedCapacity: parseInt(maxAuthorizedStudents, 10) || 0,
+                sector: 'Secteur ' + nextIdx,
+                color: palette[(nextIdx - 1) % palette.length],
+                center: SCHOOL_COORDS,
+                students: []
+            });
+            saveState();
+            renderFleetPage();
+            showToast(`🚌 ${busNum} ajouté (${fleetState.length}/${maxBuses}).`);
+            return true;
+        }
+
+        async function downloadNavetteProExcelTemplate() {
+            if (typeof ExcelJS === 'undefined') { alert("Chargement d'ExcelJS en cours, réessayez."); return; }
+            const workbook = new ExcelJS.Workbook();
+            const sheet = workbook.addWorksheet('Import Navette Pro');
+
+            // Bandeau En-tête Navette Pro
+            sheet.mergeCells('A1:G3');
+            const titleCell = sheet.getCell('A1');
+            titleCell.value = `NAVETTE PRO — FICHE D'IMPORTATION TRANSPORT SCOLAIRE\n${schoolNameGlobal}`;
+            titleCell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+            titleCell.font = { name: 'Calibri', size: 14, bold: true, color: { argb: 'FFFFFFFF' } };
+            titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0F172A' } };
+
+            // Intégration du logo SVG converti en PNG
+            const svgEl = document.getElementById('navette-pro-svg-logo');
+            if (svgEl) {
+                const svgData = new XMLSerializer().serializeToString(svgEl);
+                const canvas = document.createElement('canvas');
+                canvas.width = 120; canvas.height = 120;
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                await new Promise(res => {
+                    img.onload = () => { ctx.drawImage(img, 0, 0, 120, 120); res(); };
+                    img.onerror = () => res();
+                    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+                });
+                const imageId = workbook.addImage({ base64: canvas.toDataURL('image/png'), extension: 'png' });
+                sheet.addImage(imageId, { tl: { col: 0.15, row: 0.15 }, ext: { width: 52, height: 52 } });
+            }
+
+            // Colonnes (Ligne 5)
+            const headers = ['Numéro du Bus', 'Chauffeur', 'Accompagnatrice', 'Élèves Autorisés (Bus)', 'Nom & Prénom Élève', 'Niveau (ex: 4AP)', 'Tél. Parent'];
+            const headerRow = sheet.getRow(5);
+            headerRow.values = headers;
+            headerRow.height = 28;
+            headerRow.eachCell(cell => {
+                cell.font = { name: 'Calibri', bold: true, color: { argb: 'FFFFFFFF' }, size: 11 };
+                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0066B3' } };
+                cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                cell.border = { bottom: { style: 'medium', color: { argb: 'FFFACC15' } } };
+            });
+
+            // Exemple pré-rempli
+            const sampleRow = sheet.addRow(['Bus 1', 'Abdeladim', 'Fatima Zahra', 24, 'Yassine Bennani', '4AP', '0661458912']);
+            sampleRow.eachCell(c => { c.alignment = { vertical: 'middle', horizontal: 'center' }; });
+            sheet.columns.forEach(col => { col.width = 24; });
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Modele_Import_Navette_Pro.xlsx';
+            link.click();
+        }
+
+        function importNavetteProExcel(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+                const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { range: 4 });
+                let addedStudents = 0;
+                rows.forEach(r => {
+                    const busNum = r['Numéro du Bus'] ? String(r['Numéro du Bus']).trim() : 'Bus 1';
+                    let bus = fleetState.find(b => b.num.toLowerCase() === busNum.toLowerCase());
+                    if (!bus) {
+                        const created = createTransportBus(busNum, r['Chauffeur'] || 'À définir', r['Accompagnatrice'] || 'À définir', r['Élèves Autorisés (Bus)'] || 0);
+                        if (created) bus = fleetState[fleetState.length - 1];
+                    }
+                    if (bus && r['Nom & Prénom Élève']) {
+                        bus.students.push({
+                            id: 'EL-' + Math.floor(100 + Math.random() * 899),
+                            name: String(r['Nom & Prénom Élève']).trim(),
+                            level: String(r['Niveau (ex: 4AP)'] || 'CP').trim(),
+                            voyage: 1,
+                            phone: String(r['Tél. Parent'] || '').trim(),
+                            address: bus.sector,
+                            lat: SCHOOL_COORDS[0], lng: SCHOOL_COORDS[1],
+                            status: 'pending', statusTime: ''
+                        });
+                        addedStudents++;
+                    }
+                });
+                saveState();
+                refreshCurrentView();
+                showToast(`✅ Import terminé : ${addedStudents} élève(s) ajouté(s).`);
+                event.target.value = '';
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // ==================== LICENCES & AUTHENTIFICATION ====================
         function computeObSignature(first20Digits) {
             let h1 = 2026, h2 = 8819;
             for (let i = 0; i < 20; i++) {
@@ -827,10 +1135,12 @@
 
         async function verifyManagerLogin() {
             const rawVal = (document.getElementById('access-code-input').value || '').trim();
+            const passVal = (document.getElementById('access-pass-input').value || '');
             const errBox = document.getElementById('auth-error');
             const expBox = document.getElementById('auth-expired');
             errBox.style.display = 'none'; expBox.style.display = 'none';
 
+            // 1. Connexion SuperAdmin OB
             if (rawVal.toLowerCase() === SUPERADMIN_EMAIL.toLowerCase()) {
                 const btn = document.getElementById('btn-mgr-submit');
                 btn.disabled = true; btn.textContent = '⏳ Envoi du code OTP...';
@@ -847,6 +1157,19 @@
                 return;
             }
 
+            // 2. Connexion Compte PDG ou Gestionnaire par Email + Mot de passe
+            if (schoolAccounts.pdg && rawVal.toLowerCase() === schoolAccounts.pdg.email && passVal === schoolAccounts.pdg.pass) {
+                schoolNameGlobal = schoolAccounts.pdg.school;
+                startSession({ role: schoolAccounts.pdg.tier || 'basic', subRole: 'pdg', email: schoolAccounts.pdg.email });
+                return;
+            }
+            if (schoolAccounts.manager && rawVal.toLowerCase() === schoolAccounts.manager.email && passVal === schoolAccounts.manager.pass) {
+                if (schoolAccounts.pdg) schoolNameGlobal = schoolAccounts.pdg.school;
+                startSession({ role: (schoolAccounts.pdg && schoolAccounts.pdg.tier) || 'basic', subRole: 'manager', email: schoolAccounts.manager.email });
+                return;
+            }
+
+            // 3. Connexion Démo
             const upperCode = rawVal.toUpperCase();
             if (upperCode === '4800' || upperCode === 'AB48') {
                 let firstTs = parseInt(localStorage.getItem(DEMO_START_KEY), 10) || Date.now();
@@ -856,18 +1179,17 @@
                 return;
             }
 
+            // 4. Connexion par Clé Licence 24 chiffres
             const tier = validate24DigitLicense(rawVal);
             if (tier) {
                 const cleanDigits = rawVal.replace(/\D/g, '');
                 const matchedClient = saasClients.find(c => c.key24.replace(/\D/g, '') === cleanDigits);
-                if (matchedClient) {
-                    if (matchedClient.suspended || Date.now() > matchedClient.endDate) { expBox.style.display = 'block'; return; }
-                    schoolNameGlobal = matchedClient.school;
-                }
-                startSession({ role: tier, clientId: matchedClient ? matchedClient.id : null });
+                if (matchedClient && (matchedClient.suspended || Date.now() > matchedClient.endDate)) { expBox.style.display = 'block'; return; }
+                openPdgOnboarding(tier, rawVal, matchedClient ? matchedClient.id : null);
                 return;
             }
-            errBox.textContent = '❌ Clé licence 24 chiffres ou identifiant invalide.';
+
+            errBox.textContent = '❌ Identifiant, mot de passe ou clé licence invalide.';
             errBox.style.display = 'block';
         }
 
@@ -890,6 +1212,7 @@
             document.getElementById('mgr-step-key').style.display = 'block';
         }
 
+        // ==================== SUPERADMIN & ÉTAT FLOTTE ====================
         function setSaFilter(mode) {
             saFilterMode = mode;
             document.querySelectorAll('.sa-filter-btn').forEach(b => {
@@ -939,7 +1262,6 @@
 
         function openAddClientModal() { document.getElementById('add-client-modal').classList.add('open'); }
         function autoFillPackPrice(pack) { document.getElementById('new-cli-price').value = pack === 'premium' ? 6000 : pack === 'basic' ? 3500 : 0; }
-        
         function createSaasClient() {
             const school = (document.getElementById('new-cli-school').value || '').trim();
             if (!school) return;
@@ -962,10 +1284,10 @@
         function renewSaasClient(id) { const c = saasClients.find(x => x.id === id); if (c) { c.endDate = Math.max(Date.now(), c.endDate) + (365 * DAY_MS); c.suspended = false; saveSaasClients(); renderSuperAdminDashboard(); } }
 
         const DEFAULT_FLEET = [
-            { id: 'B1', code: 'BUS1', num: 'Bus 1', driver: 'Abdeladim', acc: 'Fatima Zahra', sector: 'Sidi Bouzid', color: '#1d4ed8', center: [33.2265, -8.5475], students: [
+            { id: 'B1', code: 'BUS1', num: 'Bus 1', driver: 'Abdeladim', acc: 'Fatima Zahra', authorizedCapacity: 24, sector: 'Sidi Bouzid', color: '#1d4ed8', center: [33.2265, -8.5475], students: [
                 { id: 'EL-101', name: 'Yassine Bennani', level: '4AP', voyage: 1, address: 'Corniche', lat: 33.2285, lng: -8.5490, phone: '0661458912', status: 'pending', statusTime: '' }
             ]},
-            { id: 'B2', code: 'BUS2', num: 'Bus 2', driver: 'Abdessalam', acc: 'Khadija', sector: 'Saada', color: '#dc2626', center: [33.2280, -8.5045], students: [] }
+            { id: 'B2', code: 'BUS2', num: 'Bus 2', driver: 'Abdessalam', acc: 'Khadija', authorizedCapacity: 24, sector: 'Saada', color: '#dc2626', center: [33.2280, -8.5045], students: [] }
         ];
 
         let fleetState = []; let waRequests = []; let selectedBusId = 'B1'; let activeSession = null; let attVoyageFilter = 1; let mapGlobal = null, mapDriver = null, globalLayer = null, driverLayer = null;
@@ -976,7 +1298,12 @@
         }
 
         function initRealtimeSync() {
-            if (firebaseDb) { firebaseDb.ref('navette_pro_live').on('value', (snapshot) => { const data = snapshot.val(); if (data && data.fleet) { fleetState = data.fleet; if (data.wa) waRequests = data.wa; if (data.schoolName) schoolNameGlobal = data.schoolName; localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); refreshCurrentView(); } }); }
+            if (firebaseDb) {
+                firebaseDb.ref('navette_pro_live').on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data && data.fleet) { fleetState = data.fleet; if (data.wa) waRequests = data.wa; if (data.schoolName) schoolNameGlobal = data.schoolName; localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); refreshCurrentView(); }
+                });
+            }
         }
 
         function refreshCurrentView() {
@@ -995,7 +1322,7 @@
         }
 
         function saveAllManual() { saveState(); saveSaasClients(); showToast('✅ Données enregistrées.'); }
-        function showToast(msg) { const t = document.createElement('div'); t.textContent = msg; t.style.cssText = 'position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 18px;border-radius:999px;font-size:12px;font-weight:800;z-index:9500;box-shadow:0 10px 25px rgba(0,0,0,0.3);'; document.body.appendChild(t); setTimeout(() => t.remove(), 2500); }
+        function showToast(msg) { const t = document.createElement('div'); t.textContent = msg; t.style.cssText = 'position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 18px;border-radius:999px;font-size:12px;font-weight:800;z-index:12000;box-shadow:0 10px 25px rgba(0,0,0,0.3);'; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
 
         function selectLoginPortal(portal) {
             ['manager', 'chauffeur', 'parent'].forEach(p => { document.getElementById(`rtab-${p}`).classList.toggle('active', p === portal); document.getElementById(`login-panel-${p}`).style.display = p === portal ? 'block' : 'none'; });
@@ -1027,6 +1354,7 @@
             document.getElementById('btn-save-mgr').style.display = isMgr ? 'inline-flex' : 'none';
             document.getElementById('btn-export-excel').style.display = isMgr ? 'inline-flex' : 'none';
             document.getElementById('btn-ob-superadmin').style.display = sess.role === 'admin' ? 'inline-flex' : 'none';
+            document.getElementById('btn-create-mgr-header').style.display = (sess.subRole === 'pdg' && !schoolAccounts.manager) ? 'inline-flex' : 'none';
             document.getElementById('demo-watermark').style.display = sess.role === 'demo' ? 'flex' : 'none';
 
             const tierPill = document.getElementById('version-tier-pill');
@@ -1035,7 +1363,13 @@
             if (sess.role === 'admin') { tierPill.textContent = 'Fondateur OB'; timerBadge.textContent = '👑 SuperAdmin'; switchPage('superadmin'); }
             else if (sess.role === 'driver') { selectedBusId = sess.busId; const bus = fleetState.find(b => b.id === sess.busId); tierPill.textContent = `Chauffeur • ${bus ? bus.num : ''}`; timerBadge.textContent = `👨‍✈️ ${bus ? bus.driver : ''}`; document.getElementById('att-driver-pills').style.display = 'none'; showOnlyPage('attendance'); renderAttendancePage(); }
             else if (sess.role === 'parent') { tierPill.textContent = 'Espace Famille'; timerBadge.textContent = '👨‍👩‍👧 Suivi Direct'; showOnlyPage('parent-portal'); renderParentPortal(); }
-            else { tierPill.textContent = sess.role === 'premium' ? 'Premium 365j' : sess.role === 'basic' ? 'Basique 365j' : 'Démo 48h'; timerBadge.textContent = '⏳ Actif'; document.getElementById('att-driver-pills').style.display = 'flex'; switchPage('driver'); }
+            else {
+                const subLabel = sess.subRole === 'pdg' ? 'PDG' : sess.subRole === 'manager' ? 'Gestionnaire' : 'Direction';
+                tierPill.textContent = `${subLabel} • ${sess.role === 'premium' ? 'Premium (12 bus)' : sess.role === 'basic' ? 'Basique (6 bus)' : 'Démo 48h'}`;
+                timerBadge.textContent = '⏳ Actif';
+                document.getElementById('att-driver-pills').style.display = 'flex';
+                switchPage('fleet');
+            }
         }
 
         function showOnlyPage(pageName) { document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active')); document.getElementById(`page-${pageName}`).classList.add('active'); }
@@ -1043,6 +1377,7 @@
         function logoutSession() {
             sessionStorage.removeItem(SESSION_KEY); activeSession = null;
             document.getElementById('btn-ob-superadmin').style.display = 'none';
+            document.getElementById('btn-create-mgr-header').style.display = 'none';
             document.getElementById('landing-page').style.display = 'flex';
             document.getElementById('auth-overlay').style.display = 'none';
         }
@@ -1070,16 +1405,32 @@
         function fitGlobalMap() { if (mapGlobal) mapGlobal.setView(SCHOOL_COORDS, 13); }
         function renderDriverPage() { document.getElementById('driver-pills-container').innerHTML = fleetState.map(bus => `<button type="button" class="driver-pill ${bus.id === selectedBusId ? 'active' : ''}" onclick="selectedBusId='${bus.id}';renderDriverPage();"><span style="width:9px;height:9px;border-radius:50%;background:${bus.color};display:inline-block;"></span> ${bus.num} - ${bus.driver}</button>`).join(''); const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0]; if (!bus) return; document.getElementById('active-crew-banner').innerHTML = `👨‍✈️ <strong>${bus.driver}</strong> &amp; 👩‍🏫 <strong>${bus.acc}</strong> • Secteur ${bus.sector}`; if (driverLayer) { driverLayer.clearLayers(); bus.students.forEach(s => L.marker([s.lat, s.lng]).addTo(driverLayer)); } document.getElementById('driver-voyages-container').innerHTML = [1, 2].map(vNum => { const sched = computeVoyageSchedule(bus.students.filter(s => s.voyage === vNum), vNum); return `<div class="voyage-card"><div class="voyage-header"><div style="font-size:12px;font-weight:900;">VOYAGE ${vNum}</div><div style="font-size:11px;color:#64748b;">${sched.stops.length} élève(s)</div></div>${sched.stops.map(st => `<div class="student-row"><div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-size:13px;font-weight:800;">${st.order}. ${st.name} (${st.level})</div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.status==='present'?'#dcfce7':st.status==='absent'?'#fee2e2':'#f1f5f9'};color:${st.status==='present'?'#15803d':st.status==='absent'?'#b91c1c':'#64748b'};">${st.status==='present'?'🟢 PRÉSENT':st.status==='absent'?'🔴 ABSENT':'⏳ EN ATTENTE'} ${st.statusTime ? '('+st.statusTime+')':''}</span><span style="font-size:12px;font-weight:900;">🕒 ${st.timeStr}</span></div></div></div>`).join('')}</div>`; }).join(''); }
         function recenterDriverMap() { if (mapDriver) mapDriver.setView(SCHOOL_COORDS, 14); }
-        function renderFleetPage() { document.getElementById('fleet-cards-container').innerHTML = fleetState.map(bus => `<div style="background:#fff;border:1px solid #e2e8f0;border-top:5px solid ${bus.color};border-radius:14px;padding:14px;"><strong>${bus.num} — ${bus.sector}</strong><div style="font-size:12px;color:#475569;margin-top:4px;">👨‍✈️ ${bus.driver} • Code : ${bus.code}</div></div>`).join(''); }
-        function renderStudentsPage() { document.getElementById('stu-bus').innerHTML = fleetState.map(b => `<option value="${b.id}">${b.num} — ${b.sector}</option>`).join(''); document.getElementById('badge-d-wa').textContent = waRequests.length; document.getElementById('wa-pending-pill').textContent = `${waRequests.length} reçue(s)`; document.getElementById('wa-requests-list').innerHTML = waRequests.map(req => `<div style="border:1px solid #e2e8f0;border-radius:12px;padding:10px;margin-bottom:8px;"><strong>${req.student} (${req.level})</strong> — ${req.label}</div>`).join(''); }
-        function submitNewStudent() { const name = (document.getElementById('stu-name').value || '').trim(); if (!name) return; const bus = fleetState.find(b => b.id === document.getElementById('stu-bus').value); bus.students.push({ id: 'EL-' + Math.floor(100+Math.random()*899), name, phone: document.getElementById('stu-phone').value, level: document.getElementById('stu-level').value, voyage: parseInt(document.getElementById('stu-voyage').value, 10), address: document.getElementById('stu-address').value || bus.sector, lat: bus.center[0], lng: bus.center[1], status: 'pending', statusTime: '' }); saveState(); switchPage('driver'); }
+        function renderFleetPage() {
+            const maxBuses = getMaxBusLimit();
+            document.getElementById('fleet-quota-badge').textContent = `${fleetState.length} / ${maxBuses} Bus utilisés`;
+            document.getElementById('fleet-cards-container').innerHTML = fleetState.map(bus => `
+                <div style="background:#fff;border:1px solid #e2e8f0;border-top:5px solid ${bus.color};border-radius:14px;padding:14px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <strong style="font-size:15px;">${bus.num}</strong>
+                        <span style="background:#f1f5f9;color:#0f172a;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;">Code : ${bus.code}</span>
+                    </div>
+                    <div style="font-size:12px;color:#475569;margin-top:8px;">👨‍✈️ Chauffeur : <strong>${bus.driver}</strong></div>
+                    <div style="font-size:12px;color:#475569;margin-top:4px;">👩‍🏫 Accompagnatrice : <strong>${bus.acc || 'Non définie'}</strong></div>
+                    <div style="font-size:12px;color:#0066b3;font-weight:800;margin-top:8px;">
+                        🎒 Élèves inscrits : ${bus.students.length} ${bus.authorizedCapacity ? `(Capacité autorisée : ${bus.authorizedCapacity})` : '(Illimité)'}
+                    </div>
+                </div>
+            `).join('');
+        }
+        function renderStudentsPage() { document.getElementById('stu-bus').innerHTML = fleetState.map(b => `<option value="${b.id}">${b.num} — ${b.driver}</option>`).join(''); document.getElementById('badge-d-wa').textContent = waRequests.length; document.getElementById('wa-pending-pill').textContent = `${waRequests.length} reçue(s)`; document.getElementById('wa-requests-list').innerHTML = waRequests.map(req => `<div style="border:1px solid #e2e8f0;border-radius:12px;padding:10px;margin-bottom:8px;"><strong>${req.student} (${req.level})</strong> — ${req.label}</div>`).join(''); }
+        function submitNewStudent() { const name = (document.getElementById('stu-name').value || '').trim(); if (!name) return; const bus = fleetState.find(b => b.id === document.getElementById('stu-bus').value); if (!bus) return; bus.students.push({ id: 'EL-' + Math.floor(100+Math.random()*899), name, phone: document.getElementById('stu-phone').value, level: document.getElementById('stu-level').value, voyage: parseInt(document.getElementById('stu-voyage').value, 10), address: document.getElementById('stu-address').value || bus.sector, lat: bus.center[0], lng: bus.center[1], status: 'pending', statusTime: '' }); saveState(); switchPage('driver'); }
         function jumpToAddStudent() { switchPage('students'); }
         function setAttVoyage(vNum) { attVoyageFilter = vNum; renderAttendancePage(); }
-        function renderAttendancePage() { const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0]; if (!bus) return; document.getElementById('att-header-title').textContent = `${bus.num} — Secteur ${bus.sector}`; const sched = computeVoyageSchedule(bus.students.filter(s => s.voyage === attVoyageFilter), attVoyageFilter); document.getElementById('att-students-grid').innerHTML = sched.stops.map((stu, idx) => `<div style="background:#fff;border:2px solid ${stu.status==='present'?'#10b981':stu.status==='absent'?'#ef4444':'#e2e8f0'};border-radius:16px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.03);"><div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><img src="${stu.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'}" style="width:60px;height:60px;border-radius:14px;object-fit:cover;"><div><div style="font-size:11px;font-weight:900;color:${bus.color};">Arrêt #${idx+1} • ${stu.level}</div><div style="font-size:15px;font-weight:900;">${stu.name}</div><div style="font-size:11px;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#64748b'};font-weight:800;margin-top:2px;">${stu.status==='present'?'🟢 PRÉSENT à '+stu.statusTime:stu.status==='absent'?'🔴 ABSENT à '+stu.statusTime:'⏳ En attente de pointage'}</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','present')" style="background:${stu.status==='present'?'#047857':'#10b981'};color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🟢 PRÉSENT</button><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','absent')" style="background:${stu.status==='absent'?'#991b1b':'#ef4444'};color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🔴 ABSENT</button></div></div>`).join(''); }
+        function renderAttendancePage() { const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0]; if (!bus) return; document.getElementById('att-header-title').textContent = `${bus.num} — Secteur ${bus.sector}`; document.getElementById('att-crew-subtitle').textContent = `Chauffeur : ${bus.driver} • Accompagnatrice : ${bus.acc}`; const sched = computeVoyageSchedule(bus.students.filter(s => s.voyage === attVoyageFilter), attVoyageFilter); document.getElementById('att-students-grid').innerHTML = sched.stops.map((stu, idx) => `<div style="background:#fff;border:2px solid ${stu.status==='present'?'#10b981':stu.status==='absent'?'#ef4444':'#e2e8f0'};border-radius:16px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.03);"><div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><img src="${stu.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'}" style="width:60px;height:60px;border-radius:14px;object-fit:cover;"><div><div style="font-size:11px;font-weight:900;color:${bus.color};">Arrêt #${idx+1} • ${stu.level}</div><div style="font-size:15px;font-weight:900;">${stu.name}</div><div style="font-size:11px;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#64748b'};font-weight:800;margin-top:2px;">${stu.status==='present'?'🟢 PRÉSENT à '+stu.statusTime:stu.status==='absent'?'🔴 ABSENT à '+stu.statusTime:'⏳ En attente de pointage'}</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','present')" style="background:${stu.status==='present'?'#047857':'#10b981'};color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🟢 PRÉSENT</button><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','absent')" style="background:${stu.status==='absent'?'#991b1b':'#ef4444'};color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🔴 ABSENT</button></div></div>`).join(''); }
         function markAttendance(busId, stuId, statusType) { const bus = fleetState.find(b => b.id === busId); const stu = bus && bus.students.find(s => s.id === stuId); if (!stu) return; stu.status = statusType; stu.statusTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); saveState(); renderAttendancePage(); showToast(`Pointage enregistré : ${stu.name} (${statusType.toUpperCase()}).`); }
         function renderParentPortal() { const q = (activeSession.parentQuery || '').toUpperCase(); const matches = []; fleetState.forEach(bus => bus.students.forEach(stu => { if ((stu.phone || '').includes(q) || stu.id.toUpperCase() === q) matches.push({ bus, stu }); })); document.getElementById('parent-children-cards').innerHTML = matches.map(({ bus, stu }) => `<div style="background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 12px rgba(0,0,0,0.04);"><div style="font-weight:900;font-size:17px;">${stu.name} (${stu.level})</div><div style="font-size:12px;color:#475569;margin-top:4px;">🚌 ${bus.num} • Chauffeur : ${bus.driver}</div><div style="margin-top:8px;font-weight:800;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#0284c7'};">État : ${stu.status==='present'?'🟢 PRÉSENT dans la navette':stu.status==='absent'?'🔴 ABSENT':'⏳ En attente du départ'}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid #f1f5f9;"><button type="button" onclick="reportAbsenceParent('${bus.id}','${stu.id}')" style="background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;padding:10px;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer;">🔴 Signaler Absence</button><button type="button" onclick="sendGpsParent('${stu.name}','${stu.level}')" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:10px;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer;">📍 Envoyer Position GPS</button></div></div>`).join(''); }
         function reportAbsenceParent(busId, stuId) { if(!confirm("Confirmez-vous l'absence de votre enfant ?")) return; const bus = fleetState.find(b => b.id === busId); const stu = bus && bus.students.find(s => s.id === stuId); if (!stu) return; stu.status = 'absent'; stu.statusTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); saveState(); renderParentPortal(); showToast("✅ Absence signalée."); }
-        function sendGpsParent(stuName, stuLevel) { if ("geolocation" in navigator) { showToast("⏳ Récupération GPS..."); navigator.geolocation.getCurrentPosition(function(position) { const lat = position.coords.latitude; const lng = position.coords.longitude; waRequests.push({ id: 'WA-' + Math.floor(100 + Math.random() * 899), student: stuName, level: stuLevel, label: '📌 Point de ramassage modifié', lat: lat, lng: lng }); saveState(); showToast("📍 Position transmise."); }, function(error) { showToast("❌ Erreur GPS."); }); } else { showToast("❌ GPS non supporté."); } }
+        function sendGpsParent(stuName, stuLevel) { if ("geolocation" in navigator) { showToast("⏳ Récupération GPS..."); navigator.geolocation.getCurrentPosition(function(position) { const lat = position.coords.latitude; const lng = position.coords.longitude; waRequests.push({ id: 'WA-' + Math.floor(100 + Math.random() * 899), student: stuName, level: stuLevel, label: '📌 Point de ramassage modifié', lat: lat, lng: lng }); saveState(); showToast("📍 Position transmise."); }, function() { showToast("❌ Erreur GPS."); }); } else { showToast("❌ GPS non supporté."); } }
         function handleExcelAction() { const wb = XLSX.utils.book_new(); fleetState.forEach(b => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(b.students), b.num)); XLSX.writeFile(wb, 'Navette_Pro_Export.xlsx'); }
 
         window.addEventListener('DOMContentLoaded', () => {
