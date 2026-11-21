@@ -218,7 +218,6 @@
                     </div>
                 </div>
 
-                <!-- ZONE DE SAISIE DE LA CLÉ -->
                 <div id="license-input-zone" style="display: none; margin-top: 36px; background: #1e293b; padding: 28px; border-radius: 20px; border: 1px solid #334155; animation: slideUp 0.3s ease-out; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
                     <h4 style="font-size: 18px; font-weight: 800; margin: 0 0 16px; color: #f8fafc;">Entrez votre clé de licence à 24 chiffres :</h4>
                     <input type="text" id="landing-license-input" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XXXX" oninput="formatLicenseInput(this)" style="width: 100%; max-width: 420px; padding: 16px; border-radius: 14px; border: 2px solid #cbd5e1; font-family: monospace; font-size: 16px; font-weight: 900; text-align: center; margin-bottom: 16px; color: #0f172a; background: #f8fafc; outline: none;">
@@ -458,7 +457,7 @@
     <!-- APPLICATION PRINCIPALE                                         -->
     <!-- ============================================================== -->
     <div id="demo-watermark">
-        <div class="watermark-text">DÉMO PROPRIÉTÉ OB • GROUPE SCOLAIRE L'ANGE BLEU</div>
+        <div class="watermark-text">DÉMO PROPRIÉTÉ OB • NAVETTE PRO</div>
     </div>
 
     <div id="app-shell" style="display: flex; flex-direction: column; height: 100dvh; overflow: hidden;">
@@ -490,26 +489,27 @@
                     </svg>
                 </div>
 
+                <!-- 1. NOM DE L'ÉCOLE DÉPLACÉ SOUS NAVETTE PRO -->
                 <div class="brand-titles">
-                    <div id="header-school-name" style="font-size: 11px; font-weight: 900; color: #0066b3; text-transform: uppercase;">
-                        Groupe Scolaire L'Ange Bleu
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 6px; margin-top: 1px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
                         <h1>Navette Pro</h1>
-                        <span id="version-tier-pill" style="background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 999px;">El Jadida</span>
+                        <span id="version-tier-pill" style="background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 999px;">Actif</span>
+                    </div>
+                    <div id="header-school-name" style="font-size: 11px; font-weight: 800; color: #0066b3; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        🏫 Mon Établissement
                     </div>
                 </div>
             </div>
 
             <nav class="desktop-nav" id="manager-desktop-nav">
                 <button type="button" class="nav-tab" id="d-tab-global" onclick="switchPage('global')">🗺️ 1. Globale</button>
-                <button type="button" class="nav-tab active" id="d-tab-driver" onclick="switchPage('driver')">👨‍✈️ 2. Par Chauffeur</button>
-                <button type="button" class="nav-tab" id="d-tab-fleet" onclick="switchPage('fleet')">🚌 3. Flotte</button>
+                <button type="button" class="nav-tab" id="d-tab-driver" onclick="switchPage('driver')">👨‍✈️ 2. Par Chauffeur</button>
+                <button type="button" class="nav-tab active" id="d-tab-fleet" onclick="switchPage('fleet')">🚌 3. Flotte</button>
                 <button type="button" class="nav-tab" id="d-tab-students" onclick="switchPage('students')">
-                    🏫 4. Élèves &amp; WA <span id="badge-d-wa" style="background: #10b981; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 999px;">1</span>
+                    🏫 4. Élèves &amp; WA <span id="badge-d-wa" style="background: #10b981; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 999px;">0</span>
                 </button>
-                <button type="button" class="nav-tab" id="d-tab-attendance" onclick="switchPage('attendance')" style="background: #eff6ff; color: #0066b3; border: 1px solid #bfdbfe;">
-                    📸 5. Pointage Terrain
+                <button type="button" class="nav-tab" id="d-tab-adherent" onclick="switchPage('adherent')" style="background: #eff6ff; color: #0066b3; border: 1px solid #bfdbfe;">
+                    👤 5. Espace Adhérent
                 </button>
             </nav>
 
@@ -578,7 +578,7 @@
                 <div class="map-pane">
                     <div id="mapGlobal" style="width: 100%; height: 100%;"></div>
                     <div class="map-overlay-bar">
-                        <div class="map-chip" id="map-school-label-global">🏫 Siège : Groupe Scolaire L'Ange Bleu</div>
+                        <div class="map-chip" id="map-school-label-global">🏫 Siège : Mon Établissement</div>
                         <button type="button" class="map-btn-center" onclick="fitGlobalMap()">🎯 Recentrer</button>
                     </div>
                 </div>
@@ -589,10 +589,10 @@
             </div>
         </section>
 
-        <section id="page-driver" class="page-view active">
+        <section id="page-driver" class="page-view">
             <div class="driver-strip" id="driver-pills-container"></div>
             <div style="background: #f8fafc; padding: 8px 12px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
-                <div id="active-crew-banner" style="font-size: 12px; font-weight: 700; color: #1e293b;">👨‍✈️ Abdeladim • Sidi Bouzid</div>
+                <div id="active-crew-banner" style="font-size: 12px; font-weight: 700; color: #1e293b;">Aucun bus sélectionné</div>
                 <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <button type="button" onclick="jumpToAddStudent()" style="background: #0066b3; color: #fff; border: none; padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer;">+ Élève</button>
                 </div>
@@ -601,7 +601,7 @@
                 <div class="map-pane">
                     <div id="mapDriver" style="width: 100%; height: 100%;"></div>
                     <div class="map-overlay-bar">
-                        <div class="map-chip" id="driver-map-chip">Bus 1 — Sidi Bouzid</div>
+                        <div class="map-chip" id="driver-map-chip">Carte Bus</div>
                         <button type="button" class="map-btn-center" onclick="recenterDriverMap()">🎯 Centrer</button>
                     </div>
                 </div>
@@ -611,11 +611,10 @@
             </div>
         </section>
 
-        <!-- ==================== VUE 3. FLOTTE (6/12 BUS + EXCEL LOGO) ==================== -->
-        <section id="page-fleet" class="page-view" style="overflow-y: auto; padding: 14px;">
-            <div style="max-width: 980px; margin: 0 auto; width: 100%; padding-bottom: 60px;">
+        <!-- ==================== VUE 3. FLOTTE (VIDE PAR DÉFAUT + EXCEL LOGO) ==================== -->
+        <section id="page-fleet" class="page-view active" style="overflow-y: auto; padding: 14px;">
+            <div style="max-width: 980px; margin: 0 auto; width: 100%; padding-bottom: 70px;">
                 
-                <!-- BARRE EXCEL OFFICIEL NAVETTE PRO -->
                 <div style="background: linear-gradient(135deg, #0f172a 0%, #0066b3 100%); color: #fff; border-radius: 16px; padding: 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                     <div>
                         <div style="font-size: 11px; font-weight: 900; color: #facc15; text-transform: uppercase;">Importation Rapide • Charte Navette Pro</div>
@@ -633,14 +632,13 @@
                     </div>
                 </div>
 
-                <!-- FORMULAIRE CRÉATION ESPACE TRANSPORT (6 BASIC / 12 PREMIUM) -->
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 16px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
                         <h3 style="margin: 0; font-size: 15px; font-weight: 900;">🚌 Créer un nouvel espace transport</h3>
                         <span id="fleet-quota-badge" style="background: #eff6ff; color: #0066b3; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 999px;">0 / 6 Bus utilisés</span>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
-                        <input type="text" id="new-bus-num" placeholder="Numéro du Bus (ex: Bus 3) *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
+                        <input type="text" id="new-bus-num" placeholder="Numéro du Bus (ex: Bus 1) *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
                         <input type="text" id="new-bus-driver" placeholder="Nom du Chauffeur *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
                         <input type="text" id="new-bus-acc" placeholder="Nom de l'Accompagnatrice *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
                         <input type="number" id="new-bus-cap" placeholder="Élèves autorisés (indicatif)" min="1" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
@@ -650,13 +648,12 @@
                     </button>
                 </div>
 
-                <!-- LISTE DES BUS -->
                 <div id="fleet-cards-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;"></div>
             </div>
         </section>
 
         <section id="page-students" class="page-view" style="overflow-y: auto; padding: 14px;">
-            <div style="max-width: 980px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; padding-bottom: 24px;">
+            <div style="max-width: 980px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; padding-bottom: 70px;">
                 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px;">
                     <h2 style="margin: 0 0 10px; font-size: 17px; font-weight: 900;">+ Ajouter un Élève</h2>
                     <input type="text" id="stu-name" placeholder="Nom & Prénom de l'élève *" style="width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; margin-bottom: 8px;">
@@ -691,15 +688,62 @@
             </div>
         </section>
 
-        <!-- ==================== VUE TERRAIN CHAUFFEUR ==================== -->
+        <!-- ==================== 3. NOUVEL ESPACE ADHÉRENT (DIRECTION) ==================== -->
+        <section id="page-adherent" class="page-view" style="overflow-y: auto; background: #f1f5f9; padding: 14px;">
+            <div style="max-width: 640px; margin: 0 auto; width: 100%; padding-bottom: 75px;">
+                
+                <div style="background: linear-gradient(135deg, #0f172a 0%, #0066b3 100%); color: #fff; border-radius: 18px; padding: 18px; margin-bottom: 14px; text-align: center; box-shadow: 0 8px 20px rgba(15,23,42,0.15);">
+                    <span style="background: #facc15; color: #0f172a; font-size: 10px; font-weight: 900; padding: 3px 10px; border-radius: 999px;">ABONNEMENT EN COURS</span>
+                    <h2 id="adh-school-title" style="margin: 8px 0 2px; font-size: 18px; font-weight: 900;">Mon Établissement</h2>
+                    <p id="adh-pack-subtitle" style="margin: 0 0 14px; font-size: 12px; color: #bae6fd;">Licence Annuelle</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                        <div style="background: rgba(255,255,255,0.12); padding: 12px 6px; border-radius: 12px;">
+                            <div id="cd-days" style="font-size: 26px; font-weight: 900; color: #facc15;">00</div>
+                            <div style="font-size: 10px; font-weight: 800; text-transform: uppercase;">Jours</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.12); padding: 12px 6px; border-radius: 12px;">
+                            <div id="cd-hours" style="font-size: 26px; font-weight: 900; color: #ffffff;">00</div>
+                            <div style="font-size: 10px; font-weight: 800; text-transform: uppercase;">Heures</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.12); padding: 12px 6px; border-radius: 12px;">
+                            <div id="cd-mins" style="font-size: 26px; font-weight: 900; color: #38bdf8;">00</div>
+                            <div style="font-size: 10px; font-weight: 800; text-transform: uppercase;">Minutes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px;">
+                    <h3 style="margin: 0 0 12px; font-size: 16px; font-weight: 900;">👤 Mes Informations Personnelles</h3>
+                    
+                    <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Adresse Gmail / E-mail</label>
+                    <input type="email" id="adh-email" placeholder="exemple@gmail.com" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;margin-bottom:10px;">
+                    
+                    <label style="display:block;font-size:11px;font-weight:800;color:#475569;margin-bottom:4px;">Numéro de téléphone</label>
+                    <input type="tel" id="adh-phone" placeholder="06XXXXXXXX" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;margin-bottom:14px;">
+                    
+                    <hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0;">
+                    <h4 style="margin: 0 0 10px; font-size: 14px; font-weight: 900;">🔐 Changer le mot de passe (optionnel)</h4>
+                    
+                    <input type="password" id="adh-new-pass" placeholder="Nouveau mot de passe (6 car. min)" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;margin-bottom:8px;">
+                    <input type="password" id="adh-confirm-pass" placeholder="Confirmer le nouveau mot de passe" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;margin-bottom:14px;">
+                    
+                    <button type="button" onclick="saveAdherentProfile()" style="width:100%;background:#10b981;color:#fff;border:none;padding:13px;border-radius:12px;font-size:14px;font-weight:900;cursor:pointer;">
+                        ✅ Enregistrer mes modifications
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== VUE TERRAIN CHAUFFEUR (CONSERVÉE POUR CHAUFFEURS) ==================== -->
         <section id="page-attendance" class="page-view" style="overflow-y: auto; background: #f8fafc;">
             <div class="driver-strip" id="att-driver-pills"></div>
             <div style="max-width: 880px; margin: 0 auto; width: 100%; padding: 14px 14px 80px 14px;">
                 <div style="background: #0f172a; color: #ffffff; border-radius: 16px; padding: 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                     <div>
                         <span style="background: #facc15; color: #0f172a; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 999px; text-transform: uppercase;">Feuille de Route Terrain</span>
-                        <h2 style="margin: 6px 0 2px; font-size: 17px; font-weight: 900;" id="att-header-title">Bus 1 — Secteur Sidi Bouzid</h2>
-                        <p style="margin: 0; font-size: 12px; color: #cbd5e1;" id="att-crew-subtitle">Chauffeur : Abdeladim • Accompagnatrice : Fatima Zahra</p>
+                        <h2 style="margin: 6px 0 2px; font-size: 17px; font-weight: 900;" id="att-header-title">Feuille de route</h2>
+                        <p style="margin: 0; font-size: 12px; color: #cbd5e1;" id="att-crew-subtitle">Équipage</p>
                     </div>
                     <div style="display: flex; gap: 6px;">
                         <button type="button" id="att-v1-btn" onclick="setAttVoyage(1)" style="background: #10b981; color: #fff; border: none; padding: 9px 13px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer;">Voyage 1 (07h00)</button>
@@ -722,12 +766,13 @@
             </div>
         </section>
 
+        <!-- BARRE MOBILE DIRECTION -->
         <nav class="mobile-nav dir-only" id="manager-mobile-nav">
-            <button type="button" class="mob-tab" onclick="switchPage('global')"><span class="mob-icon-wrap">🗺️</span><span>Globale</span></button>
-            <button type="button" class="mob-tab active" onclick="switchPage('driver')"><span class="mob-icon-wrap">👨‍✈️</span><span>Chauffeur</span></button>
-            <button type="button" class="mob-tab" onclick="switchPage('fleet')"><span class="mob-icon-wrap">🚌</span><span>Flotte</span></button>
-            <button type="button" class="mob-tab" onclick="switchPage('students')"><span class="mob-icon-wrap">➕</span><span>Élèves</span></button>
-            <button type="button" class="mob-tab" onclick="switchPage('attendance')"><span class="mob-icon-wrap">📸</span><span>Pointage</span></button>
+            <button type="button" class="mob-tab" id="m-tab-global" onclick="switchPage('global')"><span class="mob-icon-wrap">🗺️</span><span>Globale</span></button>
+            <button type="button" class="mob-tab" id="m-tab-driver" onclick="switchPage('driver')"><span class="mob-icon-wrap">👨‍✈️</span><span>Chauffeur</span></button>
+            <button type="button" class="mob-tab active" id="m-tab-fleet" onclick="switchPage('fleet')"><span class="mob-icon-wrap">🚌</span><span>Flotte</span></button>
+            <button type="button" class="mob-tab" id="m-tab-students" onclick="switchPage('students')"><span class="mob-icon-wrap">➕</span><span>Élèves</span></button>
+            <button type="button" class="mob-tab" id="m-tab-adherent" onclick="switchPage('adherent')"><span class="mob-icon-wrap">👤</span><span>Adhérent</span></button>
         </nav>
     </div>
 
@@ -794,22 +839,23 @@
             try { firebase.initializeApp({ databaseURL: FIREBASE_DB_URL }); firebaseDb = firebase.database(); } catch (e) {}
         }
 
-        const STORAGE_KEY = 'fkhekho_ange_bleu_ob_v8';
+        const STORAGE_KEY = 'navette_pro_fleet_v9';
         const SAAS_CLIENTS_KEY = 'navette_pro_saas_clients_ob_v1';
         const ACCOUNTS_KEY = 'navette_pro_accounts_v1';
-        const SESSION_KEY = 'fkhekho_ob_session_v8';
-        const DEMO_START_KEY = 'fkhekho_ob_demo_start_v8';
+        const SESSION_KEY = 'navette_pro_session_v9';
+        const DEMO_START_KEY = 'navette_pro_demo_start_v9';
         const DEMO_DURATION_MS = 48 * 60 * 60 * 1000;
         const DAY_MS = 24 * 60 * 60 * 1000;
         const SCHOOL_COORDS = [33.2378, -8.5165];
 
-        let schoolNameGlobal = "Groupe Scolaire L'Ange Bleu";
+        let schoolNameGlobal = "Mon Établissement";
         let schoolAccounts = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '{}');
         let pendingLicenseContext = null;
         let saasClients = [];
         let saFilterMode = 'all';
         let pendingOtpCode = null;
         let pendingOtpExpiry = 0;
+        let subscriptionTimerInterval = null;
 
         // ==================== LANDING PAGE & ONBOARDING PDG / GESTIONNAIRE ====================
         function showLoginPortal() {
@@ -858,15 +904,15 @@
                     return;
                 }
                 errBox.style.display = 'none';
-                openPdgOnboarding(tier, rawVal, matchedClient ? matchedClient.id : null);
+                openPdgOnboarding(tier, rawVal, matchedClient ? matchedClient.id : null, matchedClient ? matchedClient.endDate : null);
             } else {
                 errBox.textContent = "❌ Clé licence 24 chiffres invalide.";
                 errBox.style.display = 'block';
             }
         }
 
-        function openPdgOnboarding(tier, licenseKey, clientId) {
-            pendingLicenseContext = { tier, licenseKey, clientId };
+        function openPdgOnboarding(tier, licenseKey, clientId, endDate) {
+            pendingLicenseContext = { tier, licenseKey, clientId, endDate: endDate || (Date.now() + 365 * DAY_MS) };
             document.getElementById('pdg-pack-label').textContent = tier === 'premium' ? 'Pack Premium (12 bus max)' : 'Pack Basique (6 bus max)';
             document.getElementById('pdg-register-modal').classList.add('open');
         }
@@ -891,7 +937,14 @@
 
             err.style.display = 'none';
             schoolNameGlobal = school;
-            schoolAccounts.pdg = { school, address, lastname, firstname, role, email, pass, tier: pendingLicenseContext.tier };
+            fleetState = [];
+            waRequests = [];
+            schoolAccounts.pdg = {
+                school, address, lastname, firstname, role, email, pass,
+                phone: '',
+                tier: pendingLicenseContext.tier,
+                endDate: pendingLicenseContext.endDate
+            };
             localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(schoolAccounts));
             if (firebaseDb) firebaseDb.ref('navette_pro_accounts').set(schoolAccounts);
             saveState();
@@ -905,6 +958,7 @@
             document.getElementById('manager-register-modal').classList.remove('open');
             if (pendingLicenseContext && schoolAccounts.pdg) {
                 startSession({ role: pendingLicenseContext.tier, subRole: 'pdg', email: schoolAccounts.pdg.email });
+                pendingLicenseContext = null;
                 showToast("✅ Compte PDG créé ! Vous pourrez ajouter le Gestionnaire plus tard.");
             }
         }
@@ -932,7 +986,7 @@
             if (pass.length < 6 || pass !== pass2) { err.textContent = "❌ Mots de passe différents ou trop courts (6 caractères min)."; err.style.display = 'block'; return; }
 
             err.style.display = 'none';
-            schoolAccounts.manager = { lastname, firstname, role, email, pass };
+            schoolAccounts.manager = { lastname, firstname, role, email, pass, phone: '' };
             localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(schoolAccounts));
             if (firebaseDb) firebaseDb.ref('navette_pro_accounts').set(schoolAccounts);
 
@@ -940,8 +994,65 @@
             if (pendingLicenseContext) {
                 startSession({ role: pendingLicenseContext.tier, subRole: 'pdg', email: schoolAccounts.pdg.email });
                 pendingLicenseContext = null;
+            } else {
+                document.getElementById('btn-create-mgr-header').style.display = 'none';
             }
             showToast("✅ Compte Gestionnaire créé avec succès !");
+        }
+
+        // ==================== ESPACE ADHÉRENT & COMPTE À REBOURS ====================
+        function renderAdherentPage() {
+            const subKey = (activeSession && activeSession.subRole === 'manager') ? 'manager' : 'pdg';
+            const acc = schoolAccounts[subKey] || schoolAccounts.pdg || {};
+            document.getElementById('adh-school-title').textContent = schoolNameGlobal;
+            document.getElementById('adh-pack-subtitle').textContent = activeSession && activeSession.role === 'premium' ? 'Pack Premium (365 jours • 12 bus max)' : activeSession && activeSession.role === 'demo' ? 'Essai Démo (48 heures)' : 'Pack Basique (365 jours • 6 bus max)';
+            document.getElementById('adh-email').value = acc.email || (activeSession && activeSession.email) || '';
+            document.getElementById('adh-phone').value = acc.phone || '';
+            document.getElementById('adh-new-pass').value = '';
+            document.getElementById('adh-confirm-pass').value = '';
+            startSubscriptionCountdown();
+        }
+
+        function startSubscriptionCountdown() {
+            if (subscriptionTimerInterval) clearInterval(subscriptionTimerInterval);
+            let endDate = (schoolAccounts.pdg && schoolAccounts.pdg.endDate) ? schoolAccounts.pdg.endDate : (Date.now() + 365 * DAY_MS);
+            if (activeSession && activeSession.role === 'demo') {
+                const startTs = parseInt(localStorage.getItem(DEMO_START_KEY), 10) || Date.now();
+                endDate = startTs + DEMO_DURATION_MS;
+            }
+            const updateClock = () => {
+                const diff = Math.max(0, endDate - Date.now());
+                const days = Math.floor(diff / DAY_MS);
+                const hours = Math.floor((diff % DAY_MS) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+                document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+            };
+            updateClock();
+            subscriptionTimerInterval = setInterval(updateClock, 30000);
+        }
+
+        function saveAdherentProfile() {
+            const email = document.getElementById('adh-email').value.trim().toLowerCase();
+            const phone = document.getElementById('adh-phone').value.trim();
+            const newPass = document.getElementById('adh-new-pass').value;
+            const confirmPass = document.getElementById('adh-confirm-pass').value;
+
+            if (!email || !email.includes('@')) { alert("Veuillez saisir une adresse e-mail valide."); return; }
+            if (newPass && (newPass.length < 6 || newPass !== confirmPass)) { alert("Les mots de passe ne correspondent pas (6 caractères min)."); return; }
+
+            const subKey = (activeSession && activeSession.subRole === 'manager') ? 'manager' : 'pdg';
+            if (!schoolAccounts[subKey]) schoolAccounts[subKey] = {};
+            schoolAccounts[subKey].email = email;
+            schoolAccounts[subKey].phone = phone;
+            if (newPass) schoolAccounts[subKey].pass = newPass;
+
+            localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(schoolAccounts));
+            if (firebaseDb) firebaseDb.ref('navette_pro_accounts').set(schoolAccounts);
+            document.getElementById('adh-new-pass').value = '';
+            document.getElementById('adh-confirm-pass').value = '';
+            showToast("✅ Profil adhérent mis à jour !");
         }
 
         // ==================== GESTION DES BUS (6 BASIC / 12 PREMIUM) & EXCEL LOGO ====================
@@ -972,7 +1083,7 @@
             }
             const nextIdx = fleetState.length + 1;
             const palette = ['#1d4ed8', '#dc2626', '#059669', '#d97706', '#7c3aed', '#0891b2'];
-            fleetState.push({
+            const newBus = {
                 id: 'B' + Date.now() + nextIdx,
                 code: 'BUS' + nextIdx,
                 num: busNum || `Bus ${nextIdx}`,
@@ -983,7 +1094,9 @@
                 color: palette[(nextIdx - 1) % palette.length],
                 center: SCHOOL_COORDS,
                 students: []
-            });
+            };
+            fleetState.push(newBus);
+            if (!selectedBusId) selectedBusId = newBus.id;
             saveState();
             renderFleetPage();
             showToast(`🚌 ${busNum} ajouté (${fleetState.length}/${maxBuses}).`);
@@ -995,7 +1108,6 @@
             const workbook = new ExcelJS.Workbook();
             const sheet = workbook.addWorksheet('Import Navette Pro');
 
-            // Bandeau En-tête Navette Pro
             sheet.mergeCells('A1:G3');
             const titleCell = sheet.getCell('A1');
             titleCell.value = `NAVETTE PRO — FICHE D'IMPORTATION TRANSPORT SCOLAIRE\n${schoolNameGlobal}`;
@@ -1003,7 +1115,6 @@
             titleCell.font = { name: 'Calibri', size: 14, bold: true, color: { argb: 'FFFFFFFF' } };
             titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0F172A' } };
 
-            // Intégration du logo SVG converti en PNG
             const svgEl = document.getElementById('navette-pro-svg-logo');
             if (svgEl) {
                 const svgData = new XMLSerializer().serializeToString(svgEl);
@@ -1020,7 +1131,6 @@
                 sheet.addImage(imageId, { tl: { col: 0.15, row: 0.15 }, ext: { width: 52, height: 52 } });
             }
 
-            // Colonnes (Ligne 5)
             const headers = ['Numéro du Bus', 'Chauffeur', 'Accompagnatrice', 'Élèves Autorisés (Bus)', 'Nom & Prénom Élève', 'Niveau (ex: 4AP)', 'Tél. Parent'];
             const headerRow = sheet.getRow(5);
             headerRow.values = headers;
@@ -1032,8 +1142,7 @@
                 cell.border = { bottom: { style: 'medium', color: { argb: 'FFFACC15' } } };
             });
 
-            // Exemple pré-rempli
-            const sampleRow = sheet.addRow(['Bus 1', 'Abdeladim', 'Fatima Zahra', 24, 'Yassine Bennani', '4AP', '0661458912']);
+            const sampleRow = sheet.addRow(['Bus 1', 'Nom Chauffeur', 'Nom Accompagnatrice', 24, 'Nom Prénom Élève', '4AP', '0661000000']);
             sampleRow.eachCell(c => { c.alignment = { vertical: 'middle', horizontal: 'center' }; });
             sheet.columns.forEach(col => { col.width = 24; });
 
@@ -1140,7 +1249,6 @@
             const expBox = document.getElementById('auth-expired');
             errBox.style.display = 'none'; expBox.style.display = 'none';
 
-            // 1. Connexion SuperAdmin OB
             if (rawVal.toLowerCase() === SUPERADMIN_EMAIL.toLowerCase()) {
                 const btn = document.getElementById('btn-mgr-submit');
                 btn.disabled = true; btn.textContent = '⏳ Envoi du code OTP...';
@@ -1157,7 +1265,6 @@
                 return;
             }
 
-            // 2. Connexion Compte PDG ou Gestionnaire par Email + Mot de passe
             if (schoolAccounts.pdg && rawVal.toLowerCase() === schoolAccounts.pdg.email && passVal === schoolAccounts.pdg.pass) {
                 schoolNameGlobal = schoolAccounts.pdg.school;
                 startSession({ role: schoolAccounts.pdg.tier || 'basic', subRole: 'pdg', email: schoolAccounts.pdg.email });
@@ -1169,7 +1276,6 @@
                 return;
             }
 
-            // 3. Connexion Démo
             const upperCode = rawVal.toUpperCase();
             if (upperCode === '4800' || upperCode === 'AB48') {
                 let firstTs = parseInt(localStorage.getItem(DEMO_START_KEY), 10) || Date.now();
@@ -1179,13 +1285,12 @@
                 return;
             }
 
-            // 4. Connexion par Clé Licence 24 chiffres
             const tier = validate24DigitLicense(rawVal);
             if (tier) {
                 const cleanDigits = rawVal.replace(/\D/g, '');
                 const matchedClient = saasClients.find(c => c.key24.replace(/\D/g, '') === cleanDigits);
                 if (matchedClient && (matchedClient.suspended || Date.now() > matchedClient.endDate)) { expBox.style.display = 'block'; return; }
-                openPdgOnboarding(tier, rawVal, matchedClient ? matchedClient.id : null);
+                openPdgOnboarding(tier, rawVal, matchedClient ? matchedClient.id : null, matchedClient ? matchedClient.endDate : null);
                 return;
             }
 
@@ -1212,7 +1317,7 @@
             document.getElementById('mgr-step-key').style.display = 'block';
         }
 
-        // ==================== SUPERADMIN & ÉTAT FLOTTE ====================
+        // ==================== SUPERADMIN & FLOTTE VIDE PAR DÉFAUT ====================
         function setSaFilter(mode) {
             saFilterMode = mode;
             document.querySelectorAll('.sa-filter-btn').forEach(b => {
@@ -1283,25 +1388,40 @@
         }
         function renewSaasClient(id) { const c = saasClients.find(x => x.id === id); if (c) { c.endDate = Math.max(Date.now(), c.endDate) + (365 * DAY_MS); c.suspended = false; saveSaasClients(); renderSuperAdminDashboard(); } }
 
-        const DEFAULT_FLEET = [
-            { id: 'B1', code: 'BUS1', num: 'Bus 1', driver: 'Abdeladim', acc: 'Fatima Zahra', authorizedCapacity: 24, sector: 'Sidi Bouzid', color: '#1d4ed8', center: [33.2265, -8.5475], students: [
-                { id: 'EL-101', name: 'Yassine Bennani', level: '4AP', voyage: 1, address: 'Corniche', lat: 33.2285, lng: -8.5490, phone: '0661458912', status: 'pending', statusTime: '' }
-            ]},
-            { id: 'B2', code: 'BUS2', num: 'Bus 2', driver: 'Abdessalam', acc: 'Khadija', authorizedCapacity: 24, sector: 'Saada', color: '#dc2626', center: [33.2280, -8.5045], students: [] }
-        ];
+        // 2. FLOTTE VIDE PAR DÉFAUT
+        const DEFAULT_FLEET = [];
 
-        let fleetState = []; let waRequests = []; let selectedBusId = 'B1'; let activeSession = null; let attVoyageFilter = 1; let mapGlobal = null, mapDriver = null, globalLayer = null, driverLayer = null;
+        let fleetState = []; let waRequests = []; let selectedBusId = null; let activeSession = null; let attVoyageFilter = 1; let mapGlobal = null, mapDriver = null, globalLayer = null, driverLayer = null;
 
         function loadState() {
-            try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) { const parsed = JSON.parse(raw); if (parsed && Array.isArray(parsed.fleet) && parsed.fleet.length > 0) { fleetState = parsed.fleet; waRequests = Array.isArray(parsed.wa) ? parsed.wa : []; if (parsed.schoolName) schoolNameGlobal = parsed.schoolName; return; } } } catch (e) {}
-            fleetState = JSON.parse(JSON.stringify(DEFAULT_FLEET)); waRequests = [];
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && Array.isArray(parsed.fleet)) {
+                        fleetState = parsed.fleet;
+                        waRequests = Array.isArray(parsed.wa) ? parsed.wa : [];
+                        if (parsed.schoolName) schoolNameGlobal = parsed.schoolName;
+                        if (fleetState.length > 0 && !selectedBusId) selectedBusId = fleetState[0].id;
+                        return;
+                    }
+                }
+            } catch (e) {}
+            fleetState = [];
+            waRequests = [];
         }
 
         function initRealtimeSync() {
             if (firebaseDb) {
-                firebaseDb.ref('navette_pro_live').on('value', (snapshot) => {
+                firebaseDb.ref('navette_pro_live_v9').on('value', (snapshot) => {
                     const data = snapshot.val();
-                    if (data && data.fleet) { fleetState = data.fleet; if (data.wa) waRequests = data.wa; if (data.schoolName) schoolNameGlobal = data.schoolName; localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); refreshCurrentView(); }
+                    if (data && Array.isArray(data.fleet)) {
+                        fleetState = data.fleet;
+                        if (data.wa) waRequests = data.wa;
+                        if (data.schoolName) schoolNameGlobal = data.schoolName;
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                        refreshCurrentView();
+                    }
                 });
             }
         }
@@ -1311,6 +1431,7 @@
             if (document.getElementById('page-driver').classList.contains('active')) renderDriverPage();
             if (document.getElementById('page-fleet').classList.contains('active')) renderFleetPage();
             if (document.getElementById('page-students').classList.contains('active')) renderStudentsPage();
+            if (document.getElementById('page-adherent').classList.contains('active')) renderAdherentPage();
             if (document.getElementById('page-attendance').classList.contains('active')) renderAttendancePage();
             if (document.getElementById('page-parent-portal').classList.contains('active')) renderParentPortal();
         }
@@ -1318,7 +1439,7 @@
         function saveState() {
             const payload = { fleet: fleetState, wa: waRequests, schoolName: schoolNameGlobal, updatedAt: Date.now() };
             try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch (e) {}
-            if (firebaseDb) { firebaseDb.ref('navette_pro_live').set(payload).catch(err => console.error(err)); }
+            if (firebaseDb) { firebaseDb.ref('navette_pro_live_v9').set(payload).catch(err => console.error(err)); }
         }
 
         function saveAllManual() { saveState(); saveSaasClients(); showToast('✅ Données enregistrées.'); }
@@ -1327,13 +1448,19 @@
         function selectLoginPortal(portal) {
             ['manager', 'chauffeur', 'parent'].forEach(p => { document.getElementById(`rtab-${p}`).classList.toggle('active', p === portal); document.getElementById(`login-panel-${p}`).style.display = p === portal ? 'block' : 'none'; });
             document.getElementById('auth-error').style.display = 'none';
-            if (portal === 'chauffeur') document.getElementById('driver-login-select').innerHTML = fleetState.map(b => `<option value="${b.id}">${b.num} — ${b.driver} (${b.sector})</option>`).join('');
+            if (portal === 'chauffeur') {
+                document.getElementById('driver-login-select').innerHTML = fleetState.length
+                    ? fleetState.map(b => `<option value="${b.id}">${b.num} — ${b.driver}</option>`).join('')
+                    : `<option value="">Aucun bus enregistré</option>`;
+            }
         }
 
         function verifyDriverLogin() {
             const busId = document.getElementById('driver-login-select').value; const pin = (document.getElementById('driver-pin-input').value || '').trim().toUpperCase(); const bus = fleetState.find(b => b.id === busId);
-            if (!bus) return; const expectedCode = (bus.code || `BUS${bus.id.replace(/\D/g,'')}`).toUpperCase();
-            if (pin === expectedCode || pin === '1234' || pin === bus.id.toUpperCase()) { startSession({ role: 'driver', busId: bus.id }); } else { document.getElementById('auth-error').textContent = `❌ Code Bus incorrect.`; document.getElementById('auth-error').style.display = 'block'; }
+            if (!bus) { document.getElementById('auth-error').textContent = '❌ Aucun bus disponible.'; document.getElementById('auth-error').style.display = 'block'; return; }
+            const expectedCode = (bus.code || 'BUS1').toUpperCase();
+            if (pin === expectedCode || pin === '1234' || pin === bus.id.toUpperCase()) { startSession({ role: 'driver', busId: bus.id }); }
+            else { document.getElementById('auth-error').textContent = `❌ Code Bus incorrect.`; document.getElementById('auth-error').style.display = 'block'; }
         }
 
         function verifyParentLogin() {
@@ -1346,7 +1473,8 @@
             activeSession = sess; sessionStorage.setItem(SESSION_KEY, JSON.stringify(sess));
             document.getElementById('landing-page').style.display = 'none';
             document.getElementById('auth-overlay').style.display = 'none';
-            document.getElementById('header-school-name').textContent = sess.role === 'admin' ? 'SYSTÈME SAAS NAVETTE PRO • OB' : schoolNameGlobal;
+            document.getElementById('header-school-name').textContent = sess.role === 'admin' ? '👑 SYSTÈME SAAS • OB' : `🏫 ${schoolNameGlobal}`;
+            document.getElementById('map-school-label-global').textContent = `🏫 Siège : ${schoolNameGlobal}`;
 
             const isMgr = ['admin', 'premium', 'basic', 'demo'].includes(sess.role);
             document.getElementById('manager-desktop-nav').style.display = isMgr ? '' : 'none';
@@ -1367,7 +1495,6 @@
                 const subLabel = sess.subRole === 'pdg' ? 'PDG' : sess.subRole === 'manager' ? 'Gestionnaire' : 'Direction';
                 tierPill.textContent = `${subLabel} • ${sess.role === 'premium' ? 'Premium (12 bus)' : sess.role === 'basic' ? 'Basique (6 bus)' : 'Démo 48h'}`;
                 timerBadge.textContent = '⏳ Actif';
-                document.getElementById('att-driver-pills').style.display = 'flex';
                 switchPage('fleet');
             }
         }
@@ -1375,6 +1502,7 @@
         function showOnlyPage(pageName) { document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active')); document.getElementById(`page-${pageName}`).classList.add('active'); }
 
         function logoutSession() {
+            if (subscriptionTimerInterval) clearInterval(subscriptionTimerInterval);
             sessionStorage.removeItem(SESSION_KEY); activeSession = null;
             document.getElementById('btn-ob-superadmin').style.display = 'none';
             document.getElementById('btn-create-mgr-header').style.display = 'none';
@@ -1386,9 +1514,19 @@
             if (pageName === 'superadmin' && (!activeSession || activeSession.role !== 'admin')) return;
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.mob-tab').forEach(t => t.classList.remove('active'));
             document.getElementById(`page-${pageName}`).classList.add('active');
             const dTab = document.getElementById(`d-tab-${pageName}`); if (dTab) dTab.classList.add('active');
-            if (pageName === 'superadmin') renderSuperAdminDashboard(); else if (pageName === 'global') renderGlobalPage(); else if (pageName === 'driver') renderDriverPage(); else if (pageName === 'fleet') renderFleetPage(); else if (pageName === 'students') renderStudentsPage(); else if (pageName === 'attendance') renderAttendancePage();
+            const mTab = document.getElementById(`m-tab-${pageName}`); if (mTab) mTab.classList.add('active');
+
+            if (pageName === 'superadmin') renderSuperAdminDashboard();
+            else if (pageName === 'global') renderGlobalPage();
+            else if (pageName === 'driver') renderDriverPage();
+            else if (pageName === 'fleet') renderFleetPage();
+            else if (pageName === 'students') renderStudentsPage();
+            else if (pageName === 'adherent') renderAdherentPage();
+            else if (pageName === 'attendance') renderAttendancePage();
+
             setTimeout(() => { if (mapGlobal) mapGlobal.invalidateSize(); if (mapDriver) mapDriver.invalidateSize(); }, 100);
         }
 
@@ -1401,13 +1539,45 @@
             return { stops };
         }
         function initMaps() { if (typeof L === 'undefined') return; globalLayer = L.featureGroup(); driverLayer = L.featureGroup(); const tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'; mapGlobal = L.map('mapGlobal').setView(SCHOOL_COORDS, 13); L.tileLayer(tileUrl).addTo(mapGlobal); mapGlobal.addLayer(globalLayer); mapDriver = L.map('mapDriver').setView(SCHOOL_COORDS, 14); L.tileLayer(tileUrl).addTo(mapDriver); mapDriver.addLayer(driverLayer); }
-        function renderGlobalPage() { document.getElementById('global-sectors-list').innerHTML = fleetState.map(bus => `<div onclick="selectedBusId='${bus.id}';switchPage('driver');" style="background:#fff;border:1px solid #e2e8f0;border-left:5px solid ${bus.color};border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:900;">${bus.num} — ${bus.sector}</div><div style="font-size:11px;color:#64748b;">👨‍✈️ ${bus.driver}</div></div><span style="background:${bus.color};color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;">${bus.students.length} él.</span></div>`).join(''); }
+
+        function renderGlobalPage() {
+            if (fleetState.length === 0) {
+                document.getElementById('global-sectors-list').innerHTML = `<div style="background:#fff;border:1px dashed #cbd5e1;border-radius:12px;padding:18px;text-align:center;color:#64748b;font-size:12px;">Aucun bus enregistré. Ajoutez vos véhicules dans l'onglet <strong>Flotte</strong>.</div>`;
+                return;
+            }
+            document.getElementById('global-sectors-list').innerHTML = fleetState.map(bus => `<div onclick="selectedBusId='${bus.id}';switchPage('driver');" style="background:#fff;border:1px solid #e2e8f0;border-left:5px solid ${bus.color};border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:900;">${bus.num} — ${bus.sector}</div><div style="font-size:11px;color:#64748b;">👨‍✈️ ${bus.driver}</div></div><span style="background:${bus.color};color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;">${bus.students.length} él.</span></div>`).join('');
+        }
         function fitGlobalMap() { if (mapGlobal) mapGlobal.setView(SCHOOL_COORDS, 13); }
-        function renderDriverPage() { document.getElementById('driver-pills-container').innerHTML = fleetState.map(bus => `<button type="button" class="driver-pill ${bus.id === selectedBusId ? 'active' : ''}" onclick="selectedBusId='${bus.id}';renderDriverPage();"><span style="width:9px;height:9px;border-radius:50%;background:${bus.color};display:inline-block;"></span> ${bus.num} - ${bus.driver}</button>`).join(''); const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0]; if (!bus) return; document.getElementById('active-crew-banner').innerHTML = `👨‍✈️ <strong>${bus.driver}</strong> &amp; 👩‍🏫 <strong>${bus.acc}</strong> • Secteur ${bus.sector}`; if (driverLayer) { driverLayer.clearLayers(); bus.students.forEach(s => L.marker([s.lat, s.lng]).addTo(driverLayer)); } document.getElementById('driver-voyages-container').innerHTML = [1, 2].map(vNum => { const sched = computeVoyageSchedule(bus.students.filter(s => s.voyage === vNum), vNum); return `<div class="voyage-card"><div class="voyage-header"><div style="font-size:12px;font-weight:900;">VOYAGE ${vNum}</div><div style="font-size:11px;color:#64748b;">${sched.stops.length} élève(s)</div></div>${sched.stops.map(st => `<div class="student-row"><div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-size:13px;font-weight:800;">${st.order}. ${st.name} (${st.level})</div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.status==='present'?'#dcfce7':st.status==='absent'?'#fee2e2':'#f1f5f9'};color:${st.status==='present'?'#15803d':st.status==='absent'?'#b91c1c':'#64748b'};">${st.status==='present'?'🟢 PRÉSENT':st.status==='absent'?'🔴 ABSENT':'⏳ EN ATTENTE'} ${st.statusTime ? '('+st.statusTime+')':''}</span><span style="font-size:12px;font-weight:900;">🕒 ${st.timeStr}</span></div></div></div>`).join('')}</div>`; }).join(''); }
+
+        function renderDriverPage() {
+            if (fleetState.length === 0) {
+                document.getElementById('driver-pills-container').innerHTML = '';
+                document.getElementById('active-crew-banner').textContent = 'Aucun véhicule dans la flotte';
+                document.getElementById('driver-voyages-container').innerHTML = `<div style="background:#fff;border:1px dashed #cbd5e1;border-radius:12px;padding:18px;text-align:center;color:#64748b;font-size:12px;">Créez d'abord un bus dans l'onglet <strong>Flotte</strong>.</div>`;
+                return;
+            }
+            if (!selectedBusId || !fleetState.find(b => b.id === selectedBusId)) selectedBusId = fleetState[0].id;
+            document.getElementById('driver-pills-container').innerHTML = fleetState.map(bus => `<button type="button" class="driver-pill ${bus.id === selectedBusId ? 'active' : ''}" onclick="selectedBusId='${bus.id}';renderDriverPage();"><span style="width:9px;height:9px;border-radius:50%;background:${bus.color};display:inline-block;"></span> ${bus.num} - ${bus.driver}</button>`).join('');
+            const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0];
+            document.getElementById('active-crew-banner').innerHTML = `👨‍✈️ <strong>${bus.driver}</strong> &amp; 👩‍🏫 <strong>${bus.acc}</strong> • ${bus.num}`;
+            document.getElementById('driver-map-chip').textContent = `${bus.num} — ${bus.driver}`;
+            if (driverLayer) { driverLayer.clearLayers(); bus.students.forEach(s => L.marker([s.lat, s.lng]).addTo(driverLayer)); }
+            document.getElementById('driver-voyages-container').innerHTML = [1, 2].map(vNum => { const sched = computeVoyageSchedule(bus.students.filter(s => s.voyage === vNum), vNum); return `<div class="voyage-card"><div class="voyage-header"><div style="font-size:12px;font-weight:900;">VOYAGE ${vNum}</div><div style="font-size:11px;color:#64748b;">${sched.stops.length} élève(s)</div></div>${sched.stops.map(st => `<div class="student-row"><div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-size:13px;font-weight:800;">${st.order}. ${st.name} (${st.level})</div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.status==='present'?'#dcfce7':st.status==='absent'?'#fee2e2':'#f1f5f9'};color:${st.status==='present'?'#15803d':st.status==='absent'?'#b91c1c':'#64748b'};">${st.status==='present'?'🟢 PRÉSENT':st.status==='absent'?'🔴 ABSENT':'⏳ EN ATTENTE'} ${st.statusTime ? '('+st.statusTime+')':''}</span><span style="font-size:12px;font-weight:900;">🕒 ${st.timeStr}</span></div></div></div>`).join('')}</div>`; }).join('');
+        }
         function recenterDriverMap() { if (mapDriver) mapDriver.setView(SCHOOL_COORDS, 14); }
+
         function renderFleetPage() {
             const maxBuses = getMaxBusLimit();
             document.getElementById('fleet-quota-badge').textContent = `${fleetState.length} / ${maxBuses} Bus utilisés`;
+            if (fleetState.length === 0) {
+                document.getElementById('fleet-cards-container').innerHTML = `
+                    <div style="grid-column: 1 / -1; background: #fff; border: 2px dashed #cbd5e1; border-radius: 16px; padding: 28px; text-align: center; color: #64748b;">
+                        <div style="font-size: 28px; margin-bottom: 6px;">🚌</div>
+                        <strong style="color: #0f172a;">Aucun espace transport enregistré</strong>
+                        <p style="margin: 4px 0 0; font-size: 12px;">Ajoutez votre premier bus ci-dessus ou importez votre fichier Excel Navette Pro.</p>
+                    </div>`;
+                return;
+            }
             document.getElementById('fleet-cards-container').innerHTML = fleetState.map(bus => `
                 <div style="background:#fff;border:1px solid #e2e8f0;border-top:5px solid ${bus.color};border-radius:14px;padding:14px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -1422,16 +1592,43 @@
                 </div>
             `).join('');
         }
-        function renderStudentsPage() { document.getElementById('stu-bus').innerHTML = fleetState.map(b => `<option value="${b.id}">${b.num} — ${b.driver}</option>`).join(''); document.getElementById('badge-d-wa').textContent = waRequests.length; document.getElementById('wa-pending-pill').textContent = `${waRequests.length} reçue(s)`; document.getElementById('wa-requests-list').innerHTML = waRequests.map(req => `<div style="border:1px solid #e2e8f0;border-radius:12px;padding:10px;margin-bottom:8px;"><strong>${req.student} (${req.level})</strong> — ${req.label}</div>`).join(''); }
-        function submitNewStudent() { const name = (document.getElementById('stu-name').value || '').trim(); if (!name) return; const bus = fleetState.find(b => b.id === document.getElementById('stu-bus').value); if (!bus) return; bus.students.push({ id: 'EL-' + Math.floor(100+Math.random()*899), name, phone: document.getElementById('stu-phone').value, level: document.getElementById('stu-level').value, voyage: parseInt(document.getElementById('stu-voyage').value, 10), address: document.getElementById('stu-address').value || bus.sector, lat: bus.center[0], lng: bus.center[1], status: 'pending', statusTime: '' }); saveState(); switchPage('driver'); }
+
+        function renderStudentsPage() {
+            document.getElementById('stu-bus').innerHTML = fleetState.length
+                ? fleetState.map(b => `<option value="${b.id}">${b.num} — ${b.driver}</option>`).join('')
+                : `<option value="">Créez d'abord un bus dans Flotte</option>`;
+            document.getElementById('badge-d-wa').textContent = waRequests.length;
+            document.getElementById('wa-pending-pill').textContent = `${waRequests.length} reçue(s)`;
+            document.getElementById('wa-requests-list').innerHTML = waRequests.map(req => `<div style="border:1px solid #e2e8f0;border-radius:12px;padding:10px;margin-bottom:8px;"><strong>${req.student} (${req.level})</strong> — ${req.label}</div>`).join('');
+        }
+
+        function submitNewStudent() {
+            const name = (document.getElementById('stu-name').value || '').trim();
+            if (!name) return;
+            const bus = fleetState.find(b => b.id === document.getElementById('stu-bus').value);
+            if (!bus) { alert("Veuillez d'abord créer un bus dans l'onglet Flotte."); return; }
+            bus.students.push({ id: 'EL-' + Math.floor(100+Math.random()*899), name, phone: document.getElementById('stu-phone').value, level: document.getElementById('stu-level').value, voyage: parseInt(document.getElementById('stu-voyage').value, 10), address: document.getElementById('stu-address').value || bus.sector, lat: bus.center[0], lng: bus.center[1], status: 'pending', statusTime: '' });
+            saveState();
+            document.getElementById('stu-name').value = '';
+            document.getElementById('stu-phone').value = '';
+            switchPage('driver');
+        }
         function jumpToAddStudent() { switchPage('students'); }
         function setAttVoyage(vNum) { attVoyageFilter = vNum; renderAttendancePage(); }
-        function renderAttendancePage() { const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0]; if (!bus) return; document.getElementById('att-header-title').textContent = `${bus.num} — Secteur ${bus.sector}`; document.getElementById('att-crew-subtitle').textContent = `Chauffeur : ${bus.driver} • Accompagnatrice : ${bus.acc}`; const sched = computeVoyageSchedule(bus.students.filter(s => s.voyage === attVoyageFilter), attVoyageFilter); document.getElementById('att-students-grid').innerHTML = sched.stops.map((stu, idx) => `<div style="background:#fff;border:2px solid ${stu.status==='present'?'#10b981':stu.status==='absent'?'#ef4444':'#e2e8f0'};border-radius:16px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.03);"><div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><img src="${stu.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'}" style="width:60px;height:60px;border-radius:14px;object-fit:cover;"><div><div style="font-size:11px;font-weight:900;color:${bus.color};">Arrêt #${idx+1} • ${stu.level}</div><div style="font-size:15px;font-weight:900;">${stu.name}</div><div style="font-size:11px;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#64748b'};font-weight:800;margin-top:2px;">${stu.status==='present'?'🟢 PRÉSENT à '+stu.statusTime:stu.status==='absent'?'🔴 ABSENT à '+stu.statusTime:'⏳ En attente de pointage'}</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','present')" style="background:${stu.status==='present'?'#047857':'#10b981'};color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🟢 PRÉSENT</button><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','absent')" style="background:${stu.status==='absent'?'#991b1b':'#ef4444'};color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🔴 ABSENT</button></div></div>`).join(''); }
+
+        function renderAttendancePage() {
+            const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0];
+            if (!bus) return;
+            document.getElementById('att-header-title').textContent = `${bus.num} — ${bus.sector}`;
+            document.getElementById('att-crew-subtitle').textContent = `Chauffeur : ${bus.driver} • Accompagnatrice : ${bus.acc}`;
+            const sched = computeVoyageSchedule(bus.students.filter(s => s.voyage === attVoyageFilter), attVoyageFilter);
+            document.getElementById('att-students-grid').innerHTML = sched.stops.map((stu, idx) => `<div style="background:#fff;border:2px solid ${stu.status==='present'?'#10b981':stu.status==='absent'?'#ef4444':'#e2e8f0'};border-radius:16px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.03);"><div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><img src="${stu.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'}" style="width:60px;height:60px;border-radius:14px;object-fit:cover;"><div><div style="font-size:11px;font-weight:900;color:${bus.color};">Arrêt #${idx+1} • ${stu.level}</div><div style="font-size:15px;font-weight:900;">${stu.name}</div><div style="font-size:11px;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#64748b'};font-weight:800;margin-top:2px;">${stu.status==='present'?'🟢 PRÉSENT à '+stu.statusTime:stu.status==='absent'?'🔴 ABSENT à '+stu.statusTime:'⏳ En attente de pointage'}</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','present')" style="background:${stu.status==='present'?'#047857':'#10b981'};color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🟢 PRÉSENT</button><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','absent')" style="background:${stu.status==='absent'?'#991b1b':'#ef4444'};color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🔴 ABSENT</button></div></div>`).join('');
+        }
         function markAttendance(busId, stuId, statusType) { const bus = fleetState.find(b => b.id === busId); const stu = bus && bus.students.find(s => s.id === stuId); if (!stu) return; stu.status = statusType; stu.statusTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); saveState(); renderAttendancePage(); showToast(`Pointage enregistré : ${stu.name} (${statusType.toUpperCase()}).`); }
         function renderParentPortal() { const q = (activeSession.parentQuery || '').toUpperCase(); const matches = []; fleetState.forEach(bus => bus.students.forEach(stu => { if ((stu.phone || '').includes(q) || stu.id.toUpperCase() === q) matches.push({ bus, stu }); })); document.getElementById('parent-children-cards').innerHTML = matches.map(({ bus, stu }) => `<div style="background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 12px rgba(0,0,0,0.04);"><div style="font-weight:900;font-size:17px;">${stu.name} (${stu.level})</div><div style="font-size:12px;color:#475569;margin-top:4px;">🚌 ${bus.num} • Chauffeur : ${bus.driver}</div><div style="margin-top:8px;font-weight:800;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#0284c7'};">État : ${stu.status==='present'?'🟢 PRÉSENT dans la navette':stu.status==='absent'?'🔴 ABSENT':'⏳ En attente du départ'}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid #f1f5f9;"><button type="button" onclick="reportAbsenceParent('${bus.id}','${stu.id}')" style="background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;padding:10px;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer;">🔴 Signaler Absence</button><button type="button" onclick="sendGpsParent('${stu.name}','${stu.level}')" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:10px;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer;">📍 Envoyer Position GPS</button></div></div>`).join(''); }
         function reportAbsenceParent(busId, stuId) { if(!confirm("Confirmez-vous l'absence de votre enfant ?")) return; const bus = fleetState.find(b => b.id === busId); const stu = bus && bus.students.find(s => s.id === stuId); if (!stu) return; stu.status = 'absent'; stu.statusTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); saveState(); renderParentPortal(); showToast("✅ Absence signalée."); }
         function sendGpsParent(stuName, stuLevel) { if ("geolocation" in navigator) { showToast("⏳ Récupération GPS..."); navigator.geolocation.getCurrentPosition(function(position) { const lat = position.coords.latitude; const lng = position.coords.longitude; waRequests.push({ id: 'WA-' + Math.floor(100 + Math.random() * 899), student: stuName, level: stuLevel, label: '📌 Point de ramassage modifié', lat: lat, lng: lng }); saveState(); showToast("📍 Position transmise."); }, function() { showToast("❌ Erreur GPS."); }); } else { showToast("❌ GPS non supporté."); } }
-        function handleExcelAction() { const wb = XLSX.utils.book_new(); fleetState.forEach(b => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(b.students), b.num)); XLSX.writeFile(wb, 'Navette_Pro_Export.xlsx'); }
+        function handleExcelAction() { if (fleetState.length === 0) { alert("Aucun bus à exporter."); return; } const wb = XLSX.utils.book_new(); fleetState.forEach(b => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(b.students), b.num)); XLSX.writeFile(wb, 'Navette_Pro_Export.xlsx'); }
 
         window.addEventListener('DOMContentLoaded', () => {
             loadSaasClients();
