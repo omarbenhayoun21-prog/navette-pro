@@ -85,7 +85,7 @@
 
         @media (max-width: 1024px) {
             .split-layout { flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-            .map-pane { flex: none; height: 34vh; min-height: 195px; width: 100%; }
+            .map-pane { flex: none; height: 36vh; min-height: 210px; width: 100%; }
             .list-pane { flex: none; max-width: 100%; border-left: none; border-top: 1px solid #e2e8f0; padding: 12px 12px 72px 12px; overflow-y: visible; }
         }
 
@@ -114,7 +114,11 @@
 
         .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.72); z-index: 11000; display: none; align-items: center; justify-content: center; padding: 16px; }
         .modal-backdrop.open { display: flex; }
-        .modal-box { background: #ffffff; border-radius: 18px; width: 100%; max-width: 520px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative; max-height: 92dvh; overflow-y: auto; }
+        .modal-box { background: #ffffff; border-radius: 18px; width: 100%; max-width: 540px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative; max-height: 92dvh; overflow-y: auto; }
+
+        /* Marqueur Bus Live animé */
+        .bus-live-icon { background: #10b981; color: #fff; border: 3px solid #fff; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 17px; box-shadow: 0 0 0 6px rgba(16,185,129,0.28); }
+        .school-pin-icon { background: #0066b3; color: #fff; border: 3px solid #facc15; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -260,40 +264,56 @@
         </div>
     </div>
 
-    <!-- MODALE 1 : INSCRIPTION PDG (APRÈS VALIDATION CLÉ LICENCE) -->
+    <!-- MODALE 1 : INSCRIPTION PDG + LOCALISATION ÉCOLE (GPS + NOMINATIM + MINI-CARTE) -->
     <div id="pdg-register-modal" class="modal-backdrop">
-        <div class="modal-box" style="max-width: 540px;">
-            <div style="text-align: center; margin-bottom: 14px;">
+        <div class="modal-box">
+            <div style="text-align: center; margin-bottom: 12px;">
                 <span style="background: #dbeafe; color: #1e40af; font-size: 11px; font-weight: 900; padding: 4px 12px; border-radius: 999px;">ÉTAPE 1 / 2 • COMPTE DIRECTION (PDG)</span>
-                <h3 style="margin: 8px 0 4px; font-size: 19px; font-weight: 900;">Finalisez l'inscription de votre école</h3>
-                <p style="margin: 0; font-size: 12px; color: #64748b;">Clé validée (<strong id="pdg-pack-label">Pack</strong>). Créez votre accès PDG.</p>
+                <h3 style="margin: 8px 0 4px; font-size: 19px; font-weight: 900;">Inscription &amp; Localisation de l'école</h3>
+                <p style="margin: 0; font-size: 12px; color: #64748b;">Clé validée (<strong id="pdg-pack-label">Pack</strong>).</p>
             </div>
 
-            <div style="display: grid; gap: 10px;">
-                <input type="text" id="pdg-school-name" placeholder="Nom de l'école *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
-                <input type="text" id="pdg-school-address" placeholder="Adresse complète de l'école *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+            <div style="display: grid; gap: 9px;">
+                <input type="text" id="pdg-school-name" placeholder="Nom de l'école *" style="width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14px;">
+                <input type="text" id="pdg-school-address" placeholder="Adresse complète / Ville de l'école *" style="width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14px;">
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <input type="text" id="pdg-lastname" placeholder="Nom *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
-                    <input type="text" id="pdg-firstname" placeholder="Prénom *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
-                </div>
-                
-                <input type="text" id="pdg-role" placeholder="Poste occupé (ex: PDG, Directeur Général) *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <input type="email" id="pdg-email" placeholder="Adresse e-mail *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
-                    <input type="email" id="pdg-email-confirm" placeholder="Confirmer l'e-mail *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                <!-- LOCALISATION INSTANTANÉE DE L'ÉCOLE -->
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 10px;">
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+                        <button type="button" onclick="locateSchoolByGps('pdg')" style="flex:1;background:#10b981;color:#fff;border:none;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;">
+                            📍 Ma position actuelle
+                        </button>
+                        <button type="button" onclick="locateSchoolByAddress('pdg')" style="flex:1;background:#0066b3;color:#fff;border:none;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;">
+                            🔍 Localiser l'adresse
+                        </button>
+                    </div>
+                    <div id="pdg-mini-map" style="width: 100%; height: 150px; border-radius: 10px; border: 1px solid #cbd5e1; z-index: 1;"></div>
+                    <div id="pdg-coords-status" style="font-size: 11px; color: #475569; margin-top: 5px; text-align: center; font-weight: 700;">
+                        Glissez le marqueur 🏫 exactement sur le portail de votre école.
+                    </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <input type="password" id="pdg-pass" placeholder="Mot de passe *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
-                    <input type="password" id="pdg-pass-confirm" placeholder="Confirmer mot de passe *" style="width:100%;padding:11px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;">
+                    <input type="text" id="pdg-lastname" placeholder="Nom *" style="width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14px;">
+                    <input type="text" id="pdg-firstname" placeholder="Prénom *" style="width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14px;">
+                </div>
+                
+                <input type="text" id="pdg-role" placeholder="Poste occupé (ex: PDG, Directeur Général) *" style="width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14px;">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="email" id="pdg-email" placeholder="Adresse e-mail *" style="width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14px;">
+                    <input type="email" id="pdg-email-confirm" placeholder="Confirmer l'e-mail *" style="width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14px;">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="password" id="pdg-pass" placeholder="Mot de passe *" style="width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14px;">
+                    <input type="password" id="pdg-pass-confirm" placeholder="Confirmer mot de passe *" style="width:100%;padding:10px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14px;">
                 </div>
             </div>
 
             <div id="pdg-reg-error" style="display:none;color:#b91c1c;background:#fef2f2;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-top:10px;text-align:center;"></div>
 
-            <button type="button" onclick="submitPdgRegistration()" style="width:100%;margin-top:14px;background:#0066b3;color:#fff;border:none;padding:13px;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;">
+            <button type="button" onclick="submitPdgRegistration()" style="width:100%;margin-top:12px;background:#0066b3;color:#fff;border:none;padding:13px;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;">
                 ✅ Valider le compte PDG et continuer
             </button>
         </div>
@@ -394,7 +414,6 @@
                     ⏳ Licence expirée ou suspendue. Contactez <strong>OB</strong> pour renouveler.
                 </div>
 
-                <!-- CONNEXION DIRECTION (PDG / GESTIONNAIRE / CLÉ / SUPERADMIN) -->
                 <div id="login-panel-manager">
                     <div id="mgr-step-key">
                         <label style="display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px; text-align: center;">
@@ -425,7 +444,6 @@
                     </div>
                 </div>
 
-                <!-- CONNEXION CHAUFFEUR -->
                 <div id="login-panel-chauffeur" style="display: none;">
                     <label style="display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px; text-align: center;">
                         Sélectionnez votre véhicule ou saisissez votre code Bus
@@ -438,7 +456,6 @@
                     </button>
                 </div>
 
-                <!-- CONNEXION PARENT -->
                 <div id="login-panel-parent" style="display: none;">
                     <label style="display: block; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px; text-align: center;">
                         Numéro de téléphone parent ou Matricule élève
@@ -489,7 +506,6 @@
                     </svg>
                 </div>
 
-                <!-- 1. NOM DE L'ÉCOLE DÉPLACÉ SOUS NAVETTE PRO -->
                 <div class="brand-titles">
                     <div style="display: flex; align-items: center; gap: 6px;">
                         <h1>Navette Pro</h1>
@@ -583,7 +599,7 @@
                     </div>
                 </div>
                 <div class="list-pane">
-                    <h3 style="margin: 0 0 10px; font-size: 13px; font-weight: 800;">Secteurs Actifs</h3>
+                    <h3 style="margin: 0 0 10px; font-size: 13px; font-weight: 800;">Secteurs Actifs &amp; GPS en direct</h3>
                     <div id="global-sectors-list"></div>
                 </div>
             </div>
@@ -611,7 +627,7 @@
             </div>
         </section>
 
-        <!-- ==================== VUE 3. FLOTTE (VIDE PAR DÉFAUT + EXCEL LOGO) ==================== -->
+        <!-- ==================== VUE 3. FLOTTE ==================== -->
         <section id="page-fleet" class="page-view active" style="overflow-y: auto; padding: 14px;">
             <div style="max-width: 980px; margin: 0 auto; width: 100%; padding-bottom: 70px;">
                 
@@ -688,7 +704,7 @@
             </div>
         </section>
 
-        <!-- ==================== 3. NOUVEL ESPACE ADHÉRENT (DIRECTION) ==================== -->
+        <!-- ==================== ESPACE ADHÉRENT + LOCALISATION ÉCOLE ==================== -->
         <section id="page-adherent" class="page-view" style="overflow-y: auto; background: #f1f5f9; padding: 14px;">
             <div style="max-width: 640px; margin: 0 auto; width: 100%; padding-bottom: 75px;">
                 
@@ -713,6 +729,21 @@
                     </div>
                 </div>
 
+                <!-- LOCALISATION GPS DE L'ÉCOLE (MODIFIABLE) -->
+                <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 14px;">
+                    <h3 style="margin: 0 0 8px; font-size: 15px; font-weight: 900;">📍 Position GPS de l'école</h3>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
+                        <button type="button" onclick="locateSchoolByGps('adh')" style="flex:1;background:#10b981;color:#fff;border:none;padding:9px;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;">
+                            📍 Ma position actuelle
+                        </button>
+                        <button type="button" onclick="saveSchoolLocationFromAdherent()" style="flex:1;background:#0066b3;color:#fff;border:none;padding:9px;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;">
+                            💾 Enregistrer la position
+                        </button>
+                    </div>
+                    <div id="adh-mini-map" style="width: 100%; height: 170px; border-radius: 12px; border: 1px solid #cbd5e1; z-index: 1;"></div>
+                    <div id="adh-coords-status" style="font-size: 11px; color: #475569; margin-top: 6px; text-align: center; font-weight: 700;"></div>
+                </div>
+
                 <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px;">
                     <h3 style="margin: 0 0 12px; font-size: 16px; font-weight: 900;">👤 Mes Informations Personnelles</h3>
                     
@@ -735,7 +766,7 @@
             </div>
         </section>
 
-        <!-- ==================== VUE TERRAIN CHAUFFEUR (CONSERVÉE POUR CHAUFFEURS) ==================== -->
+        <!-- ==================== VUE TERRAIN CHAUFFEUR + GPS EN DIRECT ==================== -->
         <section id="page-attendance" class="page-view" style="overflow-y: auto; background: #f8fafc;">
             <div class="driver-strip" id="att-driver-pills"></div>
             <div style="max-width: 880px; margin: 0 auto; width: 100%; padding: 14px 14px 80px 14px;">
@@ -745,10 +776,16 @@
                         <h2 style="margin: 6px 0 2px; font-size: 17px; font-weight: 900;" id="att-header-title">Feuille de route</h2>
                         <p style="margin: 0; font-size: 12px; color: #cbd5e1;" id="att-crew-subtitle">Équipage</p>
                     </div>
-                    <div style="display: flex; gap: 6px;">
-                        <button type="button" id="att-v1-btn" onclick="setAttVoyage(1)" style="background: #10b981; color: #fff; border: none; padding: 9px 13px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer;">Voyage 1 (07h00)</button>
-                        <button type="button" id="att-v2-btn" onclick="setAttVoyage(2)" style="background: rgba(255,255,255,0.14); color: #fff; border: none; padding: 9px 13px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer;">Voyage 2 (07h45)</button>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        <button type="button" id="btn-driver-live-gps" onclick="toggleDriverLiveGps()" style="background: #10b981; color: #fff; border: none; padding: 10px 14px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(16,185,129,0.35);">
+                            ▶️ Démarrer la tournée (GPS en direct)
+                        </button>
+                        <button type="button" id="att-v1-btn" onclick="setAttVoyage(1)" style="background: #0066b3; color: #fff; border: none; padding: 9px 12px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer;">Voyage 1</button>
+                        <button type="button" id="att-v2-btn" onclick="setAttVoyage(2)" style="background: rgba(255,255,255,0.14); color: #fff; border: none; padding: 9px 12px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer;">Voyage 2</button>
                     </div>
+                </div>
+                <div id="driver-gps-status-bar" style="display:none; background:#dcfce7; border:1px solid #86efac; color:#166534; padding:10px 14px; border-radius:12px; font-size:12px; font-weight:800; margin-bottom:14px; text-align:center;">
+                    📡 Partage GPS en direct actif — Gardez cet écran ouvert pendant le trajet.
                 </div>
                 <div id="att-students-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px;"></div>
             </div>
@@ -766,7 +803,6 @@
             </div>
         </section>
 
-        <!-- BARRE MOBILE DIRECTION -->
         <nav class="mobile-nav dir-only" id="manager-mobile-nav">
             <button type="button" class="mob-tab" id="m-tab-global" onclick="switchPage('global')"><span class="mob-icon-wrap">🗺️</span><span>Globale</span></button>
             <button type="button" class="mob-tab" id="m-tab-driver" onclick="switchPage('driver')"><span class="mob-icon-wrap">👨‍✈️</span><span>Chauffeur</span></button>
@@ -846,8 +882,8 @@
         const DEMO_START_KEY = 'navette_pro_demo_start_v9';
         const DEMO_DURATION_MS = 48 * 60 * 60 * 1000;
         const DAY_MS = 24 * 60 * 60 * 1000;
-        const SCHOOL_COORDS = [33.2378, -8.5165];
 
+        let SCHOOL_COORDS = [33.2378, -8.5165];
         let schoolNameGlobal = "Mon Établissement";
         let schoolAccounts = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '{}');
         let pendingLicenseContext = null;
@@ -856,6 +892,227 @@
         let pendingOtpCode = null;
         let pendingOtpExpiry = 0;
         let subscriptionTimerInterval = null;
+
+        // Mini-cartes localisation école (PDG & Adhérent)
+        let pdgMiniMap = null, pdgSchoolMarker = null;
+        let adhMiniMap = null, adhSchoolMarker = null;
+        let tempSchoolCoords = [...SCHOOL_COORDS];
+
+        // Suivi GPS en direct (Chauffeur -> Direction)
+        let driverGpsWatchId = null;
+        let screenWakeLock = null;
+        let liveBusData = {};
+        let liveMarkersGlobal = {};
+        let liveMarkersDriver = {};
+        let schoolMarkerGlobal = null, schoolMarkerDriver = null;
+
+        // ==================== LOCALISATION ÉCOLE (GPS + NOMINATIM + MINI-CARTE) ====================
+        function getSchoolDivIcon() {
+            return L.divIcon({ className: '', html: '<div class="school-pin-icon">🏫</div>', iconSize: [36, 36], iconAnchor: [18, 18] });
+        }
+
+        function getBusLiveDivIcon(label) {
+            return L.divIcon({ className: '', html: `<div class="bus-live-icon" title="${label}">🚌</div>`, iconSize: [34, 34], iconAnchor: [17, 17] });
+        }
+
+        function initMiniSchoolMap(target) {
+            if (typeof L === 'undefined') return;
+            const containerId = target === 'pdg' ? 'pdg-mini-map' : 'adh-mini-map';
+            const statusId = target === 'pdg' ? 'pdg-coords-status' : 'adh-coords-status';
+            const tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+
+            if (target === 'pdg') {
+                if (!pdgMiniMap) {
+                    pdgMiniMap = L.map(containerId).setView(tempSchoolCoords, 14);
+                    L.tileLayer(tileUrl).addTo(pdgMiniMap);
+                    pdgSchoolMarker = L.marker(tempSchoolCoords, { draggable: true, icon: getSchoolDivIcon() }).addTo(pdgMiniMap);
+                    pdgSchoolMarker.on('dragend', () => {
+                        const pos = pdgSchoolMarker.getLatLng();
+                        tempSchoolCoords = [pos.lat, pos.lng];
+                        document.getElementById(statusId).textContent = `📍 Position choisie : ${pos.lat.toFixed(5)}, ${pos.lng.toFixed(5)}`;
+                    });
+                } else {
+                    pdgMiniMap.setView(tempSchoolCoords, 15);
+                    pdgSchoolMarker.setLatLng(tempSchoolCoords);
+                }
+                setTimeout(() => pdgMiniMap.invalidateSize(), 180);
+            } else {
+                tempSchoolCoords = [...SCHOOL_COORDS];
+                if (!adhMiniMap) {
+                    adhMiniMap = L.map(containerId).setView(tempSchoolCoords, 14);
+                    L.tileLayer(tileUrl).addTo(adhMiniMap);
+                    adhSchoolMarker = L.marker(tempSchoolCoords, { draggable: true, icon: getSchoolDivIcon() }).addTo(adhMiniMap);
+                    adhSchoolMarker.on('dragend', () => {
+                        const pos = adhSchoolMarker.getLatLng();
+                        tempSchoolCoords = [pos.lat, pos.lng];
+                        document.getElementById(statusId).textContent = `📍 Nouvelle position : ${pos.lat.toFixed(5)}, ${pos.lng.toFixed(5)}`;
+                    });
+                } else {
+                    adhMiniMap.setView(tempSchoolCoords, 15);
+                    adhSchoolMarker.setLatLng(tempSchoolCoords);
+                }
+                document.getElementById(statusId).textContent = `📍 Position actuelle : ${tempSchoolCoords[0].toFixed(5)}, ${tempSchoolCoords[1].toFixed(5)}`;
+                setTimeout(() => adhMiniMap.invalidateSize(), 180);
+            }
+        }
+
+        function updateMiniMapPosition(target, lat, lng, label) {
+            tempSchoolCoords = [lat, lng];
+            const statusId = target === 'pdg' ? 'pdg-coords-status' : 'adh-coords-status';
+            document.getElementById(statusId).textContent = `✅ ${label} (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
+            if (target === 'pdg' && pdgMiniMap && pdgSchoolMarker) {
+                pdgMiniMap.setView([lat, lng], 16);
+                pdgSchoolMarker.setLatLng([lat, lng]);
+            } else if (target === 'adh' && adhMiniMap && adhSchoolMarker) {
+                adhMiniMap.setView([lat, lng], 16);
+                adhSchoolMarker.setLatLng([lat, lng]);
+            }
+        }
+
+        function locateSchoolByGps(target) {
+            if (!("geolocation" in navigator)) { alert("La géolocalisation n'est pas supportée sur cet appareil."); return; }
+            showToast("⏳ Recherche de votre position GPS...");
+            navigator.geolocation.getCurrentPosition(
+                pos => { updateMiniMapPosition(target, pos.coords.latitude, pos.coords.longitude, "Position GPS captée"); showToast("📍 Position GPS de l'école trouvée !"); },
+                () => { showToast("❌ Autorisez l'accès GPS dans votre navigateur."); },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+
+        async function locateSchoolByAddress(target) {
+            const name = (document.getElementById('pdg-school-name')?.value || '').trim();
+            const addr = (document.getElementById('pdg-school-address')?.value || '').trim();
+            const query = `${addr} ${name}`.trim();
+            if (!query) { alert("Saisissez d'abord l'adresse ou la ville de l'école."); return; }
+            showToast("🔍 Recherche de l'adresse...");
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                if (data && data.length > 0) {
+                    updateMiniMapPosition(target, parseFloat(data[0].lat), parseFloat(data[0].lon), "Adresse localisée — ajustez le marqueur si besoin");
+                } else {
+                    showToast("❌ Adresse introuvable. Utilisez le bouton GPS ou glissez le marqueur.");
+                }
+            } catch (e) {
+                showToast("❌ Erreur de recherche d'adresse.");
+            }
+        }
+
+        function saveSchoolLocationFromAdherent() {
+            SCHOOL_COORDS = [...tempSchoolCoords];
+            if (schoolAccounts.pdg) schoolAccounts.pdg.coords = SCHOOL_COORDS;
+            localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(schoolAccounts));
+            if (firebaseDb) firebaseDb.ref('navette_pro_accounts').set(schoolAccounts);
+            saveState();
+            updateSchoolMarkersOnMainMaps();
+            showToast("✅ Position GPS de l'école enregistrée !");
+        }
+
+        function updateSchoolMarkersOnMainMaps() {
+            if (typeof L === 'undefined') return;
+            if (mapGlobal) {
+                if (schoolMarkerGlobal) schoolMarkerGlobal.setLatLng(SCHOOL_COORDS);
+                else schoolMarkerGlobal = L.marker(SCHOOL_COORDS, { icon: getSchoolDivIcon() }).bindPopup(`🏫 ${schoolNameGlobal}`).addTo(mapGlobal);
+                mapGlobal.setView(SCHOOL_COORDS, 13);
+            }
+            if (mapDriver) {
+                if (schoolMarkerDriver) schoolMarkerDriver.setLatLng(SCHOOL_COORDS);
+                else schoolMarkerDriver = L.marker(SCHOOL_COORDS, { icon: getSchoolDivIcon() }).bindPopup(`🏫 ${schoolNameGlobal}`).addTo(mapDriver);
+                mapDriver.setView(SCHOOL_COORDS, 14);
+            }
+        }
+
+        // ==================== SUIVI GPS EN DIRECT (CHAUFFEUR -> DIRECTION) ====================
+        async function toggleDriverLiveGps() {
+            const btn = document.getElementById('btn-driver-live-gps');
+            const bar = document.getElementById('driver-gps-status-bar');
+            const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0];
+            if (!bus) { alert("Aucun bus sélectionné."); return; }
+
+            if (driverGpsWatchId !== null) {
+                // Arrêt du suivi GPS
+                navigator.geolocation.clearWatch(driverGpsWatchId);
+                driverGpsWatchId = null;
+                if (screenWakeLock) { try { await screenWakeLock.release(); } catch (e) {} screenWakeLock = null; }
+                if (firebaseDb) firebaseDb.ref(`navette_pro_live_gps/${bus.id}`).update({ active: false, updatedAt: Date.now() });
+                btn.textContent = "▶️ Démarrer la tournée (GPS en direct)";
+                btn.style.background = "#10b981";
+                bar.style.display = "none";
+                showToast("⏹️ Partage GPS arrêté.");
+                return;
+            }
+
+            if (!("geolocation" in navigator)) { alert("GPS non disponible sur cet appareil."); return; }
+
+            // Empêcher la mise en veille de l'écran si supporté
+            if ('wakeLock' in navigator) {
+                try { screenWakeLock = await navigator.wakeLock.request('screen'); } catch (e) {}
+            }
+
+            btn.textContent = "⏹️ Arrêter le GPS en direct";
+            btn.style.background = "#ef4444";
+            bar.style.display = "block";
+            showToast("📡 GPS en direct activé !");
+
+            driverGpsWatchId = navigator.geolocation.watchPosition(
+                (pos) => {
+                    const payload = {
+                        busId: bus.id,
+                        busNum: bus.num,
+                        driver: bus.driver,
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude,
+                        active: true,
+                        updatedAt: Date.now()
+                    };
+                    if (firebaseDb) firebaseDb.ref(`navette_pro_live_gps/${bus.id}`).set(payload);
+                    bar.textContent = `📡 GPS en direct actif (${bus.num}) • Dernier signal : ${new Date().toLocaleTimeString('fr-FR')}`;
+                },
+                () => { showToast("⚠️ Signal GPS faible ou refusé."); },
+                { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 }
+            );
+        }
+
+        function renderLiveBusMarkers() {
+            if (typeof L === 'undefined') return;
+            Object.keys(liveBusData).forEach(busId => {
+                const info = liveBusData[busId];
+                const isRecent = info && info.active && (Date.now() - (info.updatedAt || 0) < 30 * 60 * 1000);
+                const timeStr = info && info.updatedAt ? new Date(info.updatedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
+
+                // Carte Globale
+                if (mapGlobal) {
+                    if (isRecent) {
+                        if (liveMarkersGlobal[busId]) {
+                            liveMarkersGlobal[busId].setLatLng([info.lat, info.lng]).setPopupContent(`🚌 <strong>${info.busNum}</strong> (${info.driver})<br>En direct • ${timeStr}`);
+                        } else {
+                            liveMarkersGlobal[busId] = L.marker([info.lat, info.lng], { icon: getBusLiveDivIcon(info.busNum) })
+                                .bindPopup(`🚌 <strong>${info.busNum}</strong> (${info.driver})<br>En direct • ${timeStr}`)
+                                .addTo(mapGlobal);
+                        }
+                    } else if (liveMarkersGlobal[busId]) {
+                        mapGlobal.removeLayer(liveMarkersGlobal[busId]);
+                        delete liveMarkersGlobal[busId];
+                    }
+                }
+
+                // Carte Par Chauffeur
+                if (mapDriver) {
+                    if (isRecent && busId === selectedBusId) {
+                        if (liveMarkersDriver[busId]) {
+                            liveMarkersDriver[busId].setLatLng([info.lat, info.lng]);
+                        } else {
+                            liveMarkersDriver[busId] = L.marker([info.lat, info.lng], { icon: getBusLiveDivIcon(info.busNum) })
+                                .bindPopup(`🚌 <strong>${info.busNum}</strong> en direct`)
+                                .addTo(mapDriver);
+                        }
+                    } else if (liveMarkersDriver[busId]) {
+                        mapDriver.removeLayer(liveMarkersDriver[busId]);
+                        delete liveMarkersDriver[busId];
+                    }
+                }
+            });
+        }
 
         // ==================== LANDING PAGE & ONBOARDING PDG / GESTIONNAIRE ====================
         function showLoginPortal() {
@@ -915,6 +1172,7 @@
             pendingLicenseContext = { tier, licenseKey, clientId, endDate: endDate || (Date.now() + 365 * DAY_MS) };
             document.getElementById('pdg-pack-label').textContent = tier === 'premium' ? 'Pack Premium (12 bus max)' : 'Pack Basique (6 bus max)';
             document.getElementById('pdg-register-modal').classList.add('open');
+            initMiniSchoolMap('pdg');
         }
 
         function submitPdgRegistration() {
@@ -937,17 +1195,19 @@
 
             err.style.display = 'none';
             schoolNameGlobal = school;
+            SCHOOL_COORDS = [...tempSchoolCoords];
             fleetState = [];
             waRequests = [];
             schoolAccounts.pdg = {
-                school, address, lastname, firstname, role, email, pass,
-                phone: '',
+                school, address, coords: SCHOOL_COORDS,
+                lastname, firstname, role, email, pass, phone: '',
                 tier: pendingLicenseContext.tier,
                 endDate: pendingLicenseContext.endDate
             };
             localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(schoolAccounts));
             if (firebaseDb) firebaseDb.ref('navette_pro_accounts').set(schoolAccounts);
             saveState();
+            updateSchoolMarkersOnMainMaps();
 
             document.getElementById('pdg-register-modal').classList.remove('open');
             document.getElementById('mgr-school-inherit').textContent = `${school} — ${address}`;
@@ -1011,6 +1271,7 @@
             document.getElementById('adh-new-pass').value = '';
             document.getElementById('adh-confirm-pass').value = '';
             startSubscriptionCountdown();
+            initMiniSchoolMap('adh');
         }
 
         function startSubscriptionCountdown() {
@@ -1092,7 +1353,7 @@
                 authorizedCapacity: parseInt(maxAuthorizedStudents, 10) || 0,
                 sector: 'Secteur ' + nextIdx,
                 color: palette[(nextIdx - 1) % palette.length],
-                center: SCHOOL_COORDS,
+                center: [...SCHOOL_COORDS],
                 students: []
             };
             fleetState.push(newBus);
@@ -1267,11 +1528,15 @@
 
             if (schoolAccounts.pdg && rawVal.toLowerCase() === schoolAccounts.pdg.email && passVal === schoolAccounts.pdg.pass) {
                 schoolNameGlobal = schoolAccounts.pdg.school;
+                if (schoolAccounts.pdg.coords) SCHOOL_COORDS = schoolAccounts.pdg.coords;
                 startSession({ role: schoolAccounts.pdg.tier || 'basic', subRole: 'pdg', email: schoolAccounts.pdg.email });
                 return;
             }
             if (schoolAccounts.manager && rawVal.toLowerCase() === schoolAccounts.manager.email && passVal === schoolAccounts.manager.pass) {
-                if (schoolAccounts.pdg) schoolNameGlobal = schoolAccounts.pdg.school;
+                if (schoolAccounts.pdg) {
+                    schoolNameGlobal = schoolAccounts.pdg.school;
+                    if (schoolAccounts.pdg.coords) SCHOOL_COORDS = schoolAccounts.pdg.coords;
+                }
                 startSession({ role: (schoolAccounts.pdg && schoolAccounts.pdg.tier) || 'basic', subRole: 'manager', email: schoolAccounts.manager.email });
                 return;
             }
@@ -1388,9 +1653,6 @@
         }
         function renewSaasClient(id) { const c = saasClients.find(x => x.id === id); if (c) { c.endDate = Math.max(Date.now(), c.endDate) + (365 * DAY_MS); c.suspended = false; saveSaasClients(); renderSuperAdminDashboard(); } }
 
-        // 2. FLOTTE VIDE PAR DÉFAUT
-        const DEFAULT_FLEET = [];
-
         let fleetState = []; let waRequests = []; let selectedBusId = null; let activeSession = null; let attVoyageFilter = 1; let mapGlobal = null, mapDriver = null, globalLayer = null, driverLayer = null;
 
         function loadState() {
@@ -1402,6 +1664,7 @@
                         fleetState = parsed.fleet;
                         waRequests = Array.isArray(parsed.wa) ? parsed.wa : [];
                         if (parsed.schoolName) schoolNameGlobal = parsed.schoolName;
+                        if (Array.isArray(parsed.schoolCoords)) SCHOOL_COORDS = parsed.schoolCoords;
                         if (fleetState.length > 0 && !selectedBusId) selectedBusId = fleetState[0].id;
                         return;
                     }
@@ -1419,9 +1682,16 @@
                         fleetState = data.fleet;
                         if (data.wa) waRequests = data.wa;
                         if (data.schoolName) schoolNameGlobal = data.schoolName;
+                        if (Array.isArray(data.schoolCoords)) { SCHOOL_COORDS = data.schoolCoords; updateSchoolMarkersOnMainMaps(); }
                         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
                         refreshCurrentView();
                     }
+                });
+
+                // Écoute GPS en direct des bus
+                firebaseDb.ref('navette_pro_live_gps').on('value', (snapshot) => {
+                    liveBusData = snapshot.val() || {};
+                    renderLiveBusMarkers();
                 });
             }
         }
@@ -1437,7 +1707,7 @@
         }
 
         function saveState() {
-            const payload = { fleet: fleetState, wa: waRequests, schoolName: schoolNameGlobal, updatedAt: Date.now() };
+            const payload = { fleet: fleetState, wa: waRequests, schoolName: schoolNameGlobal, schoolCoords: SCHOOL_COORDS, updatedAt: Date.now() };
             try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch (e) {}
             if (firebaseDb) { firebaseDb.ref('navette_pro_live_v9').set(payload).catch(err => console.error(err)); }
         }
@@ -1475,6 +1745,7 @@
             document.getElementById('auth-overlay').style.display = 'none';
             document.getElementById('header-school-name').textContent = sess.role === 'admin' ? '👑 SYSTÈME SAAS • OB' : `🏫 ${schoolNameGlobal}`;
             document.getElementById('map-school-label-global').textContent = `🏫 Siège : ${schoolNameGlobal}`;
+            updateSchoolMarkersOnMainMaps();
 
             const isMgr = ['admin', 'premium', 'basic', 'demo'].includes(sess.role);
             document.getElementById('manager-desktop-nav').style.display = isMgr ? '' : 'none';
@@ -1503,6 +1774,7 @@
 
         function logoutSession() {
             if (subscriptionTimerInterval) clearInterval(subscriptionTimerInterval);
+            if (driverGpsWatchId !== null) { navigator.geolocation.clearWatch(driverGpsWatchId); driverGpsWatchId = null; }
             sessionStorage.removeItem(SESSION_KEY); activeSession = null;
             document.getElementById('btn-ob-superadmin').style.display = 'none';
             document.getElementById('btn-create-mgr-header').style.display = 'none';
@@ -1527,7 +1799,7 @@
             else if (pageName === 'adherent') renderAdherentPage();
             else if (pageName === 'attendance') renderAttendancePage();
 
-            setTimeout(() => { if (mapGlobal) mapGlobal.invalidateSize(); if (mapDriver) mapDriver.invalidateSize(); }, 100);
+            setTimeout(() => { if (mapGlobal) mapGlobal.invalidateSize(); if (mapDriver) mapDriver.invalidateSize(); renderLiveBusMarkers(); }, 120);
         }
 
         // ======================= AFFICHAGE DES PAGES =======================
@@ -1538,14 +1810,25 @@
             const stops = students.map((stu, idx) => { const legKm = prevCoords ? haversineKm(prevCoords[0], prevCoords[1], stu.lat, stu.lng) * 1.25 : 0.8; cursor += idx === 0 ? 0 : Math.max(1.2, (legKm / 22) * 60); const stopArrival = cursor; cursor += 0.5; prevCoords = [stu.lat, stu.lng]; return { ...stu, order: idx + 1, timeStr: formatMinutesToTime(stopArrival) }; });
             return { stops };
         }
-        function initMaps() { if (typeof L === 'undefined') return; globalLayer = L.featureGroup(); driverLayer = L.featureGroup(); const tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'; mapGlobal = L.map('mapGlobal').setView(SCHOOL_COORDS, 13); L.tileLayer(tileUrl).addTo(mapGlobal); mapGlobal.addLayer(globalLayer); mapDriver = L.map('mapDriver').setView(SCHOOL_COORDS, 14); L.tileLayer(tileUrl).addTo(mapDriver); mapDriver.addLayer(driverLayer); }
+        function initMaps() {
+            if (typeof L === 'undefined') return;
+            globalLayer = L.featureGroup(); driverLayer = L.featureGroup();
+            const tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+            mapGlobal = L.map('mapGlobal').setView(SCHOOL_COORDS, 13); L.tileLayer(tileUrl).addTo(mapGlobal); mapGlobal.addLayer(globalLayer);
+            mapDriver = L.map('mapDriver').setView(SCHOOL_COORDS, 14); L.tileLayer(tileUrl).addTo(mapDriver); mapDriver.addLayer(driverLayer);
+            updateSchoolMarkersOnMainMaps();
+        }
 
         function renderGlobalPage() {
             if (fleetState.length === 0) {
                 document.getElementById('global-sectors-list').innerHTML = `<div style="background:#fff;border:1px dashed #cbd5e1;border-radius:12px;padding:18px;text-align:center;color:#64748b;font-size:12px;">Aucun bus enregistré. Ajoutez vos véhicules dans l'onglet <strong>Flotte</strong>.</div>`;
                 return;
             }
-            document.getElementById('global-sectors-list').innerHTML = fleetState.map(bus => `<div onclick="selectedBusId='${bus.id}';switchPage('driver');" style="background:#fff;border:1px solid #e2e8f0;border-left:5px solid ${bus.color};border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:900;">${bus.num} — ${bus.sector}</div><div style="font-size:11px;color:#64748b;">👨‍✈️ ${bus.driver}</div></div><span style="background:${bus.color};color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;">${bus.students.length} él.</span></div>`).join('');
+            document.getElementById('global-sectors-list').innerHTML = fleetState.map(bus => {
+                const live = liveBusData[bus.id] && liveBusData[bus.id].active;
+                return `<div onclick="selectedBusId='${bus.id}';switchPage('driver');" style="background:#fff;border:1px solid #e2e8f0;border-left:5px solid ${bus.color};border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:900;">${bus.num} — ${bus.sector} ${live ? '<span style="color:#10b981;font-size:10px;">● GPS EN DIRECT</span>' : ''}</div><div style="font-size:11px;color:#64748b;">👨‍✈️ ${bus.driver}</div></div><span style="background:${bus.color};color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;">${bus.students.length} él.</span></div>`;
+            }).join('');
+            renderLiveBusMarkers();
         }
         function fitGlobalMap() { if (mapGlobal) mapGlobal.setView(SCHOOL_COORDS, 13); }
 
@@ -1563,6 +1846,7 @@
             document.getElementById('driver-map-chip').textContent = `${bus.num} — ${bus.driver}`;
             if (driverLayer) { driverLayer.clearLayers(); bus.students.forEach(s => L.marker([s.lat, s.lng]).addTo(driverLayer)); }
             document.getElementById('driver-voyages-container').innerHTML = [1, 2].map(vNum => { const sched = computeVoyageSchedule(bus.students.filter(s => s.voyage === vNum), vNum); return `<div class="voyage-card"><div class="voyage-header"><div style="font-size:12px;font-weight:900;">VOYAGE ${vNum}</div><div style="font-size:11px;color:#64748b;">${sched.stops.length} élève(s)</div></div>${sched.stops.map(st => `<div class="student-row"><div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-size:13px;font-weight:800;">${st.order}. ${st.name} (${st.level})</div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.status==='present'?'#dcfce7':st.status==='absent'?'#fee2e2':'#f1f5f9'};color:${st.status==='present'?'#15803d':st.status==='absent'?'#b91c1c':'#64748b'};">${st.status==='present'?'🟢 PRÉSENT':st.status==='absent'?'🔴 ABSENT':'⏳ EN ATTENTE'} ${st.statusTime ? '('+st.statusTime+')':''}</span><span style="font-size:12px;font-weight:900;">🕒 ${st.timeStr}</span></div></div></div>`).join('')}</div>`; }).join('');
+            renderLiveBusMarkers();
         }
         function recenterDriverMap() { if (mapDriver) mapDriver.setView(SCHOOL_COORDS, 14); }
 
@@ -1607,7 +1891,7 @@
             if (!name) return;
             const bus = fleetState.find(b => b.id === document.getElementById('stu-bus').value);
             if (!bus) { alert("Veuillez d'abord créer un bus dans l'onglet Flotte."); return; }
-            bus.students.push({ id: 'EL-' + Math.floor(100+Math.random()*899), name, phone: document.getElementById('stu-phone').value, level: document.getElementById('stu-level').value, voyage: parseInt(document.getElementById('stu-voyage').value, 10), address: document.getElementById('stu-address').value || bus.sector, lat: bus.center[0], lng: bus.center[1], status: 'pending', statusTime: '' });
+            bus.students.push({ id: 'EL-' + Math.floor(100+Math.random()*899), name, phone: document.getElementById('stu-phone').value, level: document.getElementById('stu-level').value, voyage: parseInt(document.getElementById('stu-voyage').value, 10), address: document.getElementById('stu-address').value || bus.sector, lat: SCHOOL_COORDS[0], lng: SCHOOL_COORDS[1], status: 'pending', statusTime: '' });
             saveState();
             document.getElementById('stu-name').value = '';
             document.getElementById('stu-phone').value = '';
