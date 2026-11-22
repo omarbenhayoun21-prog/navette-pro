@@ -13,6 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
     
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
     
     <style>
@@ -875,11 +876,42 @@
     <script>
         const SUPERADMIN_EMAIL = "omarbenhayoun21@gmail.com";
         const APPS_SCRIPT_OTP_URL = "https://script.google.com/macros/s/AKfycbw-V0_w-i_a1vmNLHU1Whzt_KH5d0xZFtZABcvjCARodp1JV_DE66dtFUkugIxIOE1H/exec";
-        const FIREBASE_DB_URL = "https://navette-pro-ob-default-rtdb.europe-west1.firebasedatabase.app";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDnn13UocVfk4qT3JY36IpybpwYmAgyJKc",
+            authDomain: "navette-pro-ob.firebaseapp.com",
+            databaseURL: "https://navette-pro-ob-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "navette-pro-ob",
+            storageBucket: "navette-pro-ob.firebasestorage.app",
+            messagingSenderId: "239463562311",
+            appId: "1:239463562311:web:fcaed9acbe37ebce854562",
+            measurementId: "G-HRHWHSRGVX"
+        };
 
         let firebaseDb = null;
-        if (FIREBASE_DB_URL && typeof firebase !== 'undefined') {
-            try { firebase.initializeApp({ databaseURL: FIREBASE_DB_URL }); firebaseDb = firebase.database(); } catch (e) {}
+        let firebaseAuthReady = Promise.resolve(null);
+
+        if (typeof firebase !== 'undefined') {
+            try {
+                if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+                firebaseDb = firebase.database();
+                firebaseAuthReady = new Promise((resolve) => {
+                    firebase.auth().onAuthStateChanged((user) => {
+                        if (user) {
+                            resolve(user);
+                        } else {
+                            firebase.auth().signInAnonymously()
+                                .then((cred) => resolve(cred.user))
+                                .catch((err) => {
+                                    console.error("Erreur Auth Anonyme Firebase :", err);
+                                    resolve(null);
+                                });
+                        }
+                    });
+                });
+            } catch (e) {
+                console.error("Erreur initialisation Firebase :", e);
+            }
         }
 
         const SAAS_CLIENTS_KEY = 'navette_pro_saas_clients_ob_v1';
@@ -907,6 +939,11 @@
 
         let driverGpsWatchId = null;
         let screenWakeLock = null;
+        let lastAnchorPos = null;
+        let lastMoveTs = Date.now();
+        let currentTripStatus = 'a_l_arret';
+        let notifiedBuses = {};
+
         let liveBusData = {};
         let liveMarkersGlobal = {};
         let liveMarkersDriver = {};
@@ -958,6 +995,7 @@
         }
 
         async function lookupEmailIndex(email) {
+            await firebaseAuthReady;
             const k = emailToKey(email);
             if (firebaseDb) {
                 try {
@@ -970,6 +1008,7 @@
         }
 
         async function fetchSchoolData(schoolCode) {
+            await firebaseAuthReady;
             if (firebaseDb) {
                 try {
                     const snap = await firebaseDb.ref(`schools/${schoolCode}`).once('value');
@@ -985,11 +1024,29 @@
             activeFirebaseRefs = [];
         }
 
+        function notifyBusDeparture(busNum, driverName) {
+            const msg = `🚌 ${busNum} (${driverName}) vient de démarrer sa tournée !`;
+            showToast(msg);
+
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                osc.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.25);
+            } catch (e) {}
+
+            if ("Notification" in window && Notification.permission === "granted") {
+                try { new Notification("Navette Pro — Départ Bus", { body: msg }); } catch (e) {}
+            }
+        }
+
         function initSchoolRealtimeSync(schoolCode) {
             detachFirebaseListeners();
             currentSchoolCode = schoolCode;
 
-            // Chargement local immédiat
             const localRaw = localStorage.getItem(`navette_pro_school_${schoolCode}`);
             if (localRaw) {
                 try {
@@ -1015,14 +1072,30 @@
                         if (Array.isArray(d.schoolCoords)) { SCHOOL_COORDS = d.schoolCoords; updateSchoolMarkersOnMainMaps(); }
                         saveLocalSchoolCache(schoolCode);
                         refreshCurrentView();
+                        if (activeSession && activeSession.role === 'driver' && driverGpsWatchId === null) {
+                            startDriverAutoGps();
+                        }
                     }
                 });
                 activeFirebaseRefs.push(dataRef);
 
                 const gpsRef = firebaseDb.ref(`schools/${schoolCode}/live_gps`);
                 gpsRef.on('value', (snap) => {
-                    liveBusData = snap.val() || {};
+                    const incoming = snap.val() || {};
+                    Object.keys(incoming).forEach(busId => {
+                        const b = incoming[busId];
+                        if (b && b.active && b.tripStatus === 'en_route' && !notifiedBuses[busId]) {
+                            if (activeSession && activeSession.role !== 'driver') {
+                                notifyBusDeparture(b.busNum, b.driver);
+                            }
+                            notifiedBuses[busId] = true;
+                        } else if (b && b.tripStatus !== 'en_route') {
+                            notifiedBuses[busId] = false;
+                        }
+                    });
+                    liveBusData = incoming;
                     renderLiveBusMarkers();
+                    if (document.getElementById('page-global').classList.contains('active')) renderGlobalPage();
                 });
                 activeFirebaseRefs.push(gpsRef);
             }
@@ -1187,7 +1260,62 @@
             }
         }
 
-        // ==================== SUIVI GPS EN DIRECT (CHAUFFEUR -> DIRECTION) ====================
+        // ==================== MODE TABLETTE AUTOMATIQUE & GPS EN DIRECT ====================
+        async function startDriverAutoGps() {
+            if (driverGpsWatchId !== null) return;
+            const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0];
+            if (!bus || !("geolocation" in navigator)) return;
+
+            if ('wakeLock' in navigator) {
+                try { screenWakeLock = await navigator.wakeLock.request('screen'); } catch (e) {}
+            }
+
+            const btn = document.getElementById('btn-driver-live-gps');
+            const bar = document.getElementById('driver-gps-status-bar');
+            if (btn) { btn.textContent = "⏹️ Arrêter le GPS auto"; btn.style.background = "#ef4444"; }
+            if (bar) { bar.style.display = "block"; bar.textContent = `📡 Mode Tablette actif (${bus.num}) — En attente du démarrage...`; }
+
+            driverGpsWatchId = navigator.geolocation.watchPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    const speedKmh = pos.coords.speed ? (pos.coords.speed * 3.6) : 0;
+                    const now = Date.now();
+
+                    if (!lastAnchorPos) lastAnchorPos = [lat, lng];
+                    const distMeters = haversineKm(lastAnchorPos[0], lastAnchorPos[1], lat, lng) * 1000;
+
+                    if (speedKmh >= 10 || distMeters >= 50) {
+                        currentTripStatus = 'en_route';
+                        lastAnchorPos = [lat, lng];
+                        lastMoveTs = now;
+                    } else if (now - lastMoveTs > 15 * 60 * 1000) {
+                        currentTripStatus = 'a_l_arret';
+                    }
+
+                    const payload = {
+                        busId: bus.id,
+                        busNum: bus.num,
+                        driver: bus.driver,
+                        lat,
+                        lng,
+                        speedKmh: Math.round(speedKmh),
+                        tripStatus: currentTripStatus,
+                        active: true,
+                        updatedAt: now
+                    };
+
+                    if (firebaseDb) firebaseDb.ref(`schools/${currentSchoolCode}/live_gps/${bus.id}`).set(payload);
+                    if (bar) {
+                        const badge = currentTripStatus === 'en_route' ? '🟢 EN ROUTE' : '🟡 À L\'ARRÊT';
+                        bar.textContent = `${badge} (${bus.num} • ${Math.round(speedKmh)} km/h) — Signal : ${new Date().toLocaleTimeString('fr-FR')}`;
+                    }
+                },
+                () => { showToast("⚠️ Signal GPS faible sur la tablette."); },
+                { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 }
+            );
+        }
+
         async function toggleDriverLiveGps() {
             const btn = document.getElementById('btn-driver-live-gps');
             const bar = document.getElementById('driver-gps-status-bar');
@@ -1197,8 +1325,10 @@
             if (driverGpsWatchId !== null) {
                 navigator.geolocation.clearWatch(driverGpsWatchId);
                 driverGpsWatchId = null;
+                currentTripStatus = 'a_l_arret';
+                lastAnchorPos = null;
                 if (screenWakeLock) { try { await screenWakeLock.release(); } catch (e) {} screenWakeLock = null; }
-                if (firebaseDb) firebaseDb.ref(`schools/${currentSchoolCode}/live_gps/${bus.id}`).update({ active: false, updatedAt: Date.now() });
+                if (firebaseDb) firebaseDb.ref(`schools/${currentSchoolCode}/live_gps/${bus.id}`).update({ active: false, tripStatus: 'a_l_arret', updatedAt: Date.now() });
                 btn.textContent = "▶️ Démarrer la tournée (GPS en direct)";
                 btn.style.background = "#10b981";
                 bar.style.display = "none";
@@ -1207,22 +1337,8 @@
             }
 
             if (!("geolocation" in navigator)) { alert("GPS non disponible sur cet appareil."); return; }
-            if ('wakeLock' in navigator) { try { screenWakeLock = await navigator.wakeLock.request('screen'); } catch (e) {} }
-
-            btn.textContent = "⏹️ Arrêter le GPS en direct";
-            btn.style.background = "#ef4444";
-            bar.style.display = "block";
             showToast("📡 GPS en direct activé !");
-
-            driverGpsWatchId = navigator.geolocation.watchPosition(
-                (pos) => {
-                    const payload = { busId: bus.id, busNum: bus.num, driver: bus.driver, lat: pos.coords.latitude, lng: pos.coords.longitude, active: true, updatedAt: Date.now() };
-                    if (firebaseDb) firebaseDb.ref(`schools/${currentSchoolCode}/live_gps/${bus.id}`).set(payload);
-                    bar.textContent = `📡 GPS en direct actif (${bus.num}) • Dernier signal : ${new Date().toLocaleTimeString('fr-FR')}`;
-                },
-                () => { showToast("⚠️ Signal GPS faible ou refusé."); },
-                { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 }
-            );
+            startDriverAutoGps();
         }
 
         function renderLiveBusMarkers() {
@@ -1231,13 +1347,16 @@
                 const info = liveBusData[busId];
                 const isRecent = info && info.active && (Date.now() - (info.updatedAt || 0) < 30 * 60 * 1000);
                 const timeStr = info && info.updatedAt ? new Date(info.updatedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
+                const statusBadge = info && info.tripStatus === 'en_route' ? '🟢 EN ROUTE' : '🟡 À L\'ARRÊT';
+                const speedTxt = info && typeof info.speedKmh === 'number' ? ` • ${info.speedKmh} km/h` : '';
 
                 if (mapGlobal) {
                     if (isRecent) {
+                        const popupTxt = `🚌 <strong>${info.busNum}</strong> (${info.driver})<br>${statusBadge}${speedTxt} • ${timeStr}`;
                         if (liveMarkersGlobal[busId]) {
-                            liveMarkersGlobal[busId].setLatLng([info.lat, info.lng]).setPopupContent(`🚌 <strong>${info.busNum}</strong> (${info.driver})<br>En direct • ${timeStr}`);
+                            liveMarkersGlobal[busId].setLatLng([info.lat, info.lng]).setPopupContent(popupTxt);
                         } else {
-                            liveMarkersGlobal[busId] = L.marker([info.lat, info.lng], { icon: getBusLiveDivIcon(info.busNum) }).bindPopup(`🚌 <strong>${info.busNum}</strong> (${info.driver})<br>En direct • ${timeStr}`).addTo(mapGlobal);
+                            liveMarkersGlobal[busId] = L.marker([info.lat, info.lng], { icon: getBusLiveDivIcon(info.busNum) }).bindPopup(popupTxt).addTo(mapGlobal);
                         }
                     } else if (liveMarkersGlobal[busId]) { mapGlobal.removeLayer(liveMarkersGlobal[busId]); delete liveMarkersGlobal[busId]; }
                 }
@@ -1245,7 +1364,7 @@
                 if (mapDriver) {
                     if (isRecent && busId === selectedBusId) {
                         if (liveMarkersDriver[busId]) { liveMarkersDriver[busId].setLatLng([info.lat, info.lng]); }
-                        else { liveMarkersDriver[busId] = L.marker([info.lat, info.lng], { icon: getBusLiveDivIcon(info.busNum) }).bindPopup(`🚌 <strong>${info.busNum}</strong> en direct`).addTo(mapDriver); }
+                        else { liveMarkersDriver[busId] = L.marker([info.lat, info.lng], { icon: getBusLiveDivIcon(info.busNum) }).bindPopup(`🚌 <strong>${info.busNum}</strong> • ${statusBadge}`).addTo(mapDriver); }
                     } else if (liveMarkersDriver[busId]) { mapDriver.removeLayer(liveMarkersDriver[busId]); delete liveMarkersDriver[busId]; }
                 }
             });
@@ -1614,6 +1733,7 @@
         }
 
         async function verifyManagerLogin() {
+            await firebaseAuthReady;
             const rawVal = (document.getElementById('access-code-input').value || '').trim();
             const passVal = (document.getElementById('access-pass-input').value || '');
             const errBox = document.getElementById('auth-error');
@@ -1668,6 +1788,7 @@
         }
 
         async function verifyDriverLogin() {
+            await firebaseAuthReady;
             const code = (document.getElementById('driver-access-code').value || '').trim().toUpperCase();
             const errBox = document.getElementById('auth-error');
             errBox.style.display = 'none';
@@ -1680,6 +1801,8 @@
             const bus = fleet.find(b => (b.accessCode || '').toUpperCase() === code);
 
             if (bus) {
+                fleetState = fleet;
+                if (schoolObj.data && schoolObj.data.schoolName) schoolNameGlobal = schoolObj.data.schoolName;
                 startSession({ role: 'driver', schoolCode, busId: bus.id });
             } else {
                 errBox.textContent = '❌ Code chauffeur invalide ou révoqué.';
@@ -1688,6 +1811,7 @@
         }
 
         async function verifyParentLogin() {
+            await firebaseAuthReady;
             const schoolCode = (document.getElementById('parent-school-code').value || '').trim().toUpperCase();
             const phone = (document.getElementById('parent-phone-input').value || '').replace(/\D/g, '');
             const pin = (document.getElementById('parent-pin-input').value || '').trim();
@@ -1709,6 +1833,7 @@
             }));
 
             if (found) {
+                fleetState = fleet;
                 startSession({ role: 'parent', schoolCode, parentPhone: phone.slice(-8), parentPin: pin });
             } else {
                 errBox.textContent = '❌ Aucun élève trouvé avec ce Code École, téléphone et PIN.';
@@ -1820,7 +1945,16 @@
 
         function startSession(sess) {
             activeSession = sess;
-            sessionStorage.setItem(SESSION_KEY, JSON.stringify(sess));
+            if (sess.role === 'driver') {
+                localStorage.setItem(SESSION_KEY + '_driver', JSON.stringify(sess));
+            } else {
+                sessionStorage.setItem(SESSION_KEY, JSON.stringify(sess));
+            }
+
+            if (sess.role !== 'driver' && "Notification" in window && Notification.permission === "default") {
+                try { Notification.requestPermission(); } catch (e) {}
+            }
+
             if (sess.schoolCode && sess.role !== 'admin') initSchoolRealtimeSync(sess.schoolCode);
 
             document.getElementById('landing-page').style.display = 'none';
@@ -1841,10 +1975,25 @@
             const tierPill = document.getElementById('version-tier-pill');
             const timerBadge = document.getElementById('demo-timer-badge');
 
-            if (sess.role === 'admin') { tierPill.textContent = 'Fondateur OB'; timerBadge.textContent = '👑 SuperAdmin'; switchPage('superadmin'); }
-            else if (sess.role === 'driver') { selectedBusId = sess.busId; const bus = fleetState.find(b => b.id === sess.busId); tierPill.textContent = `Chauffeur • ${bus ? bus.num : ''}`; timerBadge.textContent = `👨‍✈️ ${bus ? bus.driver : ''}`; document.getElementById('att-driver-pills').style.display = 'none'; showOnlyPage('attendance'); renderAttendancePage(); }
-            else if (sess.role === 'parent') { tierPill.textContent = 'Espace Famille'; timerBadge.textContent = '👨‍👩‍👧 Suivi Direct'; showOnlyPage('parent-portal'); renderParentPortal(); }
-            else {
+            if (sess.role === 'admin') {
+                tierPill.textContent = 'Fondateur OB';
+                timerBadge.textContent = '👑 SuperAdmin';
+                switchPage('superadmin');
+            } else if (sess.role === 'driver') {
+                selectedBusId = sess.busId;
+                const bus = fleetState.find(b => b.id === sess.busId);
+                tierPill.textContent = `Chauffeur • ${bus ? bus.num : ''}`;
+                timerBadge.textContent = `👨‍✈️ ${bus ? bus.driver : ''}`;
+                document.getElementById('att-driver-pills').style.display = 'none';
+                showOnlyPage('attendance');
+                renderAttendancePage();
+                setTimeout(() => startDriverAutoGps(), 800);
+            } else if (sess.role === 'parent') {
+                tierPill.textContent = 'Espace Famille';
+                timerBadge.textContent = '👨‍👩‍👧 Suivi Direct';
+                showOnlyPage('parent-portal');
+                renderParentPortal();
+            } else {
                 const subLabel = sess.subRole === 'pdg' ? 'PDG' : sess.subRole === 'manager' ? 'Gestionnaire' : 'Direction';
                 tierPill.textContent = `${subLabel} • ${sess.role === 'premium' ? 'Premium (12 bus)' : sess.role === 'basic' ? 'Basique (6 bus)' : 'Démo 48h'}`;
                 timerBadge.textContent = '⏳ Actif';
@@ -1857,8 +2006,11 @@
         function logoutSession() {
             if (subscriptionTimerInterval) clearInterval(subscriptionTimerInterval);
             if (driverGpsWatchId !== null) { navigator.geolocation.clearWatch(driverGpsWatchId); driverGpsWatchId = null; }
+            if (screenWakeLock) { try { screenWakeLock.release(); } catch (e) {} screenWakeLock = null; }
             detachFirebaseListeners();
-            sessionStorage.removeItem(SESSION_KEY); activeSession = null;
+            sessionStorage.removeItem(SESSION_KEY);
+            localStorage.removeItem(SESSION_KEY + '_driver');
+            activeSession = null;
             document.getElementById('btn-ob-superadmin').style.display = 'none';
             document.getElementById('btn-create-mgr-header').style.display = 'none';
             document.getElementById('landing-page').style.display = 'flex';
@@ -1918,8 +2070,14 @@
                 return;
             }
             document.getElementById('global-sectors-list').innerHTML = fleetState.map(bus => {
-                const live = liveBusData[bus.id] && liveBusData[bus.id].active;
-                return `<div onclick="selectedBusId='${bus.id}';switchPage('driver');" style="background:#fff;border:1px solid #e2e8f0;border-left:5px solid ${bus.color};border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:900;">${bus.num} — ${bus.sector} ${live ? '<span style="color:#10b981;font-size:10px;">● GPS EN DIRECT</span>' : ''}</div><div style="font-size:11px;color:#64748b;">👨‍✈️ ${bus.driver}</div></div><span style="background:${bus.color};color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;">${(bus.students || []).length} él.</span></div>`;
+                const liveObj = liveBusData[bus.id];
+                const live = liveObj && liveObj.active;
+                const statusTag = live
+                    ? (liveObj.tripStatus === 'en_route'
+                        ? '<span style="color:#10b981;font-size:10px;font-weight:900;">● EN ROUTE</span>'
+                        : '<span style="color:#d97706;font-size:10px;font-weight:900;">● À L\'ARRÊT</span>')
+                    : '';
+                return `<div onclick="selectedBusId='${bus.id}';switchPage('driver');" style="background:#fff;border:1px solid #e2e8f0;border-left:5px solid ${bus.color};border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:900;">${bus.num} — ${bus.sector} ${statusTag}</div><div style="font-size:11px;color:#64748b;">👨‍✈️ ${bus.driver}</div></div><span style="background:${bus.color};color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;">${(bus.students || []).length} él.</span></div>`;
             }).join('');
             renderLiveBusMarkers();
         }
@@ -2060,10 +2218,11 @@
         function sendGpsParent(stuName, stuLevel) { if ("geolocation" in navigator) { showToast("⏳ Récupération GPS..."); navigator.geolocation.getCurrentPosition(function(position) { waRequests.push({ id: 'WA-' + Math.floor(100 + Math.random() * 899), student: stuName, level: stuLevel, label: '📌 Point de ramassage modifié', lat: position.coords.latitude, lng: position.coords.longitude }); saveState(); showToast("📍 Position transmise."); }, function() { showToast("❌ Erreur GPS."); }); } else { showToast("❌ GPS non supporté."); } }
         function handleExcelAction() { if (fleetState.length === 0) { alert("Aucun bus à exporter."); return; } const wb = XLSX.utils.book_new(); fleetState.forEach(b => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(b.students || []), b.num)); XLSX.writeFile(wb, `Navette_Pro_${currentSchoolCode}.xlsx`); }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
+            await firebaseAuthReady;
             loadSaasClients();
             initMaps();
-            const saved = sessionStorage.getItem(SESSION_KEY);
+            const saved = sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(SESSION_KEY + '_driver');
             if (saved) {
                 try {
                     document.getElementById('landing-page').style.display = 'none';
