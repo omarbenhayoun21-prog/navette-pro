@@ -811,7 +811,7 @@
             </div>
         </section>
 
-        <nav class="mobile-nav dir-only" id="manager-mobile-nav">
+        <nav class="mobile-nav" id="manager-mobile-nav">
             <button type="button" class="mob-tab" id="m-tab-global" onclick="switchPage('global')"><span class="mob-icon-wrap">🗺️</span><span>Globale</span></button>
             <button type="button" class="mob-tab" id="m-tab-driver" onclick="switchPage('driver')"><span class="mob-icon-wrap">👨‍✈️</span><span>Chauffeur</span></button>
             <button type="button" class="mob-tab active" id="m-tab-fleet" onclick="switchPage('fleet')"><span class="mob-icon-wrap">🚌</span><span>Flotte</span></button>
@@ -1024,6 +1024,17 @@
             activeFirebaseRefs = [];
         }
 
+        function isParentBus(busId) {
+            if (!activeSession || activeSession.role !== 'parent') return false;
+            const pPhone = activeSession.parentPhone || '';
+            const pPin = String(activeSession.parentPin || '');
+            const bus = fleetState.find(b => b.id === busId);
+            if (!bus) return false;
+            return (bus.students || []).some(stu =>
+                (stu.phone || '').replace(/\D/g, '').endsWith(pPhone) && String(stu.parentPin) === pPin
+            );
+        }
+
         function notifyBusDeparture(busNum, driverName) {
             const msg = `🚌 ${busNum} (${driverName}) vient de démarrer sa tournée !`;
             showToast(msg);
@@ -1086,7 +1097,9 @@
                         const b = incoming[busId];
                         if (b && b.active && b.tripStatus === 'en_route' && !notifiedBuses[busId]) {
                             if (activeSession && activeSession.role !== 'driver') {
-                                notifyBusDeparture(b.busNum, b.driver);
+                                if (activeSession.role !== 'parent' || isParentBus(busId)) {
+                                    notifyBusDeparture(b.busNum, b.driver);
+                                }
                             }
                             notifiedBuses[busId] = true;
                         } else if (b && b.tripStatus !== 'en_route') {
@@ -1965,7 +1978,10 @@
 
             const isMgr = ['admin', 'premium', 'basic', 'demo'].includes(sess.role);
             document.getElementById('manager-desktop-nav').style.display = isMgr ? '' : 'none';
-            document.getElementById('manager-mobile-nav').style.display = isMgr ? '' : 'none';
+            const mobNav = document.getElementById('manager-mobile-nav');
+            mobNav.classList.toggle('dir-only', isMgr);
+            mobNav.style.display = isMgr ? '' : 'none';
+
             document.getElementById('btn-save-mgr').style.display = isMgr ? 'inline-flex' : 'none';
             document.getElementById('btn-export-excel').style.display = isMgr ? 'inline-flex' : 'none';
             document.getElementById('btn-ob-superadmin').style.display = sess.role === 'admin' ? 'inline-flex' : 'none';
@@ -2011,6 +2027,9 @@
             sessionStorage.removeItem(SESSION_KEY);
             localStorage.removeItem(SESSION_KEY + '_driver');
             activeSession = null;
+            const mobNav = document.getElementById('manager-mobile-nav');
+            mobNav.classList.remove('dir-only');
+            mobNav.style.display = 'none';
             document.getElementById('btn-ob-superadmin').style.display = 'none';
             document.getElementById('btn-create-mgr-header').style.display = 'none';
             document.getElementById('landing-page').style.display = 'flex';
@@ -2018,7 +2037,10 @@
         }
 
         function switchPage(pageName) {
-            if (pageName === 'superadmin' && (!activeSession || activeSession.role !== 'admin')) return;
+            if (!activeSession) return;
+            if (pageName === 'superadmin' && activeSession.role !== 'admin') return;
+            if (['global', 'driver', 'fleet', 'students', 'adherent'].includes(pageName) && !['admin', 'premium', 'basic', 'demo'].includes(activeSession.role)) return;
+
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.mob-tab').forEach(t => t.classList.remove('active'));
