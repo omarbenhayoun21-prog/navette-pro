@@ -20,8 +20,9 @@
         :root { --p: #0f172a; --blue-ab: #0284c7; --yellow-ab: #f59e0b; --s: #10b981; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
         body { margin: 0; padding: 0; height: 100dvh; display: flex; flex-direction: column; font-family: system-ui, -apple-system, sans-serif; background: #f1f5f9; color: #0f172a; overflow: hidden; }
+        .cap-name { text-transform: capitalize; }
 
-        /* ====== STYLES LANDING PAGE NAVETTE PRO (DESIGN ORIGINAL & INTERACTIF) ====== */
+        /* ====== STYLES LANDING PAGE NAVETTE PRO ====== */
         #landing-page { position: fixed; inset: 0; z-index: 10000; background: #ffffff; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; }
         
         .lp-header { background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 60; }
@@ -106,7 +107,7 @@
         .brand-titles h1 { margin: 0; font-size: 15px; font-weight: 900; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.15; }
 
         .header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-        .timer-pill { background: #fefce8; border: 1px solid #fde047; color: #854d0e; font-size: 11px; font-weight: 800; padding: 5px 8px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+        .timer-pill { background: #fefce8; border: 1px solid #fde047; color: #854d0e; font-size: 11px; font-weight: 800; padding: 5px 9px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-variant-numeric: tabular-nums; }
         .action-btn { border: none; border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: 0.15s; white-space: nowrap; }
         .action-btn:active { transform: scale(0.96); }
 
@@ -254,10 +255,7 @@
                         <button type="button" class="lp-mock-tab" id="mock-btn-drv" onclick="switchHeroMockup('drv')">🚌 Accompagnatrice</button>
                         <button type="button" class="lp-mock-tab" id="mock-btn-par" onclick="switchHeroMockup('par')">👨‍👩‍👧 Parents (FR/AR)</button>
                     </div>
-
-                    <div class="lp-mockup-screen" id="lp-mockup-body">
-                        <!-- Rempli dynamiquement par switchHeroMockup('dir') -->
-                    </div>
+                    <div class="lp-mockup-screen" id="lp-mockup-body"></div>
                 </div>
             </div>
         </section>
@@ -344,7 +342,7 @@
             </div>
         </section>
 
-        <!-- 5. SIMULATEUR INTERACTIF DE COÛT PAR ÉLÈVE & TEMPS ÉCONOMISÉ -->
+        <!-- 5. SIMULATEUR INTERACTIF -->
         <section id="simulateur" class="lp-sim-wrap">
             <div style="max-width: 720px; margin: 0 auto; text-align: center;">
                 <span style="background: rgba(250,204,21,0.16); color: #facc15; font-size: 11px; font-weight: 900; padding: 5px 12px; border-radius: 999px; text-transform: uppercase;">Simulateur de rentabilité</span>
@@ -837,38 +835,38 @@
             </div>
         </section>
 
-        <!-- ==================== VUE 3. FLOTTE ==================== -->
+        <!-- ==================== VUE 3. FLOTTE (FORMULAIRE COMPACT 2x2 SUR MOBILE) ==================== -->
         <section id="page-fleet" class="page-view active" style="overflow-y: auto; padding: 14px;">
             <div style="max-width: 980px; margin: 0 auto; width: 100%; padding-bottom: 70px;">
-                <div style="background: linear-gradient(135deg, #0f172a 0%, #0284c7 100%); color: #fff; border-radius: 16px; padding: 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div style="background: linear-gradient(135deg, #0f172a 0%, #0284c7 100%); color: #fff; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                     <div>
-                        <div style="font-size: 11px; font-weight: 900; color: #facc15; text-transform: uppercase;">Importation Rapide • Charte Navette Pro</div>
-                        <h3 style="margin: 4px 0 2px; font-size: 16px; font-weight: 900;">Modèle Excel Officiel avec Logo</h3>
-                        <p style="margin: 0; font-size: 12px; color: #bae6fd;">Téléchargez le modèle, remplissez vos bus et élèves (illimités), puis importez-le en un clic.</p>
+                        <div style="font-size: 10px; font-weight: 900; color: #facc15; text-transform: uppercase;">Importation Rapide • Charte Navette Pro</div>
+                        <h3 style="margin: 3px 0 2px; font-size: 15px; font-weight: 900;">Modèle Excel Officiel avec Logo</h3>
+                        <p style="margin: 0; font-size: 12px; color: #bae6fd;">Téléchargez le modèle, remplissez vos bus et élèves, puis importez-le en 1 clic.</p>
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <button type="button" onclick="downloadNavetteProExcelTemplate()" style="background: #facc15; color: #0f172a; border: none; padding: 10px 14px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer;">
+                        <button type="button" onclick="downloadNavetteProExcelTemplate()" style="background: #facc15; color: #0f172a; border: none; padding: 9px 12px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer;">
                             📥 Télécharger Modèle Excel
                         </button>
-                        <label style="background: #10b981; color: #ffffff; padding: 10px 14px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                        <label style="background: #10b981; color: #ffffff; padding: 9px 12px; border-radius: 10px; font-size: 12px; font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
                             📤 Importer Excel Rempli
                             <input type="file" accept=".xlsx,.xls" onchange="importNavetteProExcel(event)" style="display: none;">
                         </label>
                     </div>
                 </div>
 
-                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 14px; margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
                         <h3 style="margin: 0; font-size: 15px; font-weight: 900;">🚌 Créer un nouvel espace transport</h3>
                         <span id="fleet-quota-badge" style="background: #eff6ff; color: #0284c7; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 999px;">0 / 6 Bus utilisés</span>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
-                        <input type="text" id="new-bus-num" placeholder="Numéro du Bus (ex: Bus 1) *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
-                        <input type="text" id="new-bus-driver" placeholder="Nom du Chauffeur *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
-                        <input type="text" id="new-bus-acc" placeholder="Nom de l'Accompagnatrice *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
-                        <input type="number" id="new-bus-cap" placeholder="Élèves autorisés (indicatif)" min="1" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                        <input type="text" id="new-bus-num" placeholder="N° Bus (ex: Bus 1) *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 13px; width: 100%;">
+                        <input type="number" id="new-bus-cap" placeholder="Capacité (ex: 24)" min="1" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 13px; width: 100%;">
+                        <input type="text" id="new-bus-driver" placeholder="Nom du Chauffeur *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 13px; width: 100%;">
+                        <input type="text" id="new-bus-acc" placeholder="Accompagnatrice *" style="padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 13px; width: 100%;">
                     </div>
-                    <button type="button" onclick="handleAddBusForm()" style="margin-top: 12px; width: 100%; background: #0f172a; color: #ffffff; border: none; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 900; cursor: pointer;">
+                    <button type="button" onclick="handleAddBusForm()" style="margin-top: 10px; width: 100%; background: #0f172a; color: #ffffff; border: none; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 900; cursor: pointer;">
                         ➕ Ajouter l'espace transport &amp; Générer le code sécurisé
                     </button>
                 </div>
@@ -1550,7 +1548,7 @@
             });
             tbody.innerHTML = filtered.length === 0
                 ? `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Aucun événement enregistré pour ce filtre.</td></tr>`
-                : filtered.map(e => `<tr><td><strong>${e.dateStr}</strong><br><small style="color:#64748b;">${e.timeStr}</small></td><td>${badges[e.type] || e.type}</td><td><strong>${e.busNum}</strong></td><td>${e.detail}</td><td>${e.actor}</td></tr>`).join('');
+                : filtered.map(e => `<tr><td><strong>${e.dateStr}</strong><br><small style="color:#64748b;">${e.timeStr}</small></td><td>${badges[e.type] || e.type}</td><td><strong class="cap-name">${e.busNum}</strong></td><td>${e.detail}</td><td class="cap-name">${e.actor}</td></tr>`).join('');
         }
 
         function exportAuditExcel() {
@@ -1834,14 +1832,33 @@
         function startSubscriptionCountdown() {
             if (subscriptionTimerInterval) clearInterval(subscriptionTimerInterval);
             let endDate = (schoolAccounts.pdg && schoolAccounts.pdg.endDate) ? schoolAccounts.pdg.endDate : (Date.now() + 365 * DAY_MS);
-            if (activeSession && activeSession.role === 'demo') endDate = (parseInt(localStorage.getItem(DEMO_START_KEY), 10) || Date.now()) + DEMO_DURATION_MS;
+            if (activeSession && activeSession.role === 'demo') {
+                endDate = (parseInt(localStorage.getItem(DEMO_START_KEY), 10) || Date.now()) + DEMO_DURATION_MS;
+            }
+            const timerBadge = document.getElementById('demo-timer-badge');
             const updateClock = () => {
                 const diff = Math.max(0, endDate - Date.now());
-                document.getElementById('cd-days').textContent = String(Math.floor(diff / DAY_MS)).padStart(2, '0');
-                document.getElementById('cd-hours').textContent = String(Math.floor((diff % DAY_MS) / 3600000)).padStart(2, '0');
-                document.getElementById('cd-mins').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+                const days = Math.floor(diff / DAY_MS);
+                const hours = Math.floor((diff % DAY_MS) / 3600000);
+                const mins = Math.floor((diff % 3600000) / 60000);
+                const cdDays = document.getElementById('cd-days');
+                const cdHours = document.getElementById('cd-hours');
+                const cdMins = document.getElementById('cd-mins');
+                if (cdDays) cdDays.textContent = String(days).padStart(2, '0');
+                if (cdHours) cdHours.textContent = String(hours).padStart(2, '0');
+                if (cdMins) cdMins.textContent = String(mins).padStart(2, '0');
+
+                if (timerBadge && activeSession) {
+                    if (activeSession.role === 'demo') {
+                        const totalHours = Math.floor(diff / 3600000);
+                        timerBadge.textContent = `⏳ ${String(totalHours).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m`;
+                    } else if (['premium', 'basic'].includes(activeSession.role)) {
+                        timerBadge.textContent = `⏳ ${days}j ${String(hours).padStart(2, '0')}h`;
+                    }
+                }
             };
-            updateClock(); subscriptionTimerInterval = setInterval(updateClock, 30000);
+            updateClock();
+            subscriptionTimerInterval = setInterval(updateClock, 30000);
         }
         function saveAdherentProfile() {
             const email = document.getElementById('adh-email').value.trim().toLowerCase(), phone = document.getElementById('adh-phone').value.trim();
@@ -2128,7 +2145,8 @@
             } else {
                 const subLabel = sess.subRole === 'pdg' ? 'PDG' : sess.subRole === 'manager' ? 'Gestionnaire' : 'Direction';
                 tierPill.textContent = `${subLabel} • ${sess.role === 'premium' ? 'Premium (12 bus)' : sess.role === 'basic' ? 'Basique (6 bus)' : 'Démo 48h'}`;
-                timerBadge.textContent = '⏳ Actif'; switchPage('fleet');
+                startSubscriptionCountdown();
+                switchPage('fleet');
             }
         }
         function showOnlyPage(pageName) { document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active')); document.getElementById(`page-${pageName}`).classList.add('active'); }
@@ -2202,7 +2220,7 @@
                 ? `<div style="background:#fff;border:1px dashed #cbd5e1;border-radius:12px;padding:18px;text-align:center;color:#64748b;font-size:12px;">Aucun bus enregistré.</div>`
                 : fleetState.map(bus => {
                     const liveObj = liveBusData[bus.id], statusTag = (liveObj && liveObj.active) ? (liveObj.tripStatus === 'en_route' ? '<span style="color:#10b981;font-size:10px;font-weight:900;">● EN ROUTE</span>' : '<span style="color:#d97706;font-size:10px;font-weight:900;">● À L\'ARRÊT</span>') : '';
-                    return `<div onclick="selectedBusId='${bus.id}';switchPage('driver');" style="background:#fff;border:1px solid #e2e8f0;border-left:5px solid ${bus.color};border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:900;">${bus.num} — ${bus.sector} ${statusTag}</div><div style="font-size:11px;color:#64748b;">👨‍✈️ ${bus.driver}</div></div><span style="background:${bus.color};color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;">${(bus.students || []).length} él.</span></div>`;
+                    return `<div onclick="selectedBusId='${bus.id}';switchPage('driver');" style="background:#fff;border:1px solid #e2e8f0;border-left:5px solid ${bus.color};border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:900;"><span class="cap-name">${bus.num}</span> — ${bus.sector} ${statusTag}</div><div style="font-size:11px;color:#64748b;">👨‍✈️ <span class="cap-name">${bus.driver}</span></div></div><span style="background:${bus.color};color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;">${(bus.students || []).length} él.</span></div>`;
                 }).join('');
             renderLiveBusMarkers();
         }
@@ -2210,14 +2228,14 @@
         function renderDriverPage() {
             if (fleetState.length === 0) { document.getElementById('driver-pills-container').innerHTML = ''; document.getElementById('driver-voyages-container').innerHTML = `<div style="background:#fff;padding:18px;border-radius:12px;text-align:center;color:#64748b;font-size:12px;">Aucun bus.</div>`; return; }
             if (!selectedBusId || !fleetState.find(b => b.id === selectedBusId)) selectedBusId = fleetState[0].id;
-            document.getElementById('driver-pills-container').innerHTML = fleetState.map(bus => `<button type="button" class="driver-pill ${bus.id === selectedBusId ? 'active' : ''}" onclick="selectedBusId='${bus.id}';renderDriverPage();"><span style="width:9px;height:9px;border-radius:50%;background:${bus.color};display:inline-block;"></span> ${bus.num} - ${bus.driver}</button>`).join('');
+            document.getElementById('driver-pills-container').innerHTML = fleetState.map(bus => `<button type="button" class="driver-pill ${bus.id === selectedBusId ? 'active' : ''}" onclick="selectedBusId='${bus.id}';renderDriverPage();"><span style="width:9px;height:9px;border-radius:50%;background:${bus.color};display:inline-block;"></span> <span class="cap-name">${bus.num} - ${bus.driver}</span></button>`).join('');
             const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0];
-            document.getElementById('active-crew-banner').innerHTML = `👨‍✈️ <strong>${bus.driver}</strong> &amp; 👩‍🏫 <strong>${bus.acc}</strong> • ${bus.num}`;
+            document.getElementById('active-crew-banner').innerHTML = `👨‍✈️ <strong class="cap-name">${bus.driver}</strong> &amp; 👩‍🏫 <strong class="cap-name">${bus.acc}</strong> • <span class="cap-name">${bus.num}</span>`;
             document.getElementById('driver-map-chip').textContent = `${bus.num} — ${bus.driver}`;
             if (driverLayer) { driverLayer.clearLayers(); (bus.students || []).forEach(s => L.marker([s.lat, s.lng]).addTo(driverLayer)); }
             document.getElementById('driver-voyages-container').innerHTML = [1, 2].map(vNum => {
                 const sched = computeVoyageSchedule((bus.students || []).filter(s => s.voyage === vNum), vNum);
-                return `<div class="voyage-card"><div class="voyage-header"><div style="font-size:12px;font-weight:900;">VOYAGE ${vNum}</div><div style="font-size:11px;color:#64748b;">${sched.stops.length} élève(s)</div></div>${sched.stops.map(st => `<div class="student-row"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;"><div style="font-size:13px;font-weight:800;">${st.order}. ${st.name} (${st.level})</div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.status==='present'?'#dcfce7':st.status==='absent'?'#fee2e2':'#f1f5f9'};color:${st.status==='present'?'#15803d':st.status==='absent'?'#b91c1c':'#64748b'};">${st.status==='present'?'🟢 PRÉSENT':st.status==='absent'?'🔴 ABSENT':'⏳ EN ATTENTE'}</span><span style="font-size:12px;font-weight:900;">🕒 ${st.timeStr}</span></div></div><div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#475569;"><span>🔐 PIN Parent : <strong>${st.parentPin || '----'}</strong></span><button type="button" onclick="shareParentAccessWhatsApp('${st.name.replace(/'/g, "\\'")}','${st.phone || ''}','${st.parentPin || ''}')" style="background:#dcfce7;color:#15803d;border:none;padding:4px 9px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;">📲 Accès Parent</button></div></div>`).join('')}</div>`;
+                return `<div class="voyage-card"><div class="voyage-header"><div style="font-size:12px;font-weight:900;">VOYAGE ${vNum}</div><div style="font-size:11px;color:#64748b;">${sched.stops.length} élève(s)</div></div>${sched.stops.map(st => `<div class="student-row"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;"><div style="font-size:13px;font-weight:800;">${st.order}. <span class="cap-name">${st.name}</span> (${st.level})</div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.status==='present'?'#dcfce7':st.status==='absent'?'#fee2e2':'#f1f5f9'};color:${st.status==='present'?'#15803d':st.status==='absent'?'#b91c1c':'#64748b'};">${st.status==='present'?'🟢 PRÉSENT':st.status==='absent'?'🔴 ABSENT':'⏳ EN ATTENTE'}</span><span style="font-size:12px;font-weight:900;">🕒 ${st.timeStr}</span></div></div><div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#475569;"><span>🔐 PIN Parent : <strong>${st.parentPin || '----'}</strong></span><button type="button" onclick="shareParentAccessWhatsApp('${st.name.replace(/'/g, "\\'")}','${st.phone || ''}','${st.parentPin || ''}')" style="background:#dcfce7;color:#15803d;border:none;padding:4px 9px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;">📲 Accès Parent</button></div></div>`).join('')}</div>`;
             }).join('');
             renderLiveBusMarkers();
         }
@@ -2226,7 +2244,7 @@
             document.getElementById('fleet-quota-badge').textContent = `${fleetState.length} / ${getMaxBusLimit()} Bus utilisés`;
             document.getElementById('fleet-cards-container').innerHTML = fleetState.length === 0
                 ? `<div style="grid-column:1/-1;background:#fff;border:2px dashed #cbd5e1;border-radius:16px;padding:28px;text-align:center;color:#64748b;">Aucun bus enregistré.</div>`
-                : fleetState.map(bus => `<div style="background:#fff;border:1px solid #e2e8f0;border-top:5px solid ${bus.color};border-radius:14px;padding:14px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:6px;"><strong style="font-size:15px;">${bus.num}</strong><span style="background:#eff6ff;color:#0284c7;font-family:monospace;font-size:11px;font-weight:900;padding:3px 8px;border-radius:8px;">${bus.accessCode}</span></div><div style="font-size:12px;color:#475569;margin-top:8px;">👨‍✈️ ${bus.driver} • 👩‍🏫 ${bus.acc || '—'}</div><div style="font-size:12px;color:#0284c7;font-weight:800;margin-top:6px;">🎒 ${(bus.students || []).length} élève(s)</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid #f1f5f9;"><button type="button" onclick="shareDriverAccessWhatsApp('${bus.id}')" style="background:#10b981;color:#fff;border:none;padding:8px;border-radius:9px;font-size:11px;font-weight:800;cursor:pointer;">📲 WhatsApp</button><button type="button" onclick="regenerateBusCode('${bus.id}')" style="background:#f1f5f9;color:#334155;border:none;padding:8px;border-radius:9px;font-size:11px;font-weight:800;cursor:pointer;">🔄 Code</button></div></div>`).join('');
+                : fleetState.map(bus => `<div style="background:#fff;border:1px solid #e2e8f0;border-top:5px solid ${bus.color};border-radius:14px;padding:14px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:6px;"><strong class="cap-name" style="font-size:15px;">${bus.num}</strong><span style="background:#eff6ff;color:#0284c7;font-family:monospace;font-size:11px;font-weight:900;padding:3px 8px;border-radius:8px;">${bus.accessCode}</span></div><div style="font-size:12px;color:#475569;margin-top:8px;">👨‍✈️ <span class="cap-name">${bus.driver}</span> • 👩‍🏫 <span class="cap-name">${bus.acc || '—'}</span></div><div style="font-size:12px;color:#0284c7;font-weight:800;margin-top:6px;">🎒 ${(bus.students || []).length} élève(s)</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid #f1f5f9;"><button type="button" onclick="shareDriverAccessWhatsApp('${bus.id}')" style="background:#10b981;color:#fff;border:none;padding:8px;border-radius:9px;font-size:11px;font-weight:800;cursor:pointer;">📲 WhatsApp</button><button type="button" onclick="regenerateBusCode('${bus.id}')" style="background:#f1f5f9;color:#334155;border:none;padding:8px;border-radius:9px;font-size:11px;font-weight:800;cursor:pointer;">🔄 Code</button></div></div>`).join('');
         }
         function renderStudentsPage() {
             document.getElementById('stu-bus').innerHTML = fleetState.length ? fleetState.map(b => `<option value="${b.id}">${b.num} — ${b.driver}</option>`).join('') : `<option value="">Créez d'abord un bus</option>`;
@@ -2266,10 +2284,10 @@
         }
         function renderAttendancePage() {
             const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0]; if (!bus) return;
-            document.getElementById('att-header-title').textContent = `${bus.num} — ${bus.sector}`;
-            document.getElementById('att-crew-subtitle').textContent = `Chauffeur : ${bus.driver} • Accompagnatrice : ${bus.acc}`;
+            document.getElementById('att-header-title').innerHTML = `<span class="cap-name">${bus.num}</span> — ${bus.sector}`;
+            document.getElementById('att-crew-subtitle').innerHTML = `Chauffeur : <span class="cap-name">${bus.driver}</span> • Accompagnatrice : <span class="cap-name">${bus.acc}</span>`;
             const sched = computeVoyageSchedule((bus.students || []).filter(s => s.voyage === attVoyageFilter), attVoyageFilter);
-            document.getElementById('att-students-grid').innerHTML = sched.stops.map((stu, idx) => `<div style="background:#fff;border:2px solid ${stu.status==='present'?'#10b981':stu.status==='absent'?'#ef4444':'#e2e8f0'};border-radius:16px;padding:14px;"><div style="font-size:11px;font-weight:900;color:${bus.color};">Arrêt #${idx+1} • ${stu.level}</div><div style="font-size:15px;font-weight:900;margin:2px 0;">${stu.name}</div><div style="font-size:11px;font-weight:800;margin-bottom:10px;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#64748b'};">${stu.status==='present'?'🟢 PRÉSENT à '+stu.statusTime:stu.status==='absent'?'🔴 ABSENT à '+stu.statusTime:'⏳ En attente'}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','present')" style="background:#10b981;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🟢 PRÉSENT</button><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','absent')" style="background:#ef4444;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🔴 ABSENT</button></div></div>`).join('');
+            document.getElementById('att-students-grid').innerHTML = sched.stops.map((stu, idx) => `<div style="background:#fff;border:2px solid ${stu.status==='present'?'#10b981':stu.status==='absent'?'#ef4444':'#e2e8f0'};border-radius:16px;padding:14px;"><div style="font-size:11px;font-weight:900;color:${bus.color};">Arrêt #${idx+1} • ${stu.level}</div><div class="cap-name" style="font-size:15px;font-weight:900;margin:2px 0;">${stu.name}</div><div style="font-size:11px;font-weight:800;margin-bottom:10px;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#64748b'};">${stu.status==='present'?'🟢 PRÉSENT à '+stu.statusTime:stu.status==='absent'?'🔴 ABSENT à '+stu.statusTime:'⏳ En attente'}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','present')" style="background:#10b981;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🟢 PRÉSENT</button><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','absent')" style="background:#ef4444;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🔴 ABSENT</button></div></div>`).join('');
         }
         function markAttendance(busId, stuId, statusType) {
             const bus = fleetState.find(b => b.id === busId), stu = bus && (bus.students || []).find(s => s.id === stuId); if (!stu) return;
@@ -2340,7 +2358,7 @@
             document.getElementById('parent-children-cards').innerHTML = getParentMatches().map(({ bus, stu }) => {
                 const stateText = stu.status === 'present' ? t.present : stu.status === 'absent' ? t.absent : t.pending;
                 const stateColor = stu.status === 'present' ? '#15803d' : stu.status === 'absent' ? '#b91c1c' : '#0284c7';
-                return `<div style="background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 12px rgba(0,0,0,0.04);"><div style="font-weight:900;font-size:17px;">${stu.name} (${stu.level})</div><div style="font-size:12px;color:#475569;margin-top:4px;">🚌 ${bus.num} • ${t.driver} : ${bus.driver}</div><div style="margin-top:8px;font-weight:800;color:${stateColor};">${t.stateLabel} : ${stateText}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid #f1f5f9;"><button type="button" onclick="reportAbsenceParent('${bus.id}','${stu.id}')" style="background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;padding:10px;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer;">${t.btnAbsence}</button><button type="button" onclick="sendGpsParent('${stu.name.replace(/'/g, "\\'")}','${stu.level}')" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:10px;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer;">${t.btnGps}</button></div></div>`;
+                return `<div style="background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 12px rgba(0,0,0,0.04);"><div class="cap-name" style="font-weight:900;font-size:17px;">${stu.name} (${stu.level})</div><div style="font-size:12px;color:#475569;margin-top:4px;">🚌 <span class="cap-name">${bus.num}</span> • ${t.driver} : <span class="cap-name">${bus.driver}</span></div><div style="margin-top:8px;font-weight:800;color:${stateColor};">${t.stateLabel} : ${stateText}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid #f1f5f9;"><button type="button" onclick="reportAbsenceParent('${bus.id}','${stu.id}')" style="background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;padding:10px;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer;">${t.btnAbsence}</button><button type="button" onclick="sendGpsParent('${stu.name.replace(/'/g, "\\'")}','${stu.level}')" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:10px;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer;">${t.btnGps}</button></div></div>`;
             }).join('');
             updateParentLiveMap();
         }
@@ -2384,3 +2402,4 @@
     </script>
 </body>
 </html>
+    
