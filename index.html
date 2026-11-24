@@ -232,7 +232,7 @@
                         Pilotez chaque trajet scolaire <span>avec sérénité.</span>
                     </h2>
                     <p style="font-size: 16px; color: #475569; line-height: 1.65; margin: 0 0 26px; max-width: 530px;">
-                        Navette Pro connecte la <strong>Direction</strong>, l'<strong>Équipage du bus</strong> et les <strong>Parents (FR / العربية)</strong> sur une plateforme web instantanée. Zéro installation technique, forfait fixe annuel par école et élèves illimités.
+                        Navette Pro connecte la <strong>Direction</strong>, le <strong>Chauffeur</strong> et les <strong>Parents (FR / العربية)</strong> sur une plateforme web instantanée. Zéro installation technique, forfait fixe annuel par école et élèves illimités.
                     </p>
                     <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
                         <button type="button" onclick="document.getElementById('demo-modal').classList.add('open')" style="background: #10b981; color: #ffffff; border: none; padding: 14px 24px; border-radius: 12px; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 12px 24px rgba(16,185,129,0.28);">
@@ -252,7 +252,7 @@
                 <div class="lp-mockup-shell">
                     <div class="lp-mockup-tabs">
                         <button type="button" class="lp-mock-tab active" id="mock-btn-dir" onclick="switchHeroMockup('dir')">🏫 Direction</button>
-                        <button type="button" class="lp-mock-tab" id="mock-btn-drv" onclick="switchHeroMockup('drv')">🚌 Accompagnatrice</button>
+                        <button type="button" class="lp-mock-tab" id="mock-btn-drv" onclick="switchHeroMockup('drv')">🚌 Chauffeur</button>
                         <button type="button" class="lp-mock-tab" id="mock-btn-par" onclick="switchHeroMockup('par')">👨‍👩‍👧 Parents (FR/AR)</button>
                     </div>
                     <div class="lp-mockup-screen" id="lp-mockup-body"></div>
@@ -273,7 +273,7 @@
                 </div>
                 <div class="lp-trust-card" style="border-color: #facc15;">
                     <div style="font-size: 24px; font-weight: 900; color: #10b981;">FR / العربية</div>
-                    <div style="font-size: 12px; color: #cbd5e1; margin-top: 3px;">Portail parents bilingue sans app à télécharger</div>
+                    <div style="font-size: 12px; color: #cbd5e1; margin-top: 3px;">Interface chauffeur &amp; parents bilingue</div>
                 </div>
                 <div class="lp-trust-card" style="border-color: #a78bfa;">
                     <div style="font-size: 24px; font-weight: 900; color: #ffffff;">Loi 09-08</div>
@@ -305,7 +305,7 @@
                     <div style="font-size: 12px; font-weight: 900; color: #047857; text-transform: uppercase; margin-bottom: 12px;">✅ Avec Navette Pro (Tout-en-un)</div>
                     <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; font-size: 14px; color: #064e3b;">
                         <li>• <strong>Carte GPS en direct :</strong> la Direction voit toute la flotte et chaque parent suit uniquement le bus de son enfant.</li>
-                        <li>• <strong>Pointage en 1 tap :</strong> l'accompagnatrice valide Présent / Absent sur son smartphone ou sa tablette.</li>
+                        <li>• <strong>Pointage en 1 tap :</strong> validation rapide Présent / Absent sur le téléphone du chauffeur.</li>
                         <li>• <strong>Journal d'audit horodaté :</strong> chaque départ, montée et absence parentale est archivé et exportable en Excel.</li>
                         <li>• <strong>Codes chauffeurs révocables en 1 clic :</strong> vous gardez 100 % du contrôle sur vos données et vos accès.</li>
                     </ul>
@@ -464,7 +464,7 @@
                         <span>Faut-il acheter et installer des boîtiers GPS dans nos bus ?</span>
                         <span>−</span>
                     </button>
-                    <div class="lp-faq-ans">Non. Navette Pro fonctionne directement sur le smartphone ou la tablette Android de l'accompagnatrice ou du chauffeur. Vous économisez 100 % des frais d'achat et de pose de boîtiers télématiques.</div>
+                    <div class="lp-faq-ans">Non. Navette Pro fonctionne directement sur le téléphone ou la tablette du chauffeur. Vous économisez 100 % des frais d'achat et de pose de boîtiers télématiques.</div>
                 </div>
 
                 <div class="lp-faq-item">
@@ -1002,13 +1002,13 @@
             </div>
         </section>
 
-        <!-- ==================== VUE TERRAIN CHAUFFEUR + CARTE DYNAMIQUE ==================== -->
+        <!-- ==================== VUE TERRAIN CHAUFFEUR + CARTE WAZE INTÉGRÉE + FR/AR ==================== -->
         <section id="page-attendance" class="page-view" style="overflow-y: auto; background: #f8fafc;">
             <div class="driver-strip" id="att-driver-pills"></div>
             <div style="max-width: 880px; margin: 0 auto; width: 100%; padding: 14px 14px 80px 14px;">
                 <div style="background: #0f172a; color: #ffffff; border-radius: 16px; padding: 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                     <div>
-                        <span style="background: #facc15; color: #0f172a; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 999px; text-transform: uppercase;">Feuille de Route Terrain</span>
+                        <span id="att-badge-top" style="background: #facc15; color: #0f172a; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 999px; text-transform: uppercase;">Feuille de Route Terrain</span>
                         <h2 style="margin: 6px 0 2px; font-size: 17px; font-weight: 900;" id="att-header-title">Feuille de route</h2>
                         <p style="margin: 0; font-size: 12px; color: #cbd5e1;" id="att-crew-subtitle">Équipage</p>
                     </div>
@@ -1024,23 +1024,58 @@
                     📡 Partage GPS en direct actif — Gardez cet écran ouvert pendant le trajet.
                 </div>
 
-                <!-- CARTE DYNAMIQUE CHAUFFEUR (ITINÉRAIRE, ARRÊTS & PROCHAIN STOP) -->
-                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(15,23,42,0.05);">
-                    <div style="padding: 10px 14px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <div>
-                            <div id="att-next-stop-banner" style="font-size: 12px; font-weight: 900; color: #0f172a;">📍 Prochain arrêt : calcul en cours...</div>
-                            <div id="att-route-summary" style="font-size: 11px; color: #64748b; font-weight: 700;">Distance &amp; ETA estimés</div>
+                <!-- CARTE SIMPLIFIÉE STYLE WAZE INTÉGRÉE + BOUTON FLOTTANT BUS + FR/AR -->
+                <div id="att-waze-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; overflow: hidden; margin-bottom: 14px; box-shadow: 0 8px 20px rgba(15,23,42,0.08);">
+                    <!-- Barre haute : langue FR/AR + suivi auto -->
+                    <div style="padding: 10px 14px; background: #0f172a; color: #ffffff; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="background: #33ccff; color: #0f172a; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 999px;">WAZE MODE</span>
+                            <span id="waze-top-destination" style="font-size: 13px; font-weight: 800;">📍 Prochain arrêt</span>
                         </div>
-                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                            <button type="button" id="btn-att-follow" onclick="toggleAttMapFollow()" style="background: #eff6ff; color: #0284c7; border: 1px solid #bae6fd; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">
-                                🔒 Suivi auto : ON
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            <button type="button" id="btn-att-lang" onclick="toggleDriverLang()" style="background: #facc15; color: #0f172a; border: none; padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 900; cursor: pointer;">
+                                🌐 العربية
                             </button>
-                            <button type="button" onclick="openExternalNavForNextStop()" style="background: #0f172a; color: #facc15; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">
-                                🧭 GPS / Waze
+                            <button type="button" id="btn-att-follow" onclick="toggleAttMapFollow()" style="background: rgba(255,255,255,0.14); color: #ffffff; border: 1px solid rgba(255,255,255,0.25); padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">
+                                🎯 Centrer : ON
                             </button>
                         </div>
                     </div>
-                    <div id="mapDriverAttendance" style="width: 100%; height: 250px; background: #e2e8f0; z-index: 1;"></div>
+
+                    <!-- Zone carte + bouton flottant recentrage bus -->
+                    <div style="position: relative;">
+                        <div id="mapDriverAttendance" style="width: 100%; height: 260px; background: #e2e8f0; z-index: 1;"></div>
+                        <button type="button" id="btn-waze-recenter-bus" onclick="recenterWazeOnBus()" title="Recentrer sur le bus" style="position: absolute; bottom: 12px; right: 12px; z-index: 500; background: #ffffff; color: #0f172a; border: 2px solid #0284c7; border-radius: 999px; padding: 8px 14px; font-size: 12px; font-weight: 900; box-shadow: 0 6px 16px rgba(15,23,42,0.25); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                            <span>🚌</span>
+                            <span id="waze-recenter-label">Bus</span>
+                        </button>
+                    </div>
+
+                    <!-- Barre basse style Waze (ETA, Distance, Vitesse) -->
+                    <div style="background: #0f172a; color: #ffffff; padding: 12px 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; border-top: 2px solid #33ccff;">
+                        <div>
+                            <div id="waze-eta-val" style="font-size: 18px; font-weight: 900; color: #10b981;">-- min</div>
+                            <div id="waze-eta-lbl" style="font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">Arrivée</div>
+                        </div>
+                        <div style="border-left: 1px solid rgba(255,255,255,0.12); border-right: 1px solid rgba(255,255,255,0.12);">
+                            <div id="waze-dist-val" style="font-size: 18px; font-weight: 900; color: #33ccff;">-- km</div>
+                            <div id="waze-dist-lbl" style="font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">Distance</div>
+                        </div>
+                        <div>
+                            <div id="waze-speed-val" style="font-size: 18px; font-weight: 900; color: #facc15;">0 km/h</div>
+                            <div id="waze-speed-lbl" style="font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">Vitesse</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RÉSUMÉ DE POINTAGE + ALERTE RETARD -->
+                <div id="att-trip-summary" style="background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                    <div id="att-trip-counts" style="font-size:12px;font-weight:800;color:#0f172a;">
+                        📊 Voyage 1 : 0 Présents • 0 Absents • 0 En attente
+                    </div>
+                    <button type="button" id="btn-att-delay-alert" onclick="logDriverQuickAlert()" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;">
+                        🚦 Signaler un retard
+                    </button>
                 </div>
 
                 <div id="att-students-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px;"></div>
@@ -1198,6 +1233,7 @@
         let liveMarkersDriver = {};
         let schoolMarkerGlobal = null, schoolMarkerDriver = null;
 
+        let driverLang = localStorage.getItem('navette_pro_driver_lang') || 'fr';
         let mapAtt = null;
         let attSchoolMarker = null;
         let attBusMarker = null;
@@ -1205,7 +1241,6 @@
         let attRouteLine = null;
         let attFollowDriver = true;
         let currentDriverPos = null;
-        let nextTargetCoords = null;
 
         let fleetState = [];
         let waRequests = [];
@@ -1250,7 +1285,7 @@
                 body.innerHTML = `
                     <div>
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                            <span style="font-size:11px;font-weight:900;color:#0f172a;background:#fef08a;padding:4px 10px;border-radius:999px;">FEUILLE DE ROUTE • VOYAGE 1 (PRIMAIRE)</span>
+                            <span style="font-size:11px;font-weight:900;color:#0f172a;background:#fef08a;padding:4px 10px;border-radius:999px;">CHAUFFEUR • WAZE MODE + FR/AR</span>
                             <span style="font-size:11px;font-weight:800;color:#10b981;">📡 GPS actif</span>
                         </div>
                         <div style="display:grid;gap:8px;">
@@ -1265,7 +1300,7 @@
                         </div>
                     </div>
                     <div style="background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;border-radius:12px;padding:10px 12px;margin-top:14px;font-size:11px;font-weight:800;text-align:center;">
-                        ✔ Zéro appel téléphonique au volant : les absences parents s'affichent automatiquement.
+                        ✔ Carte Waze simplifiée intégrée + bascule العربية / Français en 1 tap.
                     </div>`;
             } else {
                 body.innerHTML = `
@@ -1715,8 +1750,9 @@
             if (!bus || !("geolocation" in navigator)) return;
             if ('wakeLock' in navigator) { try { screenWakeLock = await navigator.wakeLock.request('screen'); } catch (e) {} }
             const btn = document.getElementById('btn-driver-live-gps'), bar = document.getElementById('driver-gps-status-bar');
-            if (btn) { btn.textContent = "⏹️ Arrêter le GPS auto"; btn.style.background = "#ef4444"; }
-            if (bar) { bar.style.display = "block"; bar.textContent = `📡 Mode Tablette actif (${bus.num})...`; }
+            const t = DRIVER_WAZE_I18N[driverLang] || DRIVER_WAZE_I18N.fr;
+            if (btn) { btn.textContent = t.gpsStop; btn.style.background = "#ef4444"; }
+            if (bar) { bar.style.display = "block"; bar.textContent = `📡 GPS actif (${bus.num})...`; }
 
             driverGpsWatchId = navigator.geolocation.watchPosition((pos) => {
                 const lat = pos.coords.latitude, lng = pos.coords.longitude, speedKmh = pos.coords.speed ? (pos.coords.speed * 3.6) : 0, now = Date.now();
@@ -1728,7 +1764,9 @@
                     currentTripStatus = 'en_route'; lastAnchorPos = [lat, lng]; lastMoveTs = now;
                 } else if (now - lastMoveTs > 15 * 60 * 1000) currentTripStatus = 'a_l_arret';
 
-                if (firebaseDb) firebaseDb.ref(`schools/${currentSchoolCode}/live_gps/${bus.id}`).set({ busId: bus.id, busNum: bus.num, driver: bus.driver, lat, lng, speedKmh: Math.round(speedKmh), tripStatus: currentTripStatus, active: true, updatedAt: now });
+                const gpsPayload = { busId: bus.id, busNum: bus.num, driver: bus.driver, lat, lng, speedKmh: Math.round(speedKmh), tripStatus: currentTripStatus, active: true, updatedAt: now };
+                liveBusData[bus.id] = gpsPayload;
+                if (firebaseDb) firebaseDb.ref(`schools/${currentSchoolCode}/live_gps/${bus.id}`).set(gpsPayload);
                 if (bar) bar.textContent = `${currentTripStatus === 'en_route' ? '🟢 EN ROUTE' : '🟡 À L\'ARRÊT'} (${bus.num} • ${Math.round(speedKmh)} km/h) — ${new Date().toLocaleTimeString('fr-FR')}`;
 
                 if (document.getElementById('page-attendance')?.classList.contains('active')) {
@@ -1744,12 +1782,13 @@
         async function toggleDriverLiveGps() {
             const btn = document.getElementById('btn-driver-live-gps'), bar = document.getElementById('driver-gps-status-bar');
             const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0];
+            const t = DRIVER_WAZE_I18N[driverLang] || DRIVER_WAZE_I18N.fr;
             if (!bus) return;
             if (driverGpsWatchId !== null) {
                 navigator.geolocation.clearWatch(driverGpsWatchId); driverGpsWatchId = null; currentTripStatus = 'a_l_arret'; lastAnchorPos = null;
                 if (screenWakeLock) { try { await screenWakeLock.release(); } catch (e) {} screenWakeLock = null; }
                 if (firebaseDb) firebaseDb.ref(`schools/${currentSchoolCode}/live_gps/${bus.id}`).update({ active: false, tripStatus: 'a_l_arret', updatedAt: Date.now() });
-                btn.textContent = "▶️ Démarrer la tournée (GPS en direct)"; btn.style.background = "#10b981"; bar.style.display = "none";
+                btn.textContent = t.gpsStart; btn.style.background = "#10b981"; bar.style.display = "none";
                 showToast("⏹️ Partage GPS arrêté."); return;
             }
             if (!("geolocation" in navigator)) { alert("GPS non disponible."); return; }
@@ -1781,23 +1820,72 @@
             updateParentLiveMap();
         }
 
-        // ==================== CARTE DYNAMIQUE ESPACE CHAUFFEUR ====================
-        function getStopPinIcon(orderNum, status) {
-            const bg = status === 'present' ? '#10b981' : status === 'absent' ? '#ef4444' : '#0284c7';
+        // ==================== CARTE SIMPLIFIÉE WAZE INTÉGRÉE + BOUTON BUS + FR/AR ====================
+        const DRIVER_WAZE_I18N = {
+            fr: {
+                btnLang: "🌐 العربية",
+                followOn: "🎯 Centrer : ON",
+                followOff: "🎯 Centrer : OFF",
+                recenterBus: "Bus",
+                gpsStart: "▶️ Démarrer la tournée (GPS en direct)",
+                gpsStop: "⏹️ Arrêter le GPS auto",
+                nextStop: "📍 Prochain arrêt :",
+                toSchool: "🏫 Direction l'école :",
+                etaLbl: "Arrivée",
+                distLbl: "Distance",
+                speedLbl: "Vitesse",
+                minsUnit: "min",
+                kmUnit: "km",
+                badgeTop: "Feuille de Route Terrain",
+                voyage1: "Voyage 1",
+                voyage2: "Voyage 2",
+                delayBtn: "🚦 Signaler un retard",
+                delayMsg: "Retard / Circulation signalé sur le trajet",
+                presentBtn: "🟢 PRÉSENT",
+                absentBtn: "🔴 ABSENT",
+                emptyVoyage: (v) => `Aucun élève enregistré sur le Voyage ${v}.`
+            },
+            ar: {
+                btnLang: "🌐 Français",
+                followOn: "🎯 توسيط : مفعل",
+                followOff: "🎯 توسيط : متوقف",
+                recenterBus: "الحافلة",
+                gpsStart: "▶️ بدء الجولة (GPS مباشر)",
+                gpsStop: "⏹️ إيقاف GPS التلقائي",
+                nextStop: "📍 المحطة التالية :",
+                toSchool: "🏫 التوجه نحو المدرسة :",
+                etaLbl: "الوصول",
+                distLbl: "المسافة",
+                speedLbl: "السرعة",
+                minsUnit: "د",
+                kmUnit: "كلم",
+                badgeTop: "ورقة طريق السائق",
+                voyage1: "الرحلة 1",
+                voyage2: "الرحلة 2",
+                delayBtn: "🚦 الإبلاغ عن تأخر",
+                delayMsg: "تم الإبلاغ عن تأخر / ازدحام في الطريق",
+                presentBtn: "🟢 حاضر",
+                absentBtn: "🔴 غائب",
+                emptyVoyage: (v) => `لا يوجد تلاميذ مسجلون في الرحلة ${v}.`
+            }
+        };
+
+        function getWazeStopPin(orderNum, status) {
+            const color = status === 'present' ? '#10b981' : status === 'absent' ? '#ef4444' : '#0284c7';
             return L.divIcon({
                 className: '',
-                html: `<div style="background:${bg};color:#ffffff;border:2.5px solid #ffffff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;box-shadow:0 3px 8px rgba(0,0,0,0.28);">${orderNum}</div>`,
-                iconSize: [28, 28],
-                iconAnchor: [14, 14]
+                html: `<div style="background:${color};color:#ffffff;border:3px solid #ffffff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;box-shadow:0 4px 10px rgba(0,0,0,0.3);">${orderNum}</div>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
             });
         }
 
         function initAttendanceMap() {
             if (typeof L === 'undefined' || !document.getElementById('mapDriverAttendance')) return;
-            const tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+            const wazeLightTiles = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
             if (!mapAtt) {
-                mapAtt = L.map('mapDriverAttendance').setView(SCHOOL_COORDS, 14);
-                L.tileLayer(tileUrl).addTo(mapAtt);
+                mapAtt = L.map('mapDriverAttendance', { zoomControl: false }).setView(SCHOOL_COORDS, 15);
+                L.tileLayer(wazeLightTiles, { maxZoom: 19 }).addTo(mapAtt);
                 attStopsLayer = L.featureGroup().addTo(mapAtt);
                 attSchoolMarker = L.marker(SCHOOL_COORDS, { icon: getSchoolDivIcon() }).bindPopup(`🏫 ${schoolNameGlobal}`).addTo(mapAtt);
             } else if (attSchoolMarker) {
@@ -1808,35 +1896,102 @@
 
         function toggleAttMapFollow() {
             attFollowDriver = !attFollowDriver;
-            const btn = document.getElementById('btn-att-follow');
-            if (btn) {
-                btn.textContent = attFollowDriver ? '🔒 Suivi auto : ON' : '🔓 Suivi auto : OFF';
-                btn.style.background = attFollowDriver ? '#eff6ff' : '#f1f5f9';
-                btn.style.color = attFollowDriver ? '#0284c7' : '#475569';
-            }
+            applyDriverWazeLang();
             if (attFollowDriver && mapAtt) {
-                const centerTarget = currentDriverPos || SCHOOL_COORDS;
-                mapAtt.setView(centerTarget, 15);
+                mapAtt.setView(currentDriverPos || SCHOOL_COORDS, 15);
             }
         }
 
-        function openExternalNavForNextStop() {
-            const target = nextTargetCoords || SCHOOL_COORDS;
-            window.open(`https://www.google.com/maps/dir/?api=1&destination=${target[0]},${target[1]}&travelmode=driving`, '_blank');
+        function recenterWazeOnBus() {
+            const activeBus = fleetState.find(b => b.id === selectedBusId) || fleetState[0];
+            let targetPos = currentDriverPos;
+            if (!targetPos && activeBus && liveBusData[activeBus.id]) {
+                const info = liveBusData[activeBus.id];
+                if (typeof info.lat === 'number' && typeof info.lng === 'number') {
+                    targetPos = [info.lat, info.lng];
+                    currentDriverPos = targetPos;
+                }
+            }
+            if (!targetPos && activeBus && Array.isArray(activeBus.center)) {
+                targetPos = activeBus.center;
+            }
+            if (!targetPos) {
+                targetPos = SCHOOL_COORDS;
+            }
+
+            attFollowDriver = true;
+            applyDriverWazeLang();
+
+            if (mapAtt && Array.isArray(targetPos)) {
+                mapAtt.setView(targetPos, 16, { animate: true });
+                if (attBusMarker && typeof attBusMarker.openPopup === 'function') {
+                    attBusMarker.openPopup();
+                }
+            }
+        }
+
+        function toggleDriverLang() {
+            driverLang = driverLang === 'fr' ? 'ar' : 'fr';
+            localStorage.setItem('navette_pro_driver_lang', driverLang);
+            applyDriverWazeLang();
+            renderAttendancePage();
+        }
+
+        function applyDriverWazeLang() {
+            const t = DRIVER_WAZE_I18N[driverLang] || DRIVER_WAZE_I18N.fr;
+            const pageEl = document.getElementById('page-attendance');
+            if (pageEl) pageEl.setAttribute('dir', driverLang === 'ar' ? 'rtl' : 'ltr');
+
+            const langBtn = document.getElementById('btn-att-lang');
+            if (langBtn) langBtn.textContent = t.btnLang;
+
+            const followBtn = document.getElementById('btn-att-follow');
+            if (followBtn) followBtn.textContent = attFollowDriver ? t.followOn : t.followOff;
+
+            const recenterLbl = document.getElementById('waze-recenter-label');
+            if (recenterLbl) recenterLbl.textContent = t.recenterBus;
+
+            const gpsBtn = document.getElementById('btn-driver-live-gps');
+            if (gpsBtn) gpsBtn.textContent = driverGpsWatchId !== null ? t.gpsStop : t.gpsStart;
+
+            const badgeTop = document.getElementById('att-badge-top');
+            if (badgeTop) badgeTop.textContent = t.badgeTop;
+
+            const v1Btn = document.getElementById('att-v1-btn');
+            const v2Btn = document.getElementById('att-v2-btn');
+            if (v1Btn) v1Btn.textContent = t.voyage1;
+            if (v2Btn) v2Btn.textContent = t.voyage2;
+
+            const delayBtn = document.getElementById('btn-att-delay-alert');
+            if (delayBtn) delayBtn.textContent = t.delayBtn;
+
+            const etaLbl = document.getElementById('waze-eta-lbl');
+            const distLbl = document.getElementById('waze-dist-lbl');
+            const speedLbl = document.getElementById('waze-speed-lbl');
+            if (etaLbl) etaLbl.textContent = t.etaLbl;
+            if (distLbl) distLbl.textContent = t.distLbl;
+            if (speedLbl) speedLbl.textContent = t.speedLbl;
+        }
+
+        function logDriverQuickAlert() {
+            const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0];
+            if (!bus) return;
+            const t = DRIVER_WAZE_I18N[driverLang] || DRIVER_WAZE_I18N.fr;
+            logAuditEvent('DEPART_BUS', bus.num, `${t.delayMsg} (Voyage ${attVoyageFilter})`, bus.driver || 'Chauffeur');
+            showToast(`✅ ${t.delayMsg}`);
         }
 
         function updateAttendanceDynamicMap(bus, stops) {
             initAttendanceMap();
+            applyDriverWazeLang();
             if (!mapAtt || !attStopsLayer || !bus) return;
 
+            const t = DRIVER_WAZE_I18N[driverLang] || DRIVER_WAZE_I18N.fr;
             attStopsLayer.clearLayers();
             if (attRouteLine) {
                 mapAtt.removeLayer(attRouteLine);
                 attRouteLine = null;
             }
-
-            const validStops = (stops || []).filter(s => typeof s.lat === 'number' && typeof s.lng === 'number' && !isNaN(s.lat) && !isNaN(s.lng));
-            const routePoints = [];
 
             const liveInfo = liveBusData[bus.id];
             if (liveInfo && liveInfo.active && typeof liveInfo.lat === 'number' && typeof liveInfo.lng === 'number') {
@@ -1845,29 +2000,28 @@
                 currentDriverPos = Array.isArray(bus.center) ? [...bus.center] : [...SCHOOL_COORDS];
             }
 
-            routePoints.push(currentDriverPos);
+            const validStops = (stops || []).filter(s => typeof s.lat === 'number' && typeof s.lng === 'number' && !isNaN(s.lat) && !isNaN(s.lng));
+            const routeCoords = [currentDriverPos];
 
             validStops.forEach((st) => {
                 const pt = [st.lat, st.lng];
-                routePoints.push(pt);
-                const statusLabel = st.status === 'present' ? '🟢 PRÉSENT' : st.status === 'absent' ? '🔴 ABSENT' : '⏳ EN ATTENTE';
-                const marker = L.marker(pt, { icon: getStopPinIcon(st.order, st.status) })
-                    .bindPopup(`<strong>#${st.order} — ${st.name}</strong> (${st.level})<br>${statusLabel}<br>📍 ${st.address || bus.sector}`);
+                routeCoords.push(pt);
+                const marker = L.marker(pt, { icon: getWazeStopPin(st.order, st.status) })
+                    .bindPopup(`<strong>#${st.order} ${st.name}</strong> (${st.level})`);
                 marker.addTo(attStopsLayer);
             });
 
-            routePoints.push([...SCHOOL_COORDS]);
+            routeCoords.push([...SCHOOL_COORDS]);
 
-            if (routePoints.length >= 2) {
-                attRouteLine = L.polyline(routePoints, {
-                    color: bus.color || '#0284c7',
-                    weight: 4,
-                    opacity: 0.85,
-                    dashArray: '8, 8'
+            if (routeCoords.length >= 2) {
+                attRouteLine = L.polyline(routeCoords, {
+                    color: '#0284c7',
+                    weight: 6,
+                    opacity: 0.9
                 }).addTo(mapAtt);
             }
 
-            const busPopup = `🚌 <strong>${bus.num}</strong> — ${bus.driver}<br>${currentTripStatus === 'en_route' ? '🟢 EN ROUTE' : '🟡 À L\'ARRÊT'}`;
+            const busPopup = `🚌 <strong>${bus.num}</strong> — ${bus.driver}`;
             if (attBusMarker) {
                 attBusMarker.setLatLng(currentDriverPos).setPopupContent(busPopup);
             } else {
@@ -1875,25 +2029,27 @@
             }
 
             const nextStop = validStops.find(s => s.status === 'pending');
-            const bannerEl = document.getElementById('att-next-stop-banner');
-            const summaryEl = document.getElementById('att-route-summary');
+            const targetPt = nextStop ? [nextStop.lat, nextStop.lng] : SCHOOL_COORDS;
+            const distKm = haversineKm(currentDriverPos[0], currentDriverPos[1], targetPt[0], targetPt[1]) * 1.25;
+            const etaMins = Math.max(1, Math.round((distKm / 24) * 60));
+            const speedKmh = liveInfo && typeof liveInfo.speedKmh === 'number' ? liveInfo.speedKmh : 0;
 
-            if (nextStop) {
-                nextTargetCoords = [nextStop.lat, nextStop.lng];
-                const distKm = haversineKm(currentDriverPos[0], currentDriverPos[1], nextStop.lat, nextStop.lng) * 1.25;
-                const etaMins = Math.max(1, Math.round((distKm / 22) * 60));
-                if (bannerEl) bannerEl.textContent = `📍 Prochain arrêt : #${nextStop.order} ${nextStop.name} (${nextStop.level})`;
-                if (summaryEl) summaryEl.textContent = `≈ ${distKm.toFixed(1)} km • Arrivée estimée dans ${etaMins} min • ${validStops.length} arrêt(s) au total`;
-            } else {
-                nextTargetCoords = [...SCHOOL_COORDS];
-                const distSchoolKm = haversineKm(currentDriverPos[0], currentDriverPos[1], SCHOOL_COORDS[0], SCHOOL_COORDS[1]) * 1.25;
-                const etaSchoolMins = Math.max(1, Math.round((distSchoolKm / 22) * 60));
-                if (bannerEl) bannerEl.textContent = validStops.length > 0 ? `🏫 Tous les élèves pointés — Cap vers ${schoolNameGlobal}` : `🏫 Cap vers ${schoolNameGlobal}`;
-                if (summaryEl) summaryEl.textContent = `≈ ${distSchoolKm.toFixed(1)} km jusqu'à l'école • ~${etaSchoolMins} min`;
+            const topDestEl = document.getElementById('waze-top-destination');
+            const etaValEl = document.getElementById('waze-eta-val');
+            const distValEl = document.getElementById('waze-dist-val');
+            const speedValEl = document.getElementById('waze-speed-val');
+
+            if (topDestEl) {
+                topDestEl.textContent = nextStop
+                    ? `${t.nextStop} #${nextStop.order} ${nextStop.name}`
+                    : `${t.toSchool} ${schoolNameGlobal}`;
             }
+            if (etaValEl) etaValEl.textContent = `${etaMins} ${t.minsUnit}`;
+            if (distValEl) distValEl.textContent = `${distKm.toFixed(1)} ${t.kmUnit}`;
+            if (speedValEl) speedValEl.textContent = `${speedKmh} km/h`;
 
             if (attFollowDriver) {
-                mapAtt.setView(currentDriverPos, 14);
+                mapAtt.setView(currentDriverPos, 15);
             }
         }
 
@@ -2330,7 +2486,6 @@
             liveBusData = {};
             selectedBusId = null;
             currentDriverPos = null;
-            nextTargetCoords = null;
             schoolNameGlobal = "Mon Établissement";
             currentSchoolCode = 'DEMO-001';
             const mobNav = document.getElementById('manager-mobile-nav'); mobNav.classList.remove('dir-only'); mobNav.style.display = 'none';
@@ -2364,14 +2519,7 @@
             if (document.getElementById('page-students').classList.contains('active')) renderStudentsPage();
             if (document.getElementById('page-adherent').classList.contains('active')) renderAdherentPage();
             if (document.getElementById('page-audit')?.classList.contains('active')) renderAuditPage();
-            if (document.getElementById('page-attendance').classList.contains('active')) {
-                renderAttendancePage();
-                const b = fleetState.find(x => x.id === selectedBusId) || fleetState[0];
-                if (b) {
-                    const sc = computeVoyageSchedule((b.students || []).filter(s => s.voyage === attVoyageFilter), attVoyageFilter);
-                    updateAttendanceDynamicMap(b, sc.stops);
-                }
-            }
+            if (document.getElementById('page-attendance').classList.contains('active')) renderAttendancePage();
             if (document.getElementById('page-parent-portal').classList.contains('active')) renderParentPortal();
         }
 
@@ -2459,10 +2607,37 @@
         }
         function renderAttendancePage() {
             const bus = fleetState.find(b => b.id === selectedBusId) || fleetState[0]; if (!bus) return;
+            const t = DRIVER_WAZE_I18N[driverLang] || DRIVER_WAZE_I18N.fr;
+            applyDriverWazeLang();
+
             document.getElementById('att-header-title').innerHTML = `<span class="cap-name">${bus.num}</span> — ${bus.sector}`;
-            document.getElementById('att-crew-subtitle').innerHTML = `Chauffeur : <span class="cap-name">${bus.driver}</span> • Accompagnatrice : <span class="cap-name">${bus.acc}</span>`;
+            document.getElementById('att-crew-subtitle').innerHTML = driverLang === 'ar'
+                ? `السائق : <span class="cap-name">${bus.driver}</span>`
+                : `Chauffeur : <span class="cap-name">${bus.driver}</span> • Accompagnatrice : <span class="cap-name">${bus.acc}</span>`;
+
             const sched = computeVoyageSchedule((bus.students || []).filter(s => s.voyage === attVoyageFilter), attVoyageFilter);
-            document.getElementById('att-students-grid').innerHTML = sched.stops.map((stu, idx) => `<div style="background:#fff;border:2px solid ${stu.status==='present'?'#10b981':stu.status==='absent'?'#ef4444':'#e2e8f0'};border-radius:16px;padding:14px;"><div style="font-size:11px;font-weight:900;color:${bus.color};">Arrêt #${idx+1} • ${stu.level}</div><div class="cap-name" style="font-size:15px;font-weight:900;margin:2px 0;">${stu.name}</div><div style="font-size:11px;font-weight:800;margin-bottom:10px;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#64748b'};">${stu.status==='present'?'🟢 PRÉSENT à '+stu.statusTime:stu.status==='absent'?'🔴 ABSENT à '+stu.statusTime:'⏳ En attente'}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','present')" style="background:#10b981;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🟢 PRÉSENT</button><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','absent')" style="background:#ef4444;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🔴 ABSENT</button></div></div>`).join('');
+            const presentCount = sched.stops.filter(s => s.status === 'present').length;
+            const absentCount = sched.stops.filter(s => s.status === 'absent').length;
+            const pendingCount = sched.stops.filter(s => s.status !== 'present' && s.status !== 'absent').length;
+
+            const countsEl = document.getElementById('att-trip-counts');
+            if (countsEl) {
+                countsEl.innerHTML = driverLang === 'ar'
+                    ? `📊 الرحلة ${attVoyageFilter} : <span style="color:#15803d;">${presentCount} حاضر</span> • <span style="color:#b91c1c;">${absentCount} غائب</span> • <span style="color:#0284c7;">${pendingCount} في الانتظار</span>`
+                    : `📊 Voyage ${attVoyageFilter} : <span style="color:#15803d;">${presentCount} Présent(s)</span> • <span style="color:#b91c1c;">${absentCount} Absent(s)</span> • <span style="color:#0284c7;">${pendingCount} En attente</span>`;
+            }
+
+            const gridEl = document.getElementById('att-students-grid');
+            if (sched.stops.length === 0) {
+                gridEl.innerHTML = `<div style="grid-column:1/-1;background:#ffffff;border:1.5px dashed #cbd5e1;border-radius:16px;padding:24px;text-align:center;color:#475569;font-size:13px;font-weight:800;">${t.emptyVoyage(attVoyageFilter)}</div>`;
+            } else {
+                gridEl.innerHTML = sched.stops.map((stu, idx) => {
+                    const statusText = driverLang === 'ar'
+                        ? (stu.status === 'present' ? `🟢 حاضر (${stu.statusTime})` : stu.status === 'absent' ? `🔴 غائب (${stu.statusTime})` : '⏳ في الانتظار')
+                        : (stu.status === 'present' ? `🟢 PRÉSENT à ${stu.statusTime}` : stu.status === 'absent' ? `🔴 ABSENT à ${stu.statusTime}` : '⏳ En attente');
+                    return `<div style="background:#fff;border:2px solid ${stu.status==='present'?'#10b981':stu.status==='absent'?'#ef4444':'#e2e8f0'};border-radius:16px;padding:14px;"><div style="font-size:11px;font-weight:900;color:${bus.color};">#${idx+1} • ${stu.level}</div><div class="cap-name" style="font-size:15px;font-weight:900;margin:2px 0;">${stu.name}</div><div style="font-size:11px;font-weight:800;margin-bottom:10px;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#64748b'};">${statusText}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','present')" style="background:#10b981;color:#fff;border:none;padding:11px;border-radius:10px;font-weight:900;cursor:pointer;">${t.presentBtn}</button><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','absent')" style="background:#ef4444;color:#fff;border:none;padding:11px;border-radius:10px;font-weight:900;cursor:pointer;">${t.absentBtn}</button></div></div>`;
+                }).join('');
+            }
             updateAttendanceDynamicMap(bus, sched.stops);
         }
         function markAttendance(busId, stuId, statusType) {
