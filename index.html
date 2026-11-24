@@ -239,7 +239,7 @@
                             ▶️ Tester la Démo Interactive (48h)
                         </button>
                         <button type="button" onclick="document.getElementById('simulateur').scrollIntoView({ behavior: 'smooth' })" style="background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer;">
-                            🧮 Simuler mon tarif / élève
+                            🧮 Simuler le budget école
                         </button>
                     </div>
                     <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: #64748b; font-weight: 700;">
@@ -342,12 +342,12 @@
             </div>
         </section>
 
-        <!-- 5. SIMULATEUR INTERACTIF -->
+        <!-- 5. SIMULATEUR INTERACTIF (CENTRÉ ÉTABLISSEMENT) -->
         <section id="simulateur" class="lp-sim-wrap">
             <div style="max-width: 720px; margin: 0 auto; text-align: center;">
-                <span style="background: rgba(250,204,21,0.16); color: #facc15; font-size: 11px; font-weight: 900; padding: 5px 12px; border-radius: 999px; text-transform: uppercase;">Simulateur de rentabilité</span>
-                <h3 style="font-size: clamp(26px, 3.4vw, 36px); font-weight: 900; margin: 12px 0 8px;">Estimez l'impact pour votre établissement</h3>
-                <p style="font-size: 14px; color: #cbd5e1; margin: 0;">Ajustez la taille de votre flotte pour calculer le coût réel par élève et le temps libéré à l'accueil.</p>
+                <span style="background: rgba(250,204,21,0.16); color: #facc15; font-size: 11px; font-weight: 900; padding: 5px 12px; border-radius: 999px; text-transform: uppercase;">Estimation pour l'établissement</span>
+                <h3 style="font-size: clamp(26px, 3.4vw, 36px); font-weight: 900; margin: 12px 0 8px;">Estimez le budget et le temps gagné</h3>
+                <p style="font-size: 14px; color: #cbd5e1; margin: 0;">Ajustez le nombre de bus et d'élèves pour voir la formule adaptée, le coût ramené par élève et les appels évités à l'accueil.</p>
             </div>
 
             <div class="lp-sim-box">
@@ -362,28 +362,28 @@
 
                     <div>
                         <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; margin-bottom: 8px;">
-                            <span>🎒 Élèves inscrits au transport</span>
+                            <span>🎒 Élèves transportés</span>
                             <span id="sim-stu-val" style="color: #10b981; font-size: 16px; font-weight: 900;">180 élèves</span>
                         </div>
                         <input type="range" id="sim-stu-range" class="lp-range" min="30" max="450" step="10" value="180" oninput="updateNavetteSimulator()">
                     </div>
 
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; font-size: 12px; color: #475569;">
-                        💡 <strong>Astuce :</strong> Avec un abonnement transport moyen de 400 à 600 MAD/mois facturé aux familles, Navette Pro représente moins de <strong>0,5 %</strong> du budget transport.
+                        🏫 <strong>Forfait annuel fixe :</strong> le tarif dépend uniquement du nombre de bus (jusqu'à 6 bus ou jusqu'à 12 bus), avec un nombre d'élèves illimité.
                     </div>
                 </div>
 
                 <div style="background: #0f172a; color: #ffffff; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                            <span style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">Formule adaptée</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 8px; flex-wrap: wrap;">
+                            <span style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">Formule conseillée</span>
                             <span id="sim-pack-badge" style="background: #38bdf8; color: #0f172a; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 999px;">⚡ Pack Basique (3 500 MAD/an)</span>
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                             <div style="background: rgba(255,255,255,0.07); padding: 14px; border-radius: 14px;">
                                 <div id="sim-cost-per-stu" style="font-size: 26px; font-weight: 900; color: #facc15;">1,94 MAD</div>
-                                <div style="font-size: 11px; color: #cbd5e1; margin-top: 2px;">par élève / mois (10 mois)</div>
+                                <div style="font-size: 11px; color: #cbd5e1; margin-top: 2px;">par élève / mois (sur 10 mois)</div>
                             </div>
                             <div style="background: rgba(255,255,255,0.07); padding: 14px; border-radius: 14px;">
                                 <div id="sim-hours-saved" style="font-size: 26px; font-weight: 900; color: #10b981;">24 h / mois</div>
@@ -391,13 +391,13 @@
                             </div>
                         </div>
 
-                        <div style="font-size: 12px; color: #bae6fd; margin-bottom: 16px;">
-                            ✔ Économie estimée vs boîtiers GPS classiques : <strong id="sim-savings-mad" style="color: #ffffff;">+14 500 MAD dès l'année 1</strong>.
+                        <div id="sim-budget-line" style="font-size: 12px; color: #bae6fd; margin-bottom: 16px;">
+                            ✔ Budget annuel de l'école : <strong style="color: #ffffff;">3 500 MAD / an</strong> • 0 DH de matériel à poser.
                         </div>
                     </div>
 
                     <button type="button" onclick="document.getElementById('demo-modal').classList.add('open')" style="width: 100%; background: #10b981; color: #ffffff; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 900; cursor: pointer;">
-                        🚀 Tester gratuitement sur 1 bus (14 jours)
+                        ▶️ Essayer la démo (48h)
                     </button>
                 </div>
             </div>
@@ -406,9 +406,9 @@
         <!-- 6. TARIFS + ACTIVATION -->
         <section id="tarifs" class="lp-pricing-section">
             <div style="max-width: 920px; margin: 0 auto; text-align: center;">
-                <span class="lp-kicker">Tarification claire</span>
-                <h3 class="lp-sec-title">Un forfait fixe annuel par école, élèves illimités</h3>
-                <p style="color: #475569; font-size: 15px; margin: 0 0 36px;">Aucune facturation à l'élève • Mise en service et import Excel offerts • Support WhatsApp direct</p>
+                <span class="lp-kicker">Tarifs annuels par école</span>
+                <h3 class="lp-sec-title">Un forfait fixe par établissement, sans surprise</h3>
+                <p style="color: #475569; font-size: 15px; margin: 0 0 36px;">Élèves illimités • Mise en service et import Excel inclus • Support WhatsApp direct</p>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 24px;">
                     <div class="lp-card-basic">
@@ -1002,7 +1002,7 @@
             </div>
         </section>
 
-        <!-- ==================== VUE TERRAIN CHAUFFEUR + GPS EN DIRECT ==================== -->
+        <!-- ==================== VUE TERRAIN CHAUFFEUR + CARTE DYNAMIQUE ==================== -->
         <section id="page-attendance" class="page-view" style="overflow-y: auto; background: #f8fafc;">
             <div class="driver-strip" id="att-driver-pills"></div>
             <div style="max-width: 880px; margin: 0 auto; width: 100%; padding: 14px 14px 80px 14px;">
@@ -1023,6 +1023,26 @@
                 <div id="driver-gps-status-bar" style="display:none; background:#dcfce7; border:1px solid #86efac; color:#166534; padding:10px 14px; border-radius:12px; font-size:12px; font-weight:800; margin-bottom:14px; text-align:center;">
                     📡 Partage GPS en direct actif — Gardez cet écran ouvert pendant le trajet.
                 </div>
+
+                <!-- CARTE DYNAMIQUE CHAUFFEUR (ITINÉRAIRE, ARRÊTS & PROCHAIN STOP) -->
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(15,23,42,0.05);">
+                    <div style="padding: 10px 14px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <div>
+                            <div id="att-next-stop-banner" style="font-size: 12px; font-weight: 900; color: #0f172a;">📍 Prochain arrêt : calcul en cours...</div>
+                            <div id="att-route-summary" style="font-size: 11px; color: #64748b; font-weight: 700;">Distance &amp; ETA estimés</div>
+                        </div>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                            <button type="button" id="btn-att-follow" onclick="toggleAttMapFollow()" style="background: #eff6ff; color: #0284c7; border: 1px solid #bae6fd; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">
+                                🔒 Suivi auto : ON
+                            </button>
+                            <button type="button" onclick="openExternalNavForNextStop()" style="background: #0f172a; color: #facc15; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">
+                                🧭 GPS / Waze
+                            </button>
+                        </div>
+                    </div>
+                    <div id="mapDriverAttendance" style="width: 100%; height: 250px; background: #e2e8f0; z-index: 1;"></div>
+                </div>
+
                 <div id="att-students-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px;"></div>
             </div>
         </section>
@@ -1178,6 +1198,15 @@
         let liveMarkersDriver = {};
         let schoolMarkerGlobal = null, schoolMarkerDriver = null;
 
+        let mapAtt = null;
+        let attSchoolMarker = null;
+        let attBusMarker = null;
+        let attStopsLayer = null;
+        let attRouteLine = null;
+        let attFollowDriver = true;
+        let currentDriverPos = null;
+        let nextTargetCoords = null;
+
         let fleetState = [];
         let waRequests = [];
         let auditLogs = [];
@@ -1277,7 +1306,6 @@
             const annualPrice = isPremium ? 6000 : 3500;
             const costPerStudentMonth = (annualPrice / 10 / students).toFixed(2).replace('.', ',');
             const hoursSavedMonth = Math.round(buses * 4);
-            const hardwareSavings = (buses * 3000) - annualPrice;
 
             const badge = document.getElementById('sim-pack-badge');
             badge.textContent = isPremium ? '👑 Pack Premium (6 000 MAD/an)' : '⚡ Pack Basique (3 500 MAD/an)';
@@ -1286,9 +1314,11 @@
 
             document.getElementById('sim-cost-per-stu').textContent = `${costPerStudentMonth} MAD`;
             document.getElementById('sim-hours-saved').textContent = `${hoursSavedMonth} h / mois`;
-            document.getElementById('sim-savings-mad').textContent = hardwareSavings > 0
-                ? `+${hardwareSavings.toLocaleString('fr-FR')} MAD dès l'année 1`
-                : '0 DH de matériel à acheter';
+
+            const budgetLine = document.getElementById('sim-budget-line');
+            if (budgetLine) {
+                budgetLine.innerHTML = `✔ Budget annuel de l'école : <strong style="color:#ffffff;">${annualPrice.toLocaleString('fr-FR')} MAD / an</strong> • 0 DH de matériel à poser.`;
+            }
         }
 
         function toggleFaqItem(btn) {
@@ -1300,6 +1330,12 @@
         }
 
         // ==================== DONNÉES DE DÉMO PRÉ-REMPLIES (DEMO-001) ====================
+        function getMorningTimestamp(hours, minutes) {
+            const d = new Date();
+            d.setHours(hours, minutes, 0, 0);
+            return d.getTime();
+        }
+
         function seedDemoFleetIfEmpty() {
             if (currentSchoolCode !== 'DEMO-001' || fleetState.length > 0) return;
             schoolNameGlobal = "École Pilote Al Massira (Démo)";
@@ -1318,7 +1354,7 @@
                     students: [
                         { id: 'EL-101', name: 'Yasmine Mansouri', level: '4AP', voyage: 1, phone: '0661000001', parentPin: '1234', address: 'Bd Al Massira', lat: 33.2415, lng: -8.5080, status: 'present', statusTime: '07:18' },
                         { id: 'EL-102', name: 'Adam Mansouri', level: '2AC', voyage: 2, phone: '0661000001', parentPin: '1234', address: 'Bd Al Massira', lat: 33.2415, lng: -8.5080, status: 'pending', statusTime: '' },
-                        { id: 'EL-103', name: 'Lina Chraibi', level: 'CP', voyage: 1, phone: '0661000002', parentPin: '5678', address: 'Av. Mohammed VI', lat: 33.2395, lng: -8.5120, status: 'present', statusTime: '07:24' }
+                        { id: 'EL-103', name: 'Lina Chraibi', level: 'CP', voyage: 1, phone: '0661000002', parentPin: '5678', address: 'Av. Mohammed VI', lat: 33.2395, lng: -8.5120, status: 'pending', statusTime: '' }
                     ]
                 },
                 {
@@ -1338,6 +1374,7 @@
                 }
             ];
             selectedBusId = 'B-DEMO-1';
+            currentDriverPos = [33.2402, -8.5110];
             liveBusData['B-DEMO-1'] = {
                 busId: 'B-DEMO-1',
                 busNum: 'Bus 01',
@@ -1352,10 +1389,9 @@
             if (auditLogs.length === 0) {
                 const today = new Date().toISOString().slice(0, 10);
                 auditLogs = [
-                    { ts: Date.now() - 120000, dateStr: today, timeStr: '07:24:10', type: 'POINTAGE_PRESENT', busNum: 'Bus 01', detail: 'Lina Chraibi (CP) marqué PRÉSENT', actor: 'Youssef Alami' },
-                    { ts: Date.now() - 360000, dateStr: today, timeStr: '07:18:04', type: 'POINTAGE_PRESENT', busNum: 'Bus 01', detail: 'Yasmine Mansouri (4AP) marqué PRÉSENT', actor: 'Youssef Alami' },
-                    { ts: Date.now() - 600000, dateStr: today, timeStr: '07:10:00', type: 'DEPART_BUS', busNum: 'Bus 01', detail: 'Démarrage de la tournée (GPS en direct)', actor: 'Youssef Alami' },
-                    { ts: Date.now() - 900000, dateStr: today, timeStr: '07:05:12', type: 'ABSENCE_PARENT', busNum: 'Bus 02', detail: 'Inès El Fassi (1BAC) signalé ABSENT par le parent', actor: 'Parent' }
+                    { ts: getMorningTimestamp(7, 18), dateStr: today, timeStr: '07:18:04', type: 'POINTAGE_PRESENT', busNum: 'Bus 01', detail: 'Yasmine Mansouri (4AP) marqué PRÉSENT', actor: 'Youssef Alami' },
+                    { ts: getMorningTimestamp(7, 10), dateStr: today, timeStr: '07:10:00', type: 'DEPART_BUS', busNum: 'Bus 01', detail: 'Démarrage de la tournée (GPS en direct)', actor: 'Youssef Alami' },
+                    { ts: getMorningTimestamp(7, 5), dateStr: today, timeStr: '07:05:12', type: 'ABSENCE_PARENT', busNum: 'Bus 02', detail: 'Inès El Fassi (1BAC) signalé ABSENT par le parent', actor: 'Parent' }
                 ];
             }
             saveState();
@@ -1666,6 +1702,10 @@
                 else schoolMarkerDriver = L.marker(SCHOOL_COORDS, { icon: getSchoolDivIcon() }).bindPopup(`🏫 ${schoolNameGlobal}`).addTo(mapDriver);
                 mapDriver.setView(SCHOOL_COORDS, 14);
             }
+            if (mapAtt) {
+                if (attSchoolMarker) attSchoolMarker.setLatLng(SCHOOL_COORDS).setPopupContent(`🏫 ${schoolNameGlobal}`);
+                else attSchoolMarker = L.marker(SCHOOL_COORDS, { icon: getSchoolDivIcon() }).bindPopup(`🏫 ${schoolNameGlobal}`).addTo(mapAtt);
+            }
         }
 
         // ==================== GPS CHAUFFEUR ====================
@@ -1680,6 +1720,7 @@
 
             driverGpsWatchId = navigator.geolocation.watchPosition((pos) => {
                 const lat = pos.coords.latitude, lng = pos.coords.longitude, speedKmh = pos.coords.speed ? (pos.coords.speed * 3.6) : 0, now = Date.now();
+                currentDriverPos = [lat, lng];
                 if (!lastAnchorPos) lastAnchorPos = [lat, lng];
                 const distMeters = haversineKm(lastAnchorPos[0], lastAnchorPos[1], lat, lng) * 1000;
                 if (speedKmh >= 10 || distMeters >= 50) {
@@ -1689,6 +1730,14 @@
 
                 if (firebaseDb) firebaseDb.ref(`schools/${currentSchoolCode}/live_gps/${bus.id}`).set({ busId: bus.id, busNum: bus.num, driver: bus.driver, lat, lng, speedKmh: Math.round(speedKmh), tripStatus: currentTripStatus, active: true, updatedAt: now });
                 if (bar) bar.textContent = `${currentTripStatus === 'en_route' ? '🟢 EN ROUTE' : '🟡 À L\'ARRÊT'} (${bus.num} • ${Math.round(speedKmh)} km/h) — ${new Date().toLocaleTimeString('fr-FR')}`;
+
+                if (document.getElementById('page-attendance')?.classList.contains('active')) {
+                    const activeBus = fleetState.find(b => b.id === selectedBusId) || fleetState[0];
+                    if (activeBus) {
+                        const activeSched = computeVoyageSchedule((activeBus.students || []).filter(s => s.voyage === attVoyageFilter), attVoyageFilter);
+                        updateAttendanceDynamicMap(activeBus, activeSched.stops);
+                    }
+                }
             }, () => showToast("⚠️ Signal GPS faible."), { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 });
         }
 
@@ -1730,6 +1779,122 @@
                 }
             });
             updateParentLiveMap();
+        }
+
+        // ==================== CARTE DYNAMIQUE ESPACE CHAUFFEUR ====================
+        function getStopPinIcon(orderNum, status) {
+            const bg = status === 'present' ? '#10b981' : status === 'absent' ? '#ef4444' : '#0284c7';
+            return L.divIcon({
+                className: '',
+                html: `<div style="background:${bg};color:#ffffff;border:2.5px solid #ffffff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;box-shadow:0 3px 8px rgba(0,0,0,0.28);">${orderNum}</div>`,
+                iconSize: [28, 28],
+                iconAnchor: [14, 14]
+            });
+        }
+
+        function initAttendanceMap() {
+            if (typeof L === 'undefined' || !document.getElementById('mapDriverAttendance')) return;
+            const tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+            if (!mapAtt) {
+                mapAtt = L.map('mapDriverAttendance').setView(SCHOOL_COORDS, 14);
+                L.tileLayer(tileUrl).addTo(mapAtt);
+                attStopsLayer = L.featureGroup().addTo(mapAtt);
+                attSchoolMarker = L.marker(SCHOOL_COORDS, { icon: getSchoolDivIcon() }).bindPopup(`🏫 ${schoolNameGlobal}`).addTo(mapAtt);
+            } else if (attSchoolMarker) {
+                attSchoolMarker.setLatLng(SCHOOL_COORDS).setPopupContent(`🏫 ${schoolNameGlobal}`);
+            }
+            setTimeout(() => { if (mapAtt) mapAtt.invalidateSize(); }, 180);
+        }
+
+        function toggleAttMapFollow() {
+            attFollowDriver = !attFollowDriver;
+            const btn = document.getElementById('btn-att-follow');
+            if (btn) {
+                btn.textContent = attFollowDriver ? '🔒 Suivi auto : ON' : '🔓 Suivi auto : OFF';
+                btn.style.background = attFollowDriver ? '#eff6ff' : '#f1f5f9';
+                btn.style.color = attFollowDriver ? '#0284c7' : '#475569';
+            }
+            if (attFollowDriver && mapAtt) {
+                const centerTarget = currentDriverPos || SCHOOL_COORDS;
+                mapAtt.setView(centerTarget, 15);
+            }
+        }
+
+        function openExternalNavForNextStop() {
+            const target = nextTargetCoords || SCHOOL_COORDS;
+            window.open(`https://www.google.com/maps/dir/?api=1&destination=${target[0]},${target[1]}&travelmode=driving`, '_blank');
+        }
+
+        function updateAttendanceDynamicMap(bus, stops) {
+            initAttendanceMap();
+            if (!mapAtt || !attStopsLayer || !bus) return;
+
+            attStopsLayer.clearLayers();
+            if (attRouteLine) {
+                mapAtt.removeLayer(attRouteLine);
+                attRouteLine = null;
+            }
+
+            const validStops = (stops || []).filter(s => typeof s.lat === 'number' && typeof s.lng === 'number' && !isNaN(s.lat) && !isNaN(s.lng));
+            const routePoints = [];
+
+            const liveInfo = liveBusData[bus.id];
+            if (liveInfo && liveInfo.active && typeof liveInfo.lat === 'number' && typeof liveInfo.lng === 'number') {
+                currentDriverPos = [liveInfo.lat, liveInfo.lng];
+            } else if (!currentDriverPos) {
+                currentDriverPos = Array.isArray(bus.center) ? [...bus.center] : [...SCHOOL_COORDS];
+            }
+
+            routePoints.push(currentDriverPos);
+
+            validStops.forEach((st) => {
+                const pt = [st.lat, st.lng];
+                routePoints.push(pt);
+                const statusLabel = st.status === 'present' ? '🟢 PRÉSENT' : st.status === 'absent' ? '🔴 ABSENT' : '⏳ EN ATTENTE';
+                const marker = L.marker(pt, { icon: getStopPinIcon(st.order, st.status) })
+                    .bindPopup(`<strong>#${st.order} — ${st.name}</strong> (${st.level})<br>${statusLabel}<br>📍 ${st.address || bus.sector}`);
+                marker.addTo(attStopsLayer);
+            });
+
+            routePoints.push([...SCHOOL_COORDS]);
+
+            if (routePoints.length >= 2) {
+                attRouteLine = L.polyline(routePoints, {
+                    color: bus.color || '#0284c7',
+                    weight: 4,
+                    opacity: 0.85,
+                    dashArray: '8, 8'
+                }).addTo(mapAtt);
+            }
+
+            const busPopup = `🚌 <strong>${bus.num}</strong> — ${bus.driver}<br>${currentTripStatus === 'en_route' ? '🟢 EN ROUTE' : '🟡 À L\'ARRÊT'}`;
+            if (attBusMarker) {
+                attBusMarker.setLatLng(currentDriverPos).setPopupContent(busPopup);
+            } else {
+                attBusMarker = L.marker(currentDriverPos, { icon: getBusLiveDivIcon(bus.num) }).bindPopup(busPopup).addTo(mapAtt);
+            }
+
+            const nextStop = validStops.find(s => s.status === 'pending');
+            const bannerEl = document.getElementById('att-next-stop-banner');
+            const summaryEl = document.getElementById('att-route-summary');
+
+            if (nextStop) {
+                nextTargetCoords = [nextStop.lat, nextStop.lng];
+                const distKm = haversineKm(currentDriverPos[0], currentDriverPos[1], nextStop.lat, nextStop.lng) * 1.25;
+                const etaMins = Math.max(1, Math.round((distKm / 22) * 60));
+                if (bannerEl) bannerEl.textContent = `📍 Prochain arrêt : #${nextStop.order} ${nextStop.name} (${nextStop.level})`;
+                if (summaryEl) summaryEl.textContent = `≈ ${distKm.toFixed(1)} km • Arrivée estimée dans ${etaMins} min • ${validStops.length} arrêt(s) au total`;
+            } else {
+                nextTargetCoords = [...SCHOOL_COORDS];
+                const distSchoolKm = haversineKm(currentDriverPos[0], currentDriverPos[1], SCHOOL_COORDS[0], SCHOOL_COORDS[1]) * 1.25;
+                const etaSchoolMins = Math.max(1, Math.round((distSchoolKm / 22) * 60));
+                if (bannerEl) bannerEl.textContent = validStops.length > 0 ? `🏫 Tous les élèves pointés — Cap vers ${schoolNameGlobal}` : `🏫 Cap vers ${schoolNameGlobal}`;
+                if (summaryEl) summaryEl.textContent = `≈ ${distSchoolKm.toFixed(1)} km jusqu'à l'école • ~${etaSchoolMins} min`;
+            }
+
+            if (attFollowDriver) {
+                mapAtt.setView(currentDriverPos, 14);
+            }
         }
 
         // ==================== LANDING & ONBOARDING ====================
@@ -2155,6 +2320,7 @@
             if (driverGpsWatchId !== null) { navigator.geolocation.clearWatch(driverGpsWatchId); driverGpsWatchId = null; }
             if (screenWakeLock) { try { screenWakeLock.release(); } catch (e) {} screenWakeLock = null; }
             if (mapParent) { Object.keys(parentBusMarkers).forEach(bid => { try { mapParent.removeLayer(parentBusMarkers[bid]); } catch (e) {} }); parentBusMarkers = {}; }
+            if (mapAtt) { try { mapAtt.remove(); } catch (e) {} mapAtt = null; attSchoolMarker = null; attBusMarker = null; attStopsLayer = null; attRouteLine = null; }
             detachFirebaseListeners(); sessionStorage.removeItem(SESSION_KEY); localStorage.removeItem(SESSION_KEY + '_driver');
             activeSession = null;
             fleetState = [];
@@ -2163,6 +2329,8 @@
             schoolAccounts = {};
             liveBusData = {};
             selectedBusId = null;
+            currentDriverPos = null;
+            nextTargetCoords = null;
             schoolNameGlobal = "Mon Établissement";
             currentSchoolCode = 'DEMO-001';
             const mobNav = document.getElementById('manager-mobile-nav'); mobNav.classList.remove('dir-only'); mobNav.style.display = 'none';
@@ -2187,7 +2355,7 @@
             else if (pageName === 'adherent') renderAdherentPage();
             else if (pageName === 'audit') renderAuditPage();
             else if (pageName === 'attendance') renderAttendancePage();
-            setTimeout(() => { if (mapGlobal) mapGlobal.invalidateSize(); if (mapDriver) mapDriver.invalidateSize(); renderLiveBusMarkers(); }, 120);
+            setTimeout(() => { if (mapGlobal) mapGlobal.invalidateSize(); if (mapDriver) mapDriver.invalidateSize(); if (mapAtt) mapAtt.invalidateSize(); renderLiveBusMarkers(); }, 120);
         }
         function refreshCurrentView() {
             if (document.getElementById('page-global').classList.contains('active')) renderGlobalPage();
@@ -2196,7 +2364,14 @@
             if (document.getElementById('page-students').classList.contains('active')) renderStudentsPage();
             if (document.getElementById('page-adherent').classList.contains('active')) renderAdherentPage();
             if (document.getElementById('page-audit')?.classList.contains('active')) renderAuditPage();
-            if (document.getElementById('page-attendance').classList.contains('active')) renderAttendancePage();
+            if (document.getElementById('page-attendance').classList.contains('active')) {
+                renderAttendancePage();
+                const b = fleetState.find(x => x.id === selectedBusId) || fleetState[0];
+                if (b) {
+                    const sc = computeVoyageSchedule((b.students || []).filter(s => s.voyage === attVoyageFilter), attVoyageFilter);
+                    updateAttendanceDynamicMap(b, sc.stops);
+                }
+            }
             if (document.getElementById('page-parent-portal').classList.contains('active')) renderParentPortal();
         }
 
@@ -2288,6 +2463,7 @@
             document.getElementById('att-crew-subtitle').innerHTML = `Chauffeur : <span class="cap-name">${bus.driver}</span> • Accompagnatrice : <span class="cap-name">${bus.acc}</span>`;
             const sched = computeVoyageSchedule((bus.students || []).filter(s => s.voyage === attVoyageFilter), attVoyageFilter);
             document.getElementById('att-students-grid').innerHTML = sched.stops.map((stu, idx) => `<div style="background:#fff;border:2px solid ${stu.status==='present'?'#10b981':stu.status==='absent'?'#ef4444':'#e2e8f0'};border-radius:16px;padding:14px;"><div style="font-size:11px;font-weight:900;color:${bus.color};">Arrêt #${idx+1} • ${stu.level}</div><div class="cap-name" style="font-size:15px;font-weight:900;margin:2px 0;">${stu.name}</div><div style="font-size:11px;font-weight:800;margin-bottom:10px;color:${stu.status==='present'?'#15803d':stu.status==='absent'?'#b91c1c':'#64748b'};">${stu.status==='present'?'🟢 PRÉSENT à '+stu.statusTime:stu.status==='absent'?'🔴 ABSENT à '+stu.statusTime:'⏳ En attente'}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','present')" style="background:#10b981;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🟢 PRÉSENT</button><button type="button" onclick="markAttendance('${bus.id}','${stu.id}','absent')" style="background:#ef4444;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;">🔴 ABSENT</button></div></div>`).join('');
+            updateAttendanceDynamicMap(bus, sched.stops);
         }
         function markAttendance(busId, stuId, statusType) {
             const bus = fleetState.find(b => b.id === busId), stu = bus && (bus.students || []).find(s => s.id === stuId); if (!stu) return;
@@ -2402,4 +2578,3 @@
     </script>
 </body>
 </html>
-    
